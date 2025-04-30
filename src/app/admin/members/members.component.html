@@ -1,0 +1,88 @@
+<div class="w-screen h-screen container mx-auto p-5">
+    <h1 class="text-2xl font-bold mb-4 text-center">Menmbers Details</h1>
+    <form (ngSubmit)="OnSubmit()" #Form="ngForm" class="space-x-2 space-y-2 mb-5">
+      <input type="text"
+      [(ngModel)]="user.name"
+      name="name"
+      placeholder="Full Name"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <input type="date" 
+      [(ngModel)]="user.dob"
+      name="dob"
+      placeholder="DOB"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <input type="text"
+      [(ngModel)]="user.nativeaddress"
+      name="nativeaddress"
+      placeholder="Native Address"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <input type="text"
+      [(ngModel)]="user.currentaddress"
+      name="currentaddress"
+      placeholder="Current Address"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <input type="number"
+      [(ngModel)]="user.mobilenum"
+      name="mobilenumber"
+      placeholder="Mobile Number"
+      required
+      class="border p-2 w-1/4 rounded">
+      <input type="text"
+      [(ngModel)]="user.baptism"
+      name="Baptism date & place"
+      placeholder="Enter Baptism Date & place"
+      required
+      class="border p-2 w-1/4 rounded">
+      <input type="text"
+      [(ngModel)]="user.solidifying"
+      name="Solidifying date & place"
+      placeholder="Enter Solidifying Date & place"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <select [(ngModel)]="user.familyHead" name="familyHead" class="border p-2 w-1/4 rounded">
+        <option value="">Select Family Head</option>
+        <option *ngFor="let head of getFamilyHeads()" [value]="head">{{ head }}</option>
+      </select>
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-1/4">{{editIndex === -1? 'Add':'Update'}}</button>
+    </form>
+  <hr>
+    <thead class="table-auto w-full mt-6 border">
+      <tr class="bg-gray-100 text-left">
+        <th class="px-4 py-2">ID</th>
+        <th class="px-4 py-2">Name</th>
+        <th class="px-4 py-2">Date Of Birth</th>
+        <th class="px-4 py-2">Native Address</th>
+        <th class="px-4 py-2">Current Address</th>
+        <th class="px-4 py-2">Mobile Number</th>
+        <th class="px-4 py-2">Baptism <br>Date&Place</th>
+        <th class="px-4 py-2">Solidifying<br> Date&Place</th>
+        <th class="px-4 py-2">Edit&Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of members;let i=index" class="text-center border-t">
+        <td class="px-4 py-2">{{m.id}}</td>
+        <td class="px-4 py-2">{{m.name}}</td>
+        <td class="px-4 py-2">{{m.dob}}</td>
+        <td class="px-4 py-2">{{m.nativeaddress}}</td>
+        <td class="px-4 py-2">{{m.currentaddress}}</td>
+        <td class="px-4 py-2">{{m.mobilenum}}</td>
+        <td class="px-4 py-2">{{m.baptism}}</td>
+        <td class="px-4 py-2">{{m.solidifying}}</td>
+        <td class="px-4 py-2">{{ m.familyHead }}</td>
+        <td class="px-4 py-2 space-x-2">
+          <button (click)="Edit(i)" class="bg-yellow-400 px-2 py-1 rounded">Edit</button>
+          <button (click)="Delete(i)" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </div>

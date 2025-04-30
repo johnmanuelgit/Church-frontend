@@ -1,0 +1,95 @@
+<div class="container mx-auto p-5">
+  <h2 class="text-2xl font-bold mb-4 text-center">LCF Tax Management</h2>
+
+  <div class="mb-6">
+    <label for="familyHead" class="block mb-2 font-bold">Select Family Head:</label>
+    <select 
+      id="familyHead"
+      [(ngModel)]="selectedHead" 
+      (change)="selectHead()" 
+      class="w-full p-2 border rounded">
+      <option value="">Select Family Head</option>
+      <option *ngFor="let head of familyHeads" [value]="head.id">
+        {{ head.name }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="familyMembers.length === 0 && selectedHead" class="text-center p-4 mb-4 bg-yellow-100 border border-yellow-400 rounded">
+    No family members found for the selected head.
+  </div>
+
+  <div *ngIf="familyMembers.length > 0" class="mt-4">
+    <h3 class="text-xl font-semibold mb-3">Family Members</h3>
+    
+    <table class="table-auto w-full border border-collapse">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="border p-2">Name</th>
+          <th class="border p-2">DOB</th>
+          <th class="border p-2">Age</th>
+          <th class="border p-2">Tax Amount</th>
+          <th class="border p-2">Status</th>
+          <th class="border p-2">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of familyMembers" class="hover:bg-gray-100">
+          <td class="border p-2">{{ member.name }}</td>
+          <td class="border p-2">{{ member.dob }}</td>
+          <td class="border p-2">{{ getAge(member.dob) }}</td>
+          <td class="border p-2">₹{{ calculateTax(member.dob) }}</td>
+          <td class="border p-2" [ngClass]="member.taxPaid ? 'text-green-600' : 'text-red-600'">
+            {{ member.taxPaid ? 'Paid' : 'Unpaid' }}
+          </td>
+          <td class="border p-2">
+            <button 
+              *ngIf="!member.taxPaid"
+              (click)="markAsPaid(member)"
+              class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition">
+              Mark as Paid
+            </button>
+            <span *ngIf="member.taxPaid" class="px-3 py-1">✓</span>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot class="bg-gray-100 font-semibold">
+        <tr>
+          <td class="border p-2" colspan="3">Total</td>
+          <td class="border p-2">
+            <!-- Fixed the reduce function -->
+            ₹{{ getTotalTax() }}
+          </td>
+          <td class="border p-2" colspan="2">
+            <!-- Fixed the comparison expression -->
+            {{ getPaidCount() }} / {{ familyMembers.length }} paid
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div *ngIf="!selectedHead && members.length > 0" class="mt-6">
+    <h3 class="text-xl font-semibold mb-3">All Members</h3>
+    <table class="table-auto w-full border border-collapse">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="border p-2">Name</th>
+          <th class="border p-2">Age</th>
+          <th class="border p-2">Tax Amount</th>
+          <th class="border p-2">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of members" class="hover:bg-gray-100">
+          <td class="border p-2">{{ member.name }}</td>
+          <td class="border p-2">{{ getAge(member.dob) }}</td>
+          <td class="border p-2">₹{{ calculateTax(member.dob) }}</td>
+          <td class="border p-2" [ngClass]="member.taxPaid ? 'text-green-600' : 'text-red-600'">
+            {{ member.taxPaid ? 'Paid' : 'Unpaid' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

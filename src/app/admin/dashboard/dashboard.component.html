@@ -1,0 +1,50 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100 bg-center bg-cover bg-no-repeat relative" style="background-image: url('assets/backround/bg-admin.jpg')">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+  
+    <!-- Dashboard Container -->
+    <div class="relative z-10 w-full max-w-3xl px-6 mx-auto">
+      <div class="overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl p-8">
+        <!-- Header -->
+        <div class="mb-6 text-center">
+          <h2 class="text-3xl font-bold text-blue-700">Admin Dashboard</h2>
+          <p class="text-gray-600">Manage all sections from here</p>
+        </div>
+  
+        <!-- Navigation Links -->
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <li>
+            <a class="block w-full text-center py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition" href="#">
+              Manage Users
+            </a>
+          </li>
+          <li>
+            <a class="block w-full text-center py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition" [routerLink]="['/members']">
+              Members
+            </a>
+          </li>
+          <li>
+            <a class="block w-full text-center py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition" href="#">
+              Offering
+            </a>
+          </li>
+          <li>
+            <a class="block w-full text-center py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition" [routerLink]="['/lcftax']">
+              LCF Tax
+            </a>
+          </li>
+          <li>
+            <a class="block w-full text-center py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition" [routerLink]="['/csimembers']">
+              Members Subscription
+            </a>
+          </li>
+          <li>
+            <a class="block w-full text-center py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition" [routerLink]="['/youthmembers']">
+              Youth Members Subscription
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
