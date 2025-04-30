@@ -37,7 +37,7 @@ export class LcfTaxComponent implements OnInit {
   }
 
   loadMembers(): void {
-    this.http.get<Member[]>('http://localhost:3000/members').subscribe({
+    this.http.get<Member[]>('https://stthomoschurch-backend.onrender.com/members').subscribe({
       next: (data) => {
         console.log('Data received:', data); // Debug log
         
@@ -123,13 +123,13 @@ export class LcfTaxComponent implements OnInit {
       };
     });
     
-    console.log('Family heads:', this.familyHeads); // Debug log
+    console.log('Family headss:', this.familyHeads); // Debug log// Debug log
   }
 
   markAsPaid(member: Member) {
     member.taxPaid = true;
 
-    this.http.put(`http://localhost:3000/members/${member.id}`, member).subscribe({
+    this.http.put(`https://stthomoschurch-backend.onrender.com/${member.id}`, member).subscribe({
       next: () => {
         console.log(`Member ${member.name} marked as paid`);
         // Update the local members array
@@ -140,6 +140,7 @@ export class LcfTaxComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to update member tax status:', err);
+        console.error('Failed to update');
         // Revert the local change if the server update failed
         member.taxPaid = false;
       }

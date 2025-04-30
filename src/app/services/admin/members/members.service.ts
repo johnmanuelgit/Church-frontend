@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class MembersService {
 
-  private baseUrl = 'http://localhost:3000/members';
+  private baseUrl = 'https://stthomoschurch-backend.onrender.com/members';
 
   constructor(private http: HttpClient) {}
 
