@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class MembersService {
   // Use direct API URL instead of environment
-  private apiUrl = 'http://localhost:3000/api/members';
+  private apiUrl = 'https://stthomoschurch-backend.onrender.com/api/members';
 
   constructor(private http: HttpClient) { }
 

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TaxSummaryService } from '../../services/admin/tax-summary/tax-summary.service';
 
 export interface Member {
   _id: string; // Add this line
@@ -38,7 +39,7 @@ availableYears: string[] = [];
   errorMessage: string = '';
 
   
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private taxService: TaxSummaryService) {}
 
   ngOnInit(): void {
     this.loadMembers();
@@ -46,7 +47,7 @@ availableYears: string[] = [];
   }
 
   loadMembers(): void {
-    this.http.get<Member[]>('http://localhost:3000/api/members').subscribe({
+    this.http.get<Member[]>('https://stthomoschurch-backend.onrender.com/api/members').subscribe({
       next: (data) => {
         console.log('Data received:', data);
   
@@ -64,7 +65,7 @@ availableYears: string[] = [];
     });
   }
   loadTaxRecords(): void {
-    this.http.get<any[]>('http://localhost:3000/api/tax/all').subscribe({
+    this.http.get<any[]>('https://stthomoschurch-backend.onrender.com/api/tax/all').subscribe({
       next: (records) => {
         this.taxRecords = records;
         this.mergeTaxIntoMembers();
@@ -188,10 +189,11 @@ availableYears: string[] = [];
   
     const payload = {
       memberId: member._id,
-      year: Number(this.selectedYear)
+      year: Number(this.selectedYear),
+      amount: this.calculateTax(member.dob)
     };
   
-    this.http.put('http://localhost:3000/api/tax/paid', payload).subscribe({
+    this.http.put('https://stthomoschurch-backend.onrender.com/api/tax/paid', payload).subscribe({
       next: () => {
         console.log(`Marked as paid for ${this.selectedYear}`);
         this.loadTaxRecords(); // 👈 RELOAD updated data
@@ -212,7 +214,7 @@ availableYears: string[] = [];
       year: Number(this.selectedYear)
     };
   
-    this.http.put('http://localhost:3000/api/tax/unpaid', payload).subscribe({
+    this.http.put('https://stthomoschurch-backend.onrender.com/api/tax/unpaid', payload).subscribe({
       next: () => {
         console.log(`Marked as unpaid for ${this.selectedYear}`);
         this.loadTaxRecords(); // 👈 RELOAD updated data
@@ -287,6 +289,20 @@ availableYears: string[] = [];
       totalMembers: targetMembers.length,
       paidPlusUnpaidAmount: paidAmount + unpaidAmount
     };
+  }
+  getTaxCollectedByYear(): { [year: string]: number } {
+    const taxByYear: { [year: string]: number } = {};
+  
+    this.members.forEach(member => {
+      if (!member.tax) return;
+      for (const [year, paid] of Object.entries(member.tax)) {
+        if (paid) {
+          taxByYear[year] = (taxByYear[year] || 0) + this.calculateTax(member.dob);
+        }
+      }
+    });
+  
+    return taxByYear;
   }
   
 }

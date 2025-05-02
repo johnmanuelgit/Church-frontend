@@ -33,9 +33,9 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {}
-
   login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/admin-login`, { username, password })
+    return this.http.post<LoginResponse>(`${this.apiUrl}/api/admin/login`, { username, password })
+  
       .pipe(
         tap(response => {
           if (response.status === 'success') {

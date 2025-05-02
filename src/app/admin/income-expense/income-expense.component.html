@@ -1,0 +1,80 @@
+<div class="container mx-auto p-5">
+    <h2 class="text-2xl font-bold mb-4 text-center">Varavu-Selavu Management</h2>
+  
+    <!-- Year Select -->
+    <div class="mb-6">
+      <label class="block mb-2 font-bold">Select Year:</label>
+      <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange($event)" class="w-full p-2 border rounded">
+        <option value="All">All Years</option>
+        <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+      </select>
+      
+    </div>
+  
+    <!-- ADD INCOME FORM -->
+    <div class="mb-8">
+      <h3 class="text-lg font-bold mb-2">Add Income</h3>
+      <form (ngSubmit)="addIncome()" class="grid gap-3 grid-cols-2">
+        <input type="text" placeholder="Donor Name" [(ngModel)]="newIncome.donorName" name="donorName" class="p-2 border rounded" required>
+        <input type="number" placeholder="Amount" [(ngModel)]="newIncome.amount" name="amount" class="p-2 border rounded" required>
+        <select [(ngModel)]="newIncome.donationType" name="donationType" class="p-2 border rounded" required>
+            <option value="" disabled selected>Select Donation Type</option>
+            <option *ngFor="let type of donationTypes" [value]="type">{{ type }}</option>
+            <option value="Other">Other</option>
+          </select>
+          
+          <!-- Show this only if "Other" is selected -->
+          <input
+            *ngIf="newIncome.donationType === 'Other'"
+            type="text"
+            [(ngModel)]="newIncome.otherDonation"
+            name="otherDonation"
+            placeholder="Enter custom donation type"
+            class="p-2 border rounded"
+          />
+          
+          
+          <div *ngIf="selectedDonation === 'Other'">
+            <input type="text" [(ngModel)]="customDonation" placeholder="Enter donation type" class="form-input mt-2" />
+          </div>
+          
+        <input type="date" [(ngModel)]="newIncome.date" name="date" class="p-2 border rounded" required>
+        <button type="submit" class="col-span-2 bg-green-600 text-white py-2 rounded hover:bg-green-700">Add Income</button>
+      </form>
+    </div>
+  
+    <!-- ADD EXPENSE FORM -->
+    <div class="mb-8">
+        <h3 class="text-lg font-bold mb-2">Add Expense</h3>
+        <form (ngSubmit)="addExpense()" class="grid gap-3 grid-cols-2" enctype="multipart/form-data">
+          
+          <input type="text" placeholder="Reason" [(ngModel)]="newExpense.reason" name="reason" class="p-2 border rounded" required>
+          <input type="number" placeholder="Amount" [(ngModel)]="newExpense.amount" name="amount" class="p-2 border rounded" required>
+          <input type="text" placeholder="Responsible Person" [(ngModel)]="newExpense.responsiblePerson" name="responsiblePerson" class="p-2 border rounded" required>
+          <input type="text" placeholder="Bill By" [(ngModel)]="newExpense.billBy" name="billBy" class="p-2 border rounded" required>
+          <input type="date" [(ngModel)]="newExpense.date" name="date" class="p-2 border rounded" required>
+      
+          <!-- File input for bill image -->
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="col-span-2 p-2 border rounded">
+      
+          <!-- Preview image (optional) -->
+          <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="col-span-2 w-32 h-32 object-cover rounded border" />
+      
+          <button type="submit" class="col-span-2 bg-red-600 text-white py-2 rounded hover:bg-red-700">Add Expense</button>
+        </form>
+      </div>
+      
+    <!-- Summary Display (Same as before) -->
+    <div class="mt-4">
+      <h3 class="text-xl font-semibold mb-3">Summary for {{ selectedYear }}</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Total Tax Collected:</strong> ₹{{ totalTaxFromLCF }}</li>
+        <li><strong>Total Income (without tax):</strong> ₹{{ getSummary().totalIncome }}</li>
+        <li><strong>Total Income (with tax):</strong> ₹{{ getSummary().totalWithTax }}</li>
+        <li><strong>Total Expense:</strong> ₹{{ getSummary().totalExpense }}</li>
+        <li><strong>Balance:</strong> ₹{{ getSummary().balance }}</li>
+      </ul>
+      
+    </div>
+  </div>
+  
