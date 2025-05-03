@@ -20,7 +20,10 @@ export class MembersComponent implements OnInit {
     baptism: '',
     solidifying: '',
     familyHead: '', 
+<<<<<<< HEAD
      marriagedate: ''
+=======
+>>>>>>> 4b4a4e2 (v1)
   };
   members: any[] = [];
   editIndex = -1;
@@ -84,8 +87,12 @@ export class MembersComponent implements OnInit {
       mobilenum: '',
       baptism: '',
       solidifying: '',
+<<<<<<< HEAD
       familyHead: '',
        marriagedate: ''
+=======
+      familyHead: ''
+>>>>>>> 4b4a4e2 (v1)
     };
   }
   
