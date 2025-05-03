@@ -18,6 +18,14 @@ export class TaxSummaryService {
       this.taxData[entry.year] = entry.total;
     });
   }
+  markTaxPaid(memberId: string, year: string): Observable<any> {
+    return this.http.put<any>(`https://stthomoschurch-backend.onrender.com/api/tax/mark-paid/${memberId}`, { year });
+  }
+  
+  markTaxUnpaid(memberId: string, year: string): Observable<any> {
+    return this.http.put<any>(`https://stthomoschurch-backend.onrender.com/api/tax/mark-unpaid/${memberId}`, { year });
+  }
+  
   
   getTaxForYear(year: string): number {
     return this.taxData[year] || 0;
