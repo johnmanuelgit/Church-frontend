@@ -34,8 +34,20 @@ export class MembersService {
   deleteMember(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+  
 
   updateMemberTaxStatus(id: number, taxPaid: boolean): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/unpaidedit/${id}`, { taxPaid });
   }
+  getAllMembers(): Observable<any[]> {
+    return this.http.get<any[]>('https://stthomoschurch-backend.onrender.com/api/members');
+  }
+  getFamilyHeads(): Observable<any[]> {
+    return this.http.get<any[]>('https://stthomoschurch-backend.onrender.com/api/members/family-heads');
+  }
+  
+  getFamilyMembersByHead(headId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/family-members/${headId}`);
+  }
+  
 }

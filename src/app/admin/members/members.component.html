@@ -47,6 +47,13 @@
       placeholder="Enter Solidifying Date & place"
       required
       class="border p-2 w-1/4 rounded">
+      <label>Marriage Date :</label>
+      <input type="date"
+[(ngModel)]="user.marriagedate"
+name="marriagedate"
+placeholder="Marriage Date"
+class="border p-2 w-1/4 rounded">
+
   
       <select [(ngModel)]="user.familyHead" name="familyHead" class="border p-2 w-1/4 rounded">
         <option value="">Select Family Head</option>
@@ -65,6 +72,8 @@
         <th class="px-4 py-2">Mobile Number</th>
         <th class="px-4 py-2">Baptism <br>Date&Place</th>
         <th class="px-4 py-2">Solidifying<br> Date&Place</th>
+        <th class="px-4 py-2">Marriage Date</th>
+
         <th class="px-4 py-2">Edit&Delete</th>
       </tr>
     </thead>
@@ -78,6 +87,7 @@
         <td class="px-4 py-2">{{m.mobilenum}}</td>
         <td class="px-4 py-2">{{m.baptism}}</td>
         <td class="px-4 py-2">{{m.solidifying}}</td>
+        <td class="px-4 py-2">{{m.marriagedate}}</td>
         <td class="px-4 py-2">{{ m.familyHead }}</td>
         <td class="px-4 py-2 space-x-2">
           <button (click)="Edit(i)" class="bg-yellow-400 px-2 py-1 rounded">Edit</button>
