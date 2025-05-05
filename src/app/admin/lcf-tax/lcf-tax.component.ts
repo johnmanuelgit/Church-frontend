@@ -3,10 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaxSummaryService } from '../../services/admin/tax-summary/tax-summary.service';
-<<<<<<< HEAD
-import { MembersService } from '../../services/admin/members/members.service';
-=======
->>>>>>> 4b4a4e2 (v1)
 
 export interface Member {
   _id: string; // Add this line
@@ -18,12 +14,7 @@ export interface Member {
   mobilenum: string;
   baptism: string;
   solidifying: string;
-<<<<<<< HEAD
-  familyHead: string;
-  familyHeadName?: string;  // Changed from familyHeadId to familyHead to match backend
-=======
   familyHead: string; // Changed from familyHeadId to familyHead to match backend
->>>>>>> 4b4a4e2 (v1)
   tax?: { [year: string]: boolean };
   taxPaid: boolean;
 }
@@ -36,46 +27,6 @@ export interface Member {
   styleUrls: ['./lcf-tax.component.css']
 })
 export class LcfTaxComponent implements OnInit {
-<<<<<<< HEAD
-  familyHeads: any[] = [];
-  familyMembers: any[] = [];
-  members: any[] = [];
-  selectedHead: string = '';
-  selectedYear: string = '';
-  availableYears: string[] = [];
-  errorMessage: string = '';
-
-  constructor(private taxService: TaxSummaryService,  private membersService: MembersService) {}
-
-  ngOnInit(): void {
-    this.fetchFamilyHeads();
-    this.fetchAllMembers();
-    this.setAvailableYears();
-  }
-
-  setAvailableYears(): void {
-    const currentYear = new Date().getFullYear();
-    this.availableYears = Array.from({ length: 10 }, (_, i) => (currentYear - i).toString());
-  }
-
-  fetchFamilyHeads(): void {
-    this.membersService.getFamilyHeads().subscribe({
-      next: (data: any[]) => {
-        this.familyHeads = data;
-      },
-      error: (err) => {
-        this.errorMessage = 'Failed to fetch family heads';
-      }
-    });
-  }
-  fetchAllMembers(): void {
-    this.membersService.getAllMembers().subscribe({
-      next: (data: any[]) => {
-        this.members = data;
-      },
-      error: () => {
-        this.errorMessage = 'Failed to fetch members';
-=======
   members: Member[] = [];
   selectedYear: string = new Date().getFullYear().toString();
 availableYears: string[] = [];
@@ -123,15 +74,10 @@ availableYears: string[] = [];
       },
       error: (err) => {
         console.error('Failed to load tax records:', err);
->>>>>>> 4b4a4e2 (v1)
       }
     });
   }
   
-<<<<<<< HEAD
-
-  selectHead(): void {
-=======
   
   mergeTaxIntoMembers(): void {
     for (const member of this.members) {
@@ -150,27 +96,11 @@ availableYears: string[] = [];
   selectHead() {
     console.log('Selected head:', this.selectedHead);
     
->>>>>>> 4b4a4e2 (v1)
     if (!this.selectedHead) {
       this.familyMembers = [];
       return;
     }
   
-<<<<<<< HEAD
-    this.membersService.getFamilyMembersByHead(this.selectedHead).subscribe({
-      next: (data: any[]) => {
-        this.familyMembers = data;
-      },
-      error: () => {
-        this.errorMessage = 'Failed to fetch family members';
-      }
-    });
-  }
-  
-
-  onYearChange(): void {
-    // You might want to refresh data here if necessary
-=======
     // Coerce both to strings to avoid mismatches
     this.familyMembers = this.members.filter(
       m => m.familyHead?.toString() === this.selectedHead.toString()
@@ -190,102 +120,11 @@ availableYears: string[] = [];
   calculateTax(dob: string): number {
     const age = this.getAge(dob);
     return age < 18 ? 500 : 1000;
->>>>>>> 4b4a4e2 (v1)
   }
 
   getAge(dob: string): number {
     const birthDate = new Date(dob);
     const today = new Date();
-<<<<<<< HEAD
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const hasBirthdayPassed = (
-      today.getMonth() > birthDate.getMonth() ||
-      (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate())
-    );
-    return hasBirthdayPassed ? age : age - 1;
-  }
-
-  calculateTax(dob: string): number {
-    const age = this.getAge(dob);
-    if (age < 5) return 0;
-    if (age < 18) return 50;
-    if (age < 60) return 100;
-    return 70;
-  }
-
-  markAsPaid(member: any): void {
-    if (!this.selectedYear || !member) return;
-
-    this.taxService.markTaxPaid(member.id, this.selectedYear).subscribe({
-      next: () => {
-        if (this.selectedHead) this.selectHead();
-        else this.fetchAllMembers();
-      },
-      error: () => {
-        this.errorMessage = 'Failed to mark as paid';
-      }
-    });
-  }
-
-  editPayment(member: any): void {
-    if (!this.selectedYear || !member) return;
-
-    this.taxService.markTaxUnpaid(member.id, this.selectedYear).subscribe({
-      next: () => {
-        if (this.selectedHead) this.selectHead();
-        else this.fetchAllMembers();
-      },
-      error: () => {
-        this.errorMessage = 'Failed to update payment';
-      }
-    });
-  }
-
-  getPaidCount(): number {
-    return this.familyMembers.filter(m => m.tax?.[this.selectedYear]).length;
-  }
-
-  getTotalTax(): number {
-    return this.familyMembers.reduce((sum, m) => sum + this.calculateTax(m.dob), 0);
-  }
-
-  getSummary() {
-    const all = this.selectedHead ? this.familyMembers : this.members;
-    let paidCount = 0;
-    let unpaidCount = 0;
-    let totalTax = 0;
-    let paidAmount = 0;
-    let unpaidAmount = 0;
-
-    for (let m of all) {
-      const tax = this.calculateTax(m.dob);
-      totalTax += tax;
-      if (this.selectedYear === 'all') {
-        const yearsPaid = Object.keys(m.tax || {});
-        if (yearsPaid.length > 0) paidCount++;
-        else unpaidCount++;
-      } else {
-        if (m.tax?.[this.selectedYear]) {
-          paidCount++;
-          paidAmount += tax;
-        } else {
-          unpaidCount++;
-          unpaidAmount += tax;
-        }
-      }
-    }
-
-    return {
-      totalMembers: all.length,
-      paidCount,
-      unpaidCount,
-      totalTax,
-      paidAmount,
-      unpaidAmount,
-      paidPlusUnpaidAmount: paidAmount + unpaidAmount,
-    };
-  }
-=======
     const age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
     return m < 0 || (m === 0 && today.getDate() < birthDate.getDate()) ? age - 1 : age;
@@ -466,5 +305,4 @@ availableYears: string[] = [];
     return taxByYear;
   }
   
->>>>>>> 4b4a4e2 (v1)
 }
