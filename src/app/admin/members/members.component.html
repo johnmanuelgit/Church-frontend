@@ -1,64 +1,98 @@
-<div class="container mx-auto p-5">
-  <h1 class="text-2xl font-bold mb-4 text-center">Members Details</h1>
+<div class="w-screen h-screen container mx-auto p-5">
+    <h1 class="text-2xl font-bold mb-4 text-center">Menmbers Details</h1>
+    <form (ngSubmit)="OnSubmit()" #Form="ngForm" class="space-x-2 space-y-2 mb-5">
+      <input type="text"
+      [(ngModel)]="user.name"
+      name="name"
+      placeholder="Full Name"
+      required
+      class="border p-2 w-1/4 rounded">
   
-  <form (ngSubmit)="onSubmit()" #form="ngForm" class="grid grid-cols-2 gap-4 mb-6">
-    <input type="text" [(ngModel)]="user.name" name="name" placeholder="Full Name" required class="border p-2 rounded">
-    <input type="date" [(ngModel)]="user.dob" name="dob" required class="border p-2 rounded">
-    <input type="text" [(ngModel)]="user.nativeaddress" name="nativeaddress" placeholder="Native Address" required class="border p-2 rounded">
-    <input type="text" [(ngModel)]="user.currentaddress" name="currentaddress" placeholder="Current Address" required class="border p-2 rounded">
-    <input type="number" [(ngModel)]="user.mobilenum" name="mobilenum" placeholder="Mobile Number" required class="border p-2 rounded">
-    <input type="text" [(ngModel)]="user.baptism" name="baptism" placeholder="Baptism Date & Place" required class="border p-2 rounded">
-    <input type="text" [(ngModel)]="user.solidifying" name="solidifying" placeholder="Solidifying Date & Place" required class="border p-2 rounded">
-    <input type="date" [(ngModel)]="user.marriagedate" name="marriagedate" class="border p-2 rounded">
-    
-    <select [(ngModel)]="user.familyHead" name="familyHead" (ngModelChange)="onFamilyHeadSelect($event)" class="border p-2 rounded">
-      <option value="">Select Family Head</option>
-      <option *ngFor="let head of getFamilyHeads()" [value]="head">{{ head }}</option>
-    </select>
+      <input type="date" 
+      [(ngModel)]="user.dob"
+      name="dob"
+      placeholder="DOB"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <input type="text"
+      [(ngModel)]="user.nativeaddress"
+      name="nativeaddress"
+      placeholder="Native Address"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <input type="text"
+      [(ngModel)]="user.currentaddress"
+      name="currentaddress"
+      placeholder="Current Address"
+      required
+      class="border p-2 w-1/4 rounded">
+  
+      <input type="number"
+      [(ngModel)]="user.mobilenum"
+      name="mobilenumber"
+      placeholder="Mobile Number"
+      required
+      class="border p-2 w-1/4 rounded">
+      <input type="text"
+      [(ngModel)]="user.baptism"
+      name="Baptism date & place"
+      placeholder="Enter Baptism Date & place"
+      required
+      class="border p-2 w-1/4 rounded">
+      <input type="text"
+      [(ngModel)]="user.solidifying"
+      name="Solidifying date & place"
+      placeholder="Enter Solidifying Date & place"
+      required
+      class="border p-2 w-1/4 rounded">
+      <label>Marriage Date :</label>
+      <input type="date"
+[(ngModel)]="user.marriagedate"
+name="marriagedate"
+placeholder="Marriage Date"
+class="border p-2 w-1/4 rounded">
 
-    <input type="text" [(ngModel)]="user.familyId" name="familyId" placeholder="Family ID" class="border p-2 rounded bg-gray-100" readonly>
 
-    <button type="submit" class="bg-blue-600 text-white p-2 rounded col-span-2">
-      {{ editIndex === -1 ? 'Add Member' : 'Update Member' }}
-    </button>
-  </form>
-
-  <table class="table-auto w-full border">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="px-4 py-2">#</th>
-        <th>Name</th><th>DOB</th><th>Native</th><th>Current</th><th>Mobile</th>
-        <th>Baptism</th><th>Solidifying</th><th>Marriage</th><th>Family ID</th><th>Family Head</th><th>Actions</th>
+  
+      <select [(ngModel)]="user.familyHead" name="familyHead" class="border p-2 w-1/4 rounded">
+        <option value="">Select Family Head</option>
+        <option *ngFor="let head of getFamilyHeads()" [value]="head">{{ head }}</option>
+      </select>
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-1/4">{{editIndex === -1? 'Add':'Update'}}</button>
+    </form>
+  <hr>
+    <thead class="table-auto w-full mt-6 border">
+      <tr class="bg-gray-100 text-left">
+        <th class="px-4 py-2">ID</th>
+        <th class="px-4 py-2">Name</th>
+        <th class="px-4 py-2">Date Of Birth</th>
+        <th class="px-4 py-2">Native Address</th>
+        <th class="px-4 py-2">Current Address</th>
+        <th class="px-4 py-2">Mobile Number</th>
+        <th class="px-4 py-2">Baptism <br>Date&Place</th>
+        <th class="px-4 py-2">Solidifying<br> Date&Place</th>
+        <th class="px-4 py-2">Marriage Date</th>
+        <th class="px-4 py-2">Edit&Delete</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let m of members; let i = index" class="border-t text-center">
-        <td class="px-2 py-1">{{ i + 1 }}</td>
-        <td>{{ m.name }}</td>
-        <td>{{ m.dob }}</td>
-        <td>{{ m.nativeaddress }}</td>
-        <td>{{ m.currentaddress }}</td>
-        <td>{{ m.mobilenum }}</td>
-        <td>{{ m.baptism }}</td>
-        <td>{{ m.solidifying }}</td>
-        <td>{{ m.marriagedate }}</td>
-        <td>{{ m.familyId }}</td>
-        <td [class.text-green-600]="m.name === m.familyHead">{{ m.familyHead }}</td>
-        <td>
-          <button (click)="edit(i)" class="bg-yellow-400 px-2 py-1 rounded">Edit</button>
-          <button (click)="delete(i)" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+      <tr *ngFor="let m of members;let i=index" class="text-center border-t">
+        <td class="px-4 py-2">{{m.id}}</td>
+        <td class="px-4 py-2">{{m.name}}</td>
+        <td class="px-4 py-2">{{m.dob}}</td>
+        <td class="px-4 py-2">{{m.nativeaddress}}</td>
+        <td class="px-4 py-2">{{m.currentaddress}}</td>
+        <td class="px-4 py-2">{{m.mobilenum}}</td>
+        <td class="px-4 py-2">{{m.baptism}}</td>
+        <td class="px-4 py-2">{{m.solidifying}}</td>
+        <td class="px-4 py-2">{{m.marriagedate}}</td>
+        <td class="px-4 py-2">{{ m.familyHead }}</td>
+        <td class="px-4 py-2 space-x-2">
+          <button (click)="Edit(i)" class="bg-yellow-400 px-2 py-1 rounded">Edit</button>
+          <button (click)="Delete(i)" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
         </td>
       </tr>
     </tbody>
-  </table>
-</div>
-<!-- <div *ngFor="let member of members; let i = index">
-  <div *ngIf="i === 0 || member.familyId !== members[i - 1].familyId">
-    <h3>Family ID: {{ member.familyId }}</h3>
   </div>
-
-  <div [ngClass]="{ 'head': member.name === member.familyHead }">
-    {{ member.name }} - {{ member.name === member.familyHead ? 'Head' : 'Member' }}
-  </div>
-</div> -->
-
