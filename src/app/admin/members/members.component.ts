@@ -5,34 +5,40 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-members',
-  standalone:true,
-  imports: [CommonModule,FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './members.component.html',
-  styleUrl: './members.component.css'
+  styleUrls: ['./members.component.css']
 })
 export class MembersComponent implements OnInit {
-  user = {
-    name: '',
-    dob: '',
-    nativeaddress: '',
-    currentaddress: '',
-    mobilenum: '',
-    baptism: '',
-    solidifying: '',
-    familyHead: '', 
-     marriagedate: ''
-  };
+  user = this.getEmptyUser();
   members: any[] = [];
   editIndex = -1;
 
-
-  constructor(private memberservice:MembersService){}
+  constructor(private memberservice: MembersService) {}
 
   ngOnInit(): void {
+    this.loadMembers();
+  }
+
+  loadMembers() {
     this.memberservice.getMembers().subscribe({
-      next: (data: any) => {
-        this.members = data;
-        console.log('Members loaded from backend:', this.members);
+      next: (data: any[]) => {
+        // Group by familyId
+        const grouped: Record<string, any[]> = {};
+  
+        for (const member of data) {
+          const fid = member.familyId || 'Unknown';
+          if (!grouped[fid]) grouped[fid] = [];
+          grouped[fid].push(member);
+        }
+  
+        // Sort inside each group: head first, then others
+        this.members = Object.values(grouped).flatMap(group => {
+          const head = group.find(m => m.name === m.familyHead);
+          const others = group.filter(m => m.name !== m.familyHead);
+          return head ? [head, ...others] : group;
+        });
       },
       error: (err) => {
         console.error('Error loading members:', err);
@@ -41,30 +47,22 @@ export class MembersComponent implements OnInit {
   }
   
 
-  OnSubmit() {
+  onSubmit() {
     if (this.editIndex === -1) {
-      const id = this.members.length + 1;
-      const newMember = { id, ...this.user, taxPaid: false };
-  
-      this.memberservice.addMember(newMember).subscribe({
+      this.memberservice.addMember({ ...this.user }).subscribe({
         next: (response) => {
-          console.log('Member added:', response);
-          this.members.push(newMember);
+          this.members.push(response);
           this.resetForm();
         },
         error: (err) => {
           console.error('Failed to add member:', err);
         }
       });
-    }  else {
-      // UPDATE EXISTING MEMBER
-      const updatedMember = { ...this.user };
-      const id = this.members[this.editIndex].id;
-  
-      this.memberservice.updateMember(id, updatedMember).subscribe({
+    } else {
+      const id = this.members[this.editIndex]._id;
+      this.memberservice.updateMember(id, this.user).subscribe({
         next: (response) => {
-          console.log('Member updated:', response);
-          this.members[this.editIndex] = updatedMember;
+          this.members[this.editIndex] = response;
           this.editIndex = -1;
           this.resetForm();
         },
@@ -74,9 +72,42 @@ export class MembersComponent implements OnInit {
       });
     }
   }
-  
+
+  edit(i: number) {
+    this.user = { ...this.members[i] };
+    this.editIndex = i;
+  }
+
+  delete(i: number) {
+    const id = this.members[i]._id;
+    this.memberservice.deleteMember(id).subscribe({
+      next: () => {
+        this.members.splice(i, 1);
+      },
+      error: (err) => {
+        console.error('Failed to delete member:', err);
+      }
+    });
+  }
+
+  onFamilyHeadSelect(headName: string) {
+    const head = this.members.find(m => m.name === headName && m.name === m.familyHead);
+    this.user.familyId = head ? head.familyId : '';
+  }
+
+  getFamilyHeads(): string[] {
+    return this.members
+      .filter(m => m.name === m.familyHead)
+      .map(m => m.name);
+  }
+
   resetForm() {
-    this.user = {
+    this.user = this.getEmptyUser();
+    this.editIndex = -1;
+  }
+
+  private getEmptyUser() {
+    return {
       name: '',
       dob: '',
       nativeaddress: '',
@@ -85,31 +116,8 @@ export class MembersComponent implements OnInit {
       baptism: '',
       solidifying: '',
       familyHead: '',
-       marriagedate: ''
+      marriagedate: '',
+      familyId: ''
     };
-  }
-  
-
-  Edit(i: number) {
-    this.user = { ...this.members[i] };
-    this.editIndex = i;
-  }
-
-  Delete(i: number) {
-    const id = this.members[i].id; // Get the backend ID of the member
-
-    this.memberservice.deleteMember(id).subscribe({
-      next: () => {
-        console.log('Member deleted from backend');
-        this.members.splice(i, 1); // Remove from local array only after successful delete
-      },
-      error: (err) => {
-        console.error('Failed to delete member:', err);
-      }
-    });
-  }
-
-  getFamilyHeads(): string[] {
-    return [...new Set(this.members.map(m => m.name))]; // All members can be heads
   }
 }

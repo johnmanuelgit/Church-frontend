@@ -230,7 +230,7 @@ availableYears: string[] = [];
   onYearChange(): void {
     console.log("Year changed to:", this.selectedYear);
     this.selectHead();
-    this.getFamilyHeads();
+    // this.getFamilyHeads();
   }
   
   
