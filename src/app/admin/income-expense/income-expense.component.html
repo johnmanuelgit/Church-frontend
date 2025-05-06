@@ -10,9 +10,9 @@
       <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
     </select>
   </div>
-
+<div class="flex gap-8">
   <!-- ADD/EDIT INCOME FORM -->
-  <div class="mb-8">
+  <div class="mb-8 w-1/2 p-5">
     <h3 class="text-lg font-bold mb-2">{{ isEditingIncome ? 'Edit' : 'Add' }} Income</h3>
     <form (ngSubmit)="isEditingIncome ? updateIncome() : addIncome()" class="grid gap-3 grid-cols-2">
       <input type="text" placeholder="Donor Name" [(ngModel)]="newIncome.donorName" name="donorName" class="p-2 border rounded" required>
@@ -43,11 +43,13 @@
       </div>
     </form>
   </div>
+  <div class="border-l border-black h-auto "></div>
+
 
   <!-- ADD/EDIT EXPENSE FORM -->
-  <div class="mb-8">
+  <div class="mb-8 w-1/2 p-5">
     <h3 class="text-lg font-bold mb-2">{{ isEditingExpense ? 'Edit' : 'Add' }} Expense</h3>
-    <form (ngSubmit)="isEditingExpense ? updateExpense() : addExpense()" class="grid gap-3 grid-cols-2" enctype="multipart/form-data">
+    <form #editExpenseForm (ngSubmit)="isEditingExpense ? updateExpense() : addExpense()" class="grid gap-3 grid-cols-2" enctype="multipart/form-data">
       <input type="text" placeholder="Reason" [(ngModel)]="newExpense.reason" name="reason" class="p-2 border rounded" required>
       <input type="number" placeholder="Amount" [(ngModel)]="newExpense.amount" name="amount" class="p-2 border rounded" required>
       <input type="text" placeholder="Responsible Person" [(ngModel)]="newExpense.responsiblePerson" name="responsiblePerson" class="p-2 border rounded" required>
@@ -70,9 +72,10 @@
       </div>
     </form>
   </div>
-
+</div>
+<hr class="border-t text-black my-4" />
   <!-- Income List -->
-  <div class="mb-8">
+  <div class="mb-8 p-5">
     <h3 class="text-xl font-semibold mb-3">Income Records</h3>
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white border">
@@ -86,7 +89,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let income of incomeList" class="border-b hover:bg-gray-50">
+          <tr *ngFor="let income of incomeList" class="border-b hover:bg-gray-50" [attr.id]="'income-' + (income.id || income._id)">
             <td class="py-2 px-3 border">{{ income.date | date:'dd-MM-yyyy' }}</td>
             <td class="py-2 px-3 border">{{ income.donorName }}</td>
             <td class="py-2 px-3 border">{{ income.donationType }}</td>
@@ -95,9 +98,10 @@
               <button (click)="editIncome(income)" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
                 Edit
               </button>
-              <button (click)="deleteIncome(getIncomeId(income))">Delete</button>
+              <button (click)="deleteIncome(income.id  || income._id || '')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+                Delete
+              </button>
             </td>
-            
           </tr>
           <tr *ngIf="incomeList.length === 0">
             <td colspan="5" class="py-4 text-center text-gray-500">No income records found</td>
@@ -105,10 +109,12 @@
         </tbody>
       </table>
     </div>
+    <h3 class="text-xl font-semibold mt-2">Summary for {{ selectedYear }}</h3>
+    <li class="mt-2"><strong>Total Income:</strong> ₹{{ getSummary().totalIncome }}</li>
   </div>
-
+  <hr class="border-t text-red-500 font-bold" />
   <!-- Expense List -->
-  <div class="mb-8">
+  <div class="mb-8 p-5">
     <h3 class="text-xl font-semibold mb-3">Expense Records</h3>
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white border">
@@ -124,7 +130,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let expense of expenseList" class="border-b hover:bg-gray-50">
+          <tr *ngFor="let expense of expenseList" class="border-b hover:bg-gray-50" [attr.id]="'expense-' + (expense.id || expense._id)">
             <td class="py-2 px-3 border">{{ expense.date | date:'dd-MM-yyyy' }}</td>
             <td class="py-2 px-3 border">{{ expense.reason }}</td>
             <td class="py-2 px-3 border">{{ expense.responsiblePerson }}</td>
@@ -140,8 +146,9 @@
               <button (click)="editExpense(expense)" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
                 Edit
               </button>
-              <button (click)="deleteExpense(getExpenseId(expense))">Delete</button>
-              
+              <button (click)="deleteExpense(expense.id || expense._id || '')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+                Delete
+              </button>
             </td>
           </tr>
           <tr *ngIf="expenseList.length === 0">
@@ -150,14 +157,16 @@
         </tbody>
       </table>
     </div>
+    <h3 class="text-xl font-semibold mt-2 ">Summary for {{ selectedYear }}</h3>
+    <li class="mt-2"><strong>Total Expense:</strong> ₹{{ getSummary().totalExpense }}</li>
   </div>
-
+<hr class="border-t text-black my-4" />
   <!-- Summary Display -->
-  <div class="mt-4">
+  <div class="mt-4 p-5">
     <h3 class="text-xl font-semibold mb-3">Summary for {{ selectedYear }}</h3>
     <ul class="list-disc pl-5 space-y-1">
-      <li><strong>Total Tax Collected:</strong> ₹{{ totalTaxFromLCF }}</li>
       <li><strong>Total Income (without tax):</strong> ₹{{ getSummary().totalIncome }}</li>
+      <li><strong>Total Tax Collected:</strong> ₹{{ totalTaxFromLCF }}</li>
       <li><strong>Total Income (with tax):</strong> ₹{{ getSummary().totalWithTax }}</li>
       <li><strong>Total Expense:</strong> ₹{{ getSummary().totalExpense }}</li>
       <li><strong>Balance:</strong> ₹{{ getSummary().balance }}</li>

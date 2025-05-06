@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaxSummaryService } from '../../services/admin/tax-summary/tax-summary.service';
+import { ViewChild, ElementRef } from '@angular/core';
+
+
 
 interface Income {
   id?: string;
@@ -34,8 +37,9 @@ interface Expense {
   templateUrl: './income-expense.component.html',
   styleUrl: './income-expense.component.css'
 })
-export class IncomeExpenseComponent implements OnInit {
 
+export class IncomeExpenseComponent implements OnInit {
+  @ViewChild('editExpenseForm') editExpenseFormRef!: ElementRef;
   donationTypes = ['Offering', 'Donation', 'Other'];
   selectedDonation = '';
   customDonation = '';
@@ -53,10 +57,9 @@ export class IncomeExpenseComponent implements OnInit {
   // For edit functionality
   isEditingIncome: boolean = false;
   isEditingExpense: boolean = false;
-  editingIncomeId: string | null = null;
-  editingExpenseId: string | null = null;
-  income: { id?: string, [key: string]: any } = {};
-
+  editingIncomeId: any | null = null;
+  editingExpenseId: any | null = null;
+  
 
   newIncome: Income = {
     donorName: '',
@@ -122,7 +125,7 @@ export class IncomeExpenseComponent implements OnInit {
       payload.donationType = payload.otherDonation;
     }
     
-    this.http.post(`${this.apiBaseUrl}/incomes`, payload)
+    this.http.post(`${this.apiBaseUrl}/in/incomes`, payload)
       .subscribe({
         next: () => {
           this.loadIncomes();
@@ -137,7 +140,7 @@ export class IncomeExpenseComponent implements OnInit {
   
   editIncome(income: Income): void {
     this.isEditingIncome = true;
-    this.editingIncomeId = income.id || income._id || '';
+    this.editingIncomeId = income.id || income._id;
     
     // Clone the income object to avoid direct reference
     this.newIncome = {
@@ -153,7 +156,12 @@ export class IncomeExpenseComponent implements OnInit {
       this.newIncome.donationType = 'Other';
       this.newIncome.otherDonation = income.donationType;
     }
+      // 🔽 Scroll to the form
+      setTimeout(() => {
+        this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      }, 100); // Wait for DOM to render
   }
+  
   updateIncome(): void {
     if (!this.editingIncomeId) {
       console.error('No income ID to update');
@@ -170,11 +178,15 @@ export class IncomeExpenseComponent implements OnInit {
       payload.donationType = payload.otherDonation;
     }
     
-    this.http.put(`${this.apiBaseUrl}/incomes/${this.editingIncomeId}`, payload)
+    this.http.put(`${this.apiBaseUrl}/in/incomes/${this.editingIncomeId}`, payload)
       .subscribe({
         next: () => {
           this.loadIncomes();
           this.cancelIncomeEdit();
+            // 🔽 Scroll to the form
+    setTimeout(() => {
+      this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }, 100); // Wait for DOM to render
         },
         error: (err) => {
           console.error('Error updating income:', err);
@@ -184,13 +196,8 @@ export class IncomeExpenseComponent implements OnInit {
   }
   
   deleteIncome(id: string): void {
-    if (!id) {
-      alert('Invalid income ID');
-      return;
-    }
-  
     if (confirm('Are you sure you want to delete this income record?')) {
-      this.http.delete(`${this.apiBaseUrl}/incomes/${id}`)
+      this.http.delete(`${this.apiBaseUrl}/in/incomes/${id}`)
         .subscribe({
           next: () => {
             this.loadIncomes();
@@ -247,11 +254,12 @@ export class IncomeExpenseComponent implements OnInit {
       this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
     }
     
-    this.http.post(`${this.apiBaseUrl}/expenses`, this.formData)
+    this.http.post(`${this.apiBaseUrl}/out/expenses`, this.formData)
       .subscribe({
         next: () => {
           this.loadExpenses();
           this.resetExpenseForm();
+
         },
         error: (err) => {
           console.error('Error adding expense:', err);
@@ -262,9 +270,9 @@ export class IncomeExpenseComponent implements OnInit {
   
   editExpense(expense: Expense): void {
     this.isEditingExpense = true;
-    this.editingExpenseId = expense.id || expense._id || '';
-    
-    // Clone the expense object to avoid direct reference
+    this.editingExpenseId = expense.id || expense._id;
+  
+    // Clone the expense object
     this.newExpense = {
       reason: expense.reason,
       amount: expense.amount,
@@ -274,14 +282,14 @@ export class IncomeExpenseComponent implements OnInit {
       year: expense.year,
       billImage: expense.billImage
     };
-    
-    // Reset form data but keep reference to existing bill image
+  
     this.formData = new FormData();
-    if (expense.billImage) {
-      this.previewUrl = expense.billImage;
-    } else {
-      this.previewUrl = null;
-    }
+    this.previewUrl = expense.billImage ?? null;
+  
+    // 🔽 Scroll to the form
+    setTimeout(() => {
+      this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }, 100); // Wait for DOM to render
   }
   
   updateExpense(): void {
@@ -289,26 +297,31 @@ export class IncomeExpenseComponent implements OnInit {
       console.error('No expense ID to update');
       return;
     }
-    
-    // Create a new FormData object
+  
     this.formData = new FormData();
-    
-    // Add year to the expense
     const expenseWithYear = {
       ...this.newExpense,
       year: Number(this.selectedYear)
     };
-    
-    // Append all expense data to form data
+  
     for (const key in expenseWithYear) {
       this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
     }
-    
-    this.http.put(`${this.apiBaseUrl}/expenses/${this.editingExpenseId}`, this.formData)
+  
+    this.http.put(`${this.apiBaseUrl}/out/expenses/${this.editingExpenseId}`, this.formData)
       .subscribe({
         next: () => {
+          const updatedId = this.editingExpenseId;
           this.loadExpenses();
           this.cancelExpenseEdit();
+  
+          // 🔽 After a short delay, scroll to updated row
+          setTimeout(() => {
+            const el = document.getElementById(`expense-${updatedId}`);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 500); // Adjust timing if needed
         },
         error: (err) => {
           console.error('Error updating expense:', err);
@@ -317,14 +330,10 @@ export class IncomeExpenseComponent implements OnInit {
       });
   }
   
-  deleteExpense(id: string): void {
-    if (!id) {
-      alert('Invalid expense ID');
-      return;
-    }
   
+  deleteExpense(id: string): void {
     if (confirm('Are you sure you want to delete this expense record?')) {
-      this.http.delete(`${this.apiBaseUrl}/expenses/${id}`)
+      this.http.delete(`${this.apiBaseUrl}/out/expenses/${id}`)
         .subscribe({
           next: () => {
             this.loadExpenses();
@@ -342,13 +351,6 @@ export class IncomeExpenseComponent implements OnInit {
     this.editingExpenseId = null;
     this.resetExpenseForm();
   }
-  getIncomeId(income: Income): string {
-    return income.id ?? income._id ?? '';
-  }
-  
-  getExpenseId(expense: Expense): string {
-    return expense.id ?? expense._id ?? '';
-  }
   
   resetExpenseForm(): void {
     this.newExpense = {
@@ -365,13 +367,12 @@ export class IncomeExpenseComponent implements OnInit {
 
   // DATA LOADING FUNCTIONS
   loadIncomes(): void {
-    let url = `${this.apiBaseUrl}/incomes`;
+    let url = `${this.apiBaseUrl}/in/incomes`;
     
-    // Add year filter if not "All"
     if (this.selectedYear !== 'All') {
       url += `?year=${this.selectedYear}`;
     }
-    
+  
     this.http.get<Income[]>(url)
       .subscribe({
         next: (data) => {
@@ -382,9 +383,10 @@ export class IncomeExpenseComponent implements OnInit {
         }
       });
   }
+  
 
   loadExpenses(): void {
-    let url = `${this.apiBaseUrl}/expenses`;
+    let url = `${this.apiBaseUrl}/out/expenses`;
     
     // Add year filter if not "All"
     if (this.selectedYear !== 'All') {
@@ -434,7 +436,10 @@ export class IncomeExpenseComponent implements OnInit {
     const totalExpense = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
     const balance = totalWithTax - totalExpense;
   
-    return { totalIncome, totalWithTax, totalExpense, balance };
+    return { totalIncome, totalWithTax, totalExpense, balance,totalTaxFromLCF: taxCollected,
+
+     };
+    
   }
   
   // Export data to CSV
@@ -461,7 +466,7 @@ export class IncomeExpenseComponent implements OnInit {
     csvContent += expenseData.join('\n') + "\n\n";
     
     csvContent += "Summary\n";
-    csvContent += `Total Tax Collected,₹${this.taxForSelectedYear}\n`;
+    csvContent += `Total Tax Collected,₹${summary.totalTaxFromLCF}\n`;
     csvContent += `Total Income (without tax),₹${summary.totalIncome}\n`;
     csvContent += `Total Income (with tax),₹${summary.totalWithTax}\n`;
     csvContent += `Total Expense,₹${summary.totalExpense}\n`;
@@ -482,7 +487,7 @@ export class IncomeExpenseComponent implements OnInit {
   
   // Filter functions
   filterByDonationType(type: string): void {
-    let url = `${this.apiBaseUrl}/incomes?donationType=${type}`;
+    let url = `${this.apiBaseUrl}/in/incomes?donationType=${type}`;
     
     if (this.selectedYear !== 'All') {
       url += `&year=${this.selectedYear}`;
@@ -505,7 +510,7 @@ export class IncomeExpenseComponent implements OnInit {
       return;
     }
     
-    let url = `${this.apiBaseUrl}/incomes/search?term=${searchTerm}`;
+    let url = `${this.apiBaseUrl}/in/incomes/search?term=${searchTerm}`;
     
     if (this.selectedYear !== 'All') {
       url += `&year=${this.selectedYear}`;
@@ -528,7 +533,7 @@ export class IncomeExpenseComponent implements OnInit {
       return;
     }
     
-    let url = `${this.apiBaseUrl}/expenses/search?term=${searchTerm}`;
+    let url = `${this.apiBaseUrl}/out/expenses/search?term=${searchTerm}`;
     
     if (this.selectedYear !== 'All') {
       url += `&year=${this.selectedYear}`;
