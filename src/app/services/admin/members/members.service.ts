@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 interface Member {
   id: number | null;
   memberNumber: number | null;
-  parentId: string | null;
   name: string;
   dateOfBirth: Date | null;
   dateOfBaptism: Date | null;
@@ -14,14 +13,15 @@ interface Member {
   permanentAddress: string;
   presentAddress: string;
   mobileNumber: string;
-  formattedParentId?: string;
+  familyId: string | null;
+  isHeadOfFamily: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class MembersService {
-  private apiUrl = 'https://stthomoschurch-backend.onrender.com/api/members';
+  private apiUrl = 'http://localhost:3000/api/members';
 
   constructor(private http: HttpClient) { }
 
@@ -38,7 +38,6 @@ export class MembersService {
   }
 
   updateMember(member: Member): Observable<Member> {
-    // Ensure we're using the correct ID for the PUT request
     const id = member.id;
     return this.http.put<Member>(`${this.apiUrl}/${id}`, member);
   }
@@ -47,11 +46,15 @@ export class MembersService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  getFamilyMembers(headId: string): Observable<Member[]> {
-    return this.http.get<Member[]>(`${this.apiUrl}/family/${headId}`);
+  getFamilyMembers(familyId: string): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiUrl}/family/${familyId}`);
   }
 
   getFamilyHeads(): Observable<Member[]> {
     return this.http.get<Member[]>(`${this.apiUrl}/heads`);
+  }
+
+  searchByFamilyId(familyId: string): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiUrl}/search/${familyId}`);
   }
 }

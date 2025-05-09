@@ -1,190 +1,224 @@
 <div class="container mx-auto p-5">
   <h1 class="text-2xl font-bold mb-4 text-center">Member Details</h1>
   
-  <!-- Form for adding/editing members -->
-  <form (ngSubmit)="onSubmit()" #memberForm="ngForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
-    <div *ngIf="editMode" class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Member ID:</label>
-      <input type="text" [value]="member.id" disabled class="border p-2 w-full rounded bg-gray-100">
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Full Name:</label>
-      <input type="text"
-        [(ngModel)]="member.name"
-        name="name"
-        placeholder="Full Name"
-        required
-        class="border p-2 w-full rounded">
-      <div *ngIf="submitted && memberForm.controls['name']?.errors" class="text-red-500 text-xs mt-1">
-        Name is required
-      </div>
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Date of Birth:</label>
-      <input type="date"
-        [(ngModel)]="member.dateOfBirth"
-        name="dateOfBirth"
-        required
-        class="border p-2 w-full rounded">
-      <div *ngIf="submitted && memberForm.controls['dateOfBirth']?.errors" class="text-red-500 text-xs mt-1">
-        Date of birth is required
-      </div>
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Date of Baptism:</label>
-      <input type="date"
-        [(ngModel)]="member.dateOfBaptism"
-        name="dateOfBaptism"
-        class="border p-2 w-full rounded">
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Date of Confirmation:</label>
-      <input type="date"
-        [(ngModel)]="member.dateOfConfirmation"
-        name="dateOfConfirmation"
-        class="border p-2 w-full rounded">
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Date of Marriage:</label>
-      <input type="date"
-        [(ngModel)]="member.dateOfMarriage"
-        name="dateOfMarriage"
-        class="border p-2 w-full rounded">
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Permanent Address:</label>
-      <textarea
-        [(ngModel)]="member.permanentAddress"
-        name="permanentAddress"
-        placeholder="Permanent Address"
-        required
-        class="border p-2 w-full rounded"></textarea>
-      <div *ngIf="submitted && memberForm.controls['permanentAddress']?.errors" class="text-red-500 text-xs mt-1">
-        Permanent address is required
-      </div>
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Present Address:</label>
-      <textarea
-        [(ngModel)]="member.presentAddress"
-        name="presentAddress"
-        placeholder="Present Address"
-        required
-        class="border p-2 w-full rounded"></textarea>
-      <div *ngIf="submitted && memberForm.controls['presentAddress']?.errors" class="text-red-500 text-xs mt-1">
-        Present address is required
-      </div>
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Mobile Number:</label>
-      <input type="text"
-        [(ngModel)]="member.mobileNumber"
-        name="mobileNumber"
-        placeholder="Mobile Number"
-        required
-        pattern="[0-9]+"
-        class="border p-2 w-full rounded">
-      <div *ngIf="submitted && memberForm.controls['mobileNumber']?.errors" class="text-red-500 text-xs mt-1">
-        Valid mobile number is required
-      </div>
-    </div>
-    
-    <div class="mb-2">
-      <label class="block text-sm font-semibold mb-1">Family Head:</label>
-      <select [(ngModel)]="member.parentId" (change)="onFamilyHeadChange()" name="parentId" class="border p-2 w-full rounded">
-        <option [ngValue]="null">-- Head of Family --</option>
-        <option *ngFor="let head of familyHeads" [ngValue]="head.formattedParentId || head.parentId">
-          {{ head.name }}
-        </option>
-      </select>
-    </div>
+<form (ngSubmit)="onSubmit()" #memberForm="ngForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+  <div *ngIf="editMode" class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Member ID:</label>
+    <input type="text" [value]="member.id" disabled class="border p-2 w-full rounded bg-gray-100">
+  </div>
 
-    <!-- Display generated family ID -->
-    <div class="mb-2" *ngIf="selectedFamilyHeadFormattedId">
-      <label class="block text-sm font-semibold mb-1">Family ID:</label>
-      <div class="border p-2 w-full rounded bg-gray-100">
-        {{ selectedFamilyHeadFormattedId }}
-      </div>
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Full Name:</label>
+    <input type="text"
+      [(ngModel)]="member.name"
+      name="name"
+      placeholder="Full Name"
+      required
+      class="border p-2 w-full rounded">
+    <div *ngIf="submitted && memberForm.controls['name']?.errors" class="text-red-500 text-xs mt-1">
+      Name is required
     </div>
-    
-    <div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-start mt-4">
-      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">
-        {{ editMode ? 'Update' : 'Add' }} Member
-      </button>
-      <button type="button" *ngIf="editMode" (click)="cancelEdit()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded ml-4">
-        Cancel
-      </button>
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Date of Birth:</label>
+    <input type="date"
+      [(ngModel)]="member.dateOfBirth"
+      name="dateOfBirth"
+      required
+      class="border p-2 w-full rounded">
+    <div *ngIf="submitted && memberForm.controls['dateOfBirth']?.errors" class="text-red-500 text-xs mt-1">
+      Date of birth is required
     </div>
-  </form>
-  
-  <!-- Search and filter controls -->
-  <div class="flex flex-col md:flex-row gap-4 mb-4">
-    <div class="flex-1">
-      <input type="text" 
-        [(ngModel)]="searchTerm" 
-        (input)="filterMembers()"
-        placeholder="Search by name or mobile number" 
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Date of Baptism:</label>
+    <input type="date"
+      [(ngModel)]="member.dateOfBaptism"
+      name="dateOfBaptism"
+      class="border p-2 w-full rounded">
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Date of Confirmation:</label>
+    <input type="date"
+      [(ngModel)]="member.dateOfConfirmation"
+      name="dateOfConfirmation"
+      class="border p-2 w-full rounded">
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Date of Marriage:</label>
+    <input type="date"
+      [(ngModel)]="member.dateOfMarriage"
+      name="dateOfMarriage"
+      class="border p-2 w-full rounded">
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Permanent Address:</label>
+    <textarea
+      [(ngModel)]="member.permanentAddress"
+      name="permanentAddress"
+      placeholder="Permanent Address"
+      required
+      class="border p-2 w-full rounded"></textarea>
+    <div *ngIf="submitted && memberForm.controls['permanentAddress']?.errors" class="text-red-500 text-xs mt-1">
+      Permanent address is required
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Present Address:</label>
+    <textarea
+      [(ngModel)]="member.presentAddress"
+      name="presentAddress"
+      placeholder="Present Address"
+      required
+      class="border p-2 w-full rounded"></textarea>
+    <div *ngIf="submitted && memberForm.controls['presentAddress']?.errors" class="text-red-500 text-xs mt-1">
+      Present address is required
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Mobile Number:</label>
+    <input type="text"
+      [(ngModel)]="member.mobileNumber"
+      name="mobileNumber"
+      placeholder="Mobile Number"
+      required
+      pattern="[0-9]+"
+      (input)="updateFamilyId()"
+      class="border p-2 w-full rounded">
+    <div *ngIf="submitted && memberForm.controls['mobileNumber']?.errors" class="text-red-500 text-xs mt-1">
+      Valid mobile number is required
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <label class="block text-sm font-semibold mb-1">Is Head of Family:</label>
+    <div class="mt-1">
+      <label class="inline-flex items-center mr-4">
+        <input type="radio" [(ngModel)]="member.isHeadOfFamily" [value]="true" name="isHeadOfFamily" class="mr-1">
+        Yes
+      </label>
+      <label class="inline-flex items-center">
+        <input type="radio" [(ngModel)]="member.isHeadOfFamily" [value]="false" name="isHeadOfFamily" class="mr-1">
+        No
+      </label>
+    </div>
+  </div>
+
+  <div class="mb-2" *ngIf="!member.isHeadOfFamily">
+    <label class="block text-sm font-semibold mb-1">Family ID:</label>
+    <select [(ngModel)]="member.familyId" name="familyId" class="border p-2 w-full rounded">
+      <option [ngValue]="null">-- Select Family ID --</option>
+      <option *ngFor="let head of familyHeads" [ngValue]="head.familyId">
+        {{ head.familyId }} ({{ head.name }})
+      </option>
+    </select>
+  </div>
+
+  <div class="mb-2" *ngIf="member.isHeadOfFamily">
+    <label class="block text-sm font-semibold mb-1">Family ID:</label>
+    <div class="flex gap-2">
+      <input type="text"
+        [(ngModel)]="member.familyId"
+        name="familyId"
+        placeholder="Auto-generated"
         class="border p-2 w-full rounded">
-    </div>
-    <div>
-      <button (click)="exportToExcel()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center">
-        <span>Export to Excel</span>
+      <button type="button" (click)="generateFamilyId()" class="bg-gray-200 hover:bg-gray-300 px-3 rounded">
+        Generate
       </button>
     </div>
+    <div class="text-xs text-gray-500 mt-1">
+      Auto-generates as first 3 letters of name + last 3 digits of mobile
+    </div>
   </div>
-  
-  <!-- Members Table -->
-  <div class="overflow-x-auto">
-    <table class="table-auto w-full mt-6 border">
-      <thead>
-        <tr class="bg-gray-100 text-left">
-          <th class="px-4 py-2">ID</th>
-          <th class="px-4 py-2">Member #</th>
-          <th class="px-4 py-2 cursor-pointer" (click)="sortBy('name')">
-            Name <span *ngIf="sortColumn === 'name'">[{{ sortDirection === 'asc' ? '↑' : '↓' }}]</span>
-          </th>
-          <th class="px-4 py-2">Date of Birth</th>
-          <th class="px-4 py-2">Mobile Number</th>
-          <th class="px-4 py-2">Family Head</th>
-          <th class="px-4 py-2">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let m of filteredMembers" class="border-t hover:bg-gray-50">
-          <td class="px-4 py-2">{{m.id}}</td>
-          <td class="px-4 py-2">{{m.memberNumber}}</td>
-          <td class="px-4 py-2">{{m.name}}</td>
-          <td class="px-4 py-2">{{m.dateOfBirth | date:'dd/MM/yyyy'}}</td>
-          <td class="px-4 py-2">{{m.mobileNumber}}</td>
-          <td class="px-4 py-2">{{getFamilyHeadName(m.parentId)}}</td>
-          <td class="px-4 py-2 space-x-2">
-            <button (click)="viewDetails(m)" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">
-              View
-            </button>
-            <button (click)="editMember(m)" class="bg-yellow-400 hover:bg-yellow-500 px-2 py-1 rounded">
-              Edit
-            </button>
-            <button (click)="deleteMember(m.id)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">
-              Delete
-            </button>
-          </td>
-        </tr>
-        <tr *ngIf="filteredMembers.length === 0">
-          <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-            No members found
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+  <div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-start mt-4">
+    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">
+      {{ editMode ? 'Update' : 'Add' }} Member
+    </button>
+    <button type="button" *ngIf="editMode" (click)="cancelEdit()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded ml-4">
+      Cancel
+    </button>
   </div>
+</form>
+
+<!-- Search and filter controls with Family ID search -->
+<div class="flex flex-col md:flex-row gap-4 mb-4">
+  <div class="flex-1 flex gap-2">
+    <input type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="filterMembers()"
+      placeholder="Search by name or mobile number" 
+      class="border p-2 w-full rounded">
+  </div>
+  <div class="flex gap-2">
+    <input type="text" 
+      [(ngModel)]="familyIdSearch" 
+      placeholder="Search by Family ID" 
+      class="border p-2 w-full rounded">
+    <button (click)="searchByFamilyId()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+      Search
+    </button>
+  </div>
+  <div>
+    <button (click)="exportToExcel()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center">
+      <span>Export to Excel</span>
+    </button>
+  </div>
+</div>
+
+<!-- Updated Members Table -->
+<div class="overflow-x-auto">
+  <table class="table-auto w-full mt-6 border">
+    <thead>
+      <tr class="bg-gray-100 text-left">
+        <th class="px-4 py-2">ID</th>
+        <th class="px-4 py-2">Member #</th>
+        <th class="px-4 py-2 cursor-pointer" (click)="sortBy('name')">
+          Name <span *ngIf="sortColumn === 'name'">[{{ sortDirection === 'asc' ? '↑' : '↓' }}]</span>
+        </th>
+        <th class="px-4 py-2">Date of Birth</th>
+        <th class="px-4 py-2">Mobile Number</th>
+        <th class="px-4 py-2">Family ID</th>
+        <th class="px-4 py-2">Family Head</th>
+        <th class="px-4 py-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of filteredMembers" class="border-t hover:bg-gray-50">
+        <td class="px-4 py-2">{{m.id}}</td>
+        <td class="px-4 py-2">{{m.memberNumber}}</td>
+        <td class="px-4 py-2">{{m.name}}</td>
+        <td class="px-4 py-2">{{m.dateOfBirth | date:'dd/MM/yyyy'}}</td>
+        <td class="px-4 py-2">{{m.mobileNumber}}</td>
+        <td class="px-4 py-2">{{m.familyId}}</td>
+        <td class="px-4 py-2">{{m.isHeadOfFamily ? 'Yes' : 'No'}}</td>
+        <td class="px-4 py-2 space-x-2">
+          <button (click)="viewDetails(m)" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">
+            View
+          </button>
+          <button (click)="editMember(m)" class="bg-yellow-400 hover:bg-yellow-500 px-2 py-1 rounded">
+            Edit
+          </button>
+          <button (click)="deleteMember(m.id)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">
+            Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredMembers.length === 0">
+        <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+          No members found
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
   
   <!-- Member details modal -->
   <div *ngIf="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -237,8 +271,16 @@
           <p>{{selectedMember?.mobileNumber}}</p>
         </div>
         <div>
+          <p class="font-semibold">Family ID:</p>
+          <p>{{selectedMember?.familyId}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Is Family Head:</p>
+          <p>{{selectedMember?.isHeadOfFamily ? 'Yes' : 'No'}}</p>
+        </div>
+        <div *ngIf="!selectedMember?.isHeadOfFamily && selectedMember?.familyId">
           <p class="font-semibold">Family Head:</p>
-          <p>{{selectedMember ? getFamilyHeadName(selectedMember.parentId) : ''}}</p>
+    <p>{{ getFamilyHeadName(selectedMember?.familyId ?? null) }}</p>
         </div>
       </div>
       <div class="mt-6 flex justify-end">
