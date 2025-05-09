@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TaxSummaryService } from '../../services/admin/tax-summary/tax-summary.service';
+import { TaxSummaryService, TaxRecord, TaxSummary } from '../../services/admin/tax-summary/tax-summary.service';
+import { HttpClient } from '@angular/common/http';
 
 export interface Member {
-  _id: string; // Add this line
+  _id: string;
   id: number;
   name: string;
   dob: string;
+  dateOfBirth?: string; // Support both field names
   nativeaddress: string;
   currentaddress: string;
   mobilenum: string;
   baptism: string;
   solidifying: string;
-  familyHead: string; // Changed from familyHeadId to familyHead to match backend
-  tax?: { [year: string]: boolean };
-  taxPaid: boolean;
+  familyHead: string;
+  tax?: { [year: string]: { taxPaid: boolean, amount: number } };
 }
 
 @Component({
@@ -29,21 +29,24 @@ export interface Member {
 export class LcfTaxComponent implements OnInit {
   members: Member[] = [];
   selectedYear: string = new Date().getFullYear().toString();
-availableYears: string[] = [];
-
+  availableYears: string[] = [];
   
   selectedHead: string = '';
   familyMembers: Member[] = [];
   familyHeads: { id: string, name: string }[] = [];
-  taxRecords: { memberId: string; year: number; taxPaid: boolean }[] = [];
+  taxRecords: TaxRecord[] = [];
   errorMessage: string = '';
-
   
-  constructor(private http: HttpClient,private taxService: TaxSummaryService) {}
+  // New properties for tax amount editing
+  editingTaxAmount: { memberId: string, year: string } | null = null;
+  customTaxAmount: number = 0;
+  
+  constructor(private http: HttpClient, private taxService: TaxSummaryService) {}
 
   ngOnInit(): void {
     this.loadMembers();
     this.generateYears();
+    this.loadTaxSummary();
   }
 
   loadMembers(): void {
@@ -53,10 +56,10 @@ availableYears: string[] = [];
   
         this.members = data.map(m => ({
           ...m,
-          tax: m.tax ?? {}
+          tax: {}
         }));
   
-        this.loadTaxRecords(); // ✅ Called only once after mapping
+        this.loadTaxRecords();
       },
       error: (err) => {
         console.error('Failed to load members:', err);
@@ -64,13 +67,14 @@ availableYears: string[] = [];
       }
     });
   }
+  
   loadTaxRecords(): void {
-    this.http.get<any[]>('https://stthomoschurch-backend.onrender.com/api/tax/all').subscribe({
+    this.taxService.getAllTaxRecords().subscribe({
       next: (records) => {
         this.taxRecords = records;
         this.mergeTaxIntoMembers();
         this.getFamilyHeads();
-        this.selectHead(); // 👈 Force update of familyMembers list
+        this.selectHead();
       },
       error: (err) => {
         console.error('Failed to load tax records:', err);
@@ -78,17 +82,32 @@ availableYears: string[] = [];
     });
   }
   
+  loadTaxSummary(): void {
+    this.taxService.getTaxSummary().subscribe({
+      next: (summary) => {
+        this.taxService.setTaxData(summary);
+      },
+      error: (err) => {
+        console.error('Failed to load tax summary:', err);
+      }
+    });
+  }
   
   mergeTaxIntoMembers(): void {
+    // Reset tax info
     for (const member of this.members) {
       member.tax = {};
     }
   
+    // Merge tax records data
     for (const rec of this.taxRecords) {
       const member = this.members.find(m => m._id === rec.memberId);
-
       if (member) {
-        member.tax![rec.year.toString()] = rec.taxPaid;
+        if (!member.tax) member.tax = {};
+        member.tax[rec.year.toString()] = {
+          taxPaid: rec.taxPaid,
+          amount: rec.amount
+        };
       }
     }
   }
@@ -101,11 +120,12 @@ availableYears: string[] = [];
       return;
     }
   
-    // Coerce both to strings to avoid mismatches
+    // Filter to find family members
     this.familyMembers = this.members.filter(
       m => m.familyHead?.toString() === this.selectedHead.toString()
     );
   
+    // Add the head if not already included
     const head = this.members.find(
       m => m.id.toString() === this.selectedHead.toString()
     );
@@ -130,31 +150,83 @@ availableYears: string[] = [];
     return m < 0 || (m === 0 && today.getDate() < birthDate.getDate()) ? age - 1 : age;
   }
 
-  // Helper method for template - fixes the reduce error
+  // Get tax amount - use custom amount if available, otherwise calculate default
+  getTaxAmount(member: Member, year: string): number {
+    return member.tax?.[year]?.amount || this.calculateTax(member.dob);
+  }
+
+  // Start editing tax amount
+  editTaxAmount(member: Member): void {
+    this.editingTaxAmount = {
+      memberId: member._id,
+      year: this.selectedYear
+    };
+    this.customTaxAmount = this.getTaxAmount(member, this.selectedYear);
+  }
+
+  // Save edited tax amount
+  saveTaxAmount(member: Member): void {
+    if (!this.customTaxAmount || this.customTaxAmount < 0) {
+      this.errorMessage = 'Please enter a valid tax amount';
+      return;
+    }
+
+    const taxPaid = member.tax?.[this.selectedYear]?.taxPaid || false;
+    
+    this.taxService.updateTaxAmount(member._id, Number(this.selectedYear), this.customTaxAmount, taxPaid).subscribe({
+      next: (response) => {
+        // Update local data
+        if (!member.tax) member.tax = {};
+        member.tax[this.selectedYear] = {
+          taxPaid: taxPaid,
+          amount: this.customTaxAmount
+        };
+        
+        this.editingTaxAmount = null;
+        this.loadTaxSummary(); // Refresh summary data
+      },
+      error: (err) => {
+        console.error('Error updating tax amount:', err);
+        this.errorMessage = 'Failed to update tax amount';
+      }
+    });
+  }
+
+  // Cancel tax amount editing
+  cancelEditTaxAmount(): void {
+    this.editingTaxAmount = null;
+  }
+
+  // Helper method for template - get total tax for family
   getTotalTax(): number {
     if (this.selectedYear === 'all') {
       return this.familyMembers.reduce((sum, member) => {
-        const yearsPaid = Object.entries(member.tax ?? {}).filter(([_, paid]) => paid);
-        return sum + (this.calculateTax(member.dob) * yearsPaid.length);
+        let yearTotal = 0;
+        Object.entries(member.tax || {}).forEach(([year, taxInfo]) => {
+          if (taxInfo.taxPaid) {
+            yearTotal += taxInfo.amount;
+          }
+        });
+        return sum + yearTotal;
       }, 0);
     }
   
-    return this.familyMembers.reduce((sum, member) => sum + this.calculateTax(member.dob), 0);
+    return this.familyMembers.reduce((sum, member) => 
+      sum + this.getTaxAmount(member, this.selectedYear), 0);
   }
   
-
-  // Helper method for template - fixes the filter/length error
+  // Helper method for template - get paid count
   getPaidCount(): number {
     if (this.selectedYear === 'all') {
       return this.familyMembers.filter(member =>
-        Object.values(member.tax ?? {}).some(paid => paid)
+        Object.values(member.tax || {}).some(taxInfo => taxInfo.taxPaid)
       ).length;
     }
   
-    return this.familyMembers.filter(member => member.tax?.[this.selectedYear]).length;
+    return this.familyMembers.filter(member => 
+      member.tax?.[this.selectedYear]?.taxPaid).length;
   }
   
-
   getFamilyHeads() {
     const familyHeadsSet = new Set<string>();
   
@@ -182,58 +254,44 @@ availableYears: string[] = [];
     console.log('Family heads:', this.familyHeads);
   }
   
-
   markAsPaid(member: Member) {
-    if (!member.tax) member.tax = {};
-    member.tax[this.selectedYear] = true;
-  
-    const payload = {
-      memberId: member._id,
-      year: Number(this.selectedYear),
-      amount: this.calculateTax(member.dob)
-    };
-  
-    this.http.put('https://stthomoschurch-backend.onrender.com/api/tax/paid', payload).subscribe({
-      next: () => {
-        console.log(`Marked as paid for ${this.selectedYear}`);
-        this.loadTaxRecords(); // 👈 RELOAD updated data
+    const amount = this.getTaxAmount(member, this.selectedYear);
+    
+    this.taxService.markTaxPaid(member._id, Number(this.selectedYear), amount).subscribe({
+      next: (response) => {
+        if (!member.tax) member.tax = {};
+        member.tax[this.selectedYear] = {
+          taxPaid: true,
+          amount: amount
+        };
+        this.loadTaxSummary();
       },
       error: (err) => {
         console.error('Error marking as paid:', err);
-        member.tax![this.selectedYear] = false; // Revert on failure
+        this.errorMessage = 'Failed to mark as paid';
       }
     });
   }
   
   editPayment(member: Member) {
-    if (!member.tax) member.tax = {};
-    member.tax[this.selectedYear] = false;
-  
-    const payload = {
-      memberId: member._id, // Consistently use _id
-      year: Number(this.selectedYear)
-    };
-  
-    this.http.put('https://stthomoschurch-backend.onrender.com/api/tax/unpaid', payload).subscribe({
-      next: () => {
-        console.log(`Marked as unpaid for ${this.selectedYear}`);
-        this.loadTaxRecords(); // 👈 RELOAD updated data
+    this.taxService.markTaxUnpaid(member._id, Number(this.selectedYear)).subscribe({
+      next: (response) => {
+        if (member.tax && member.tax[this.selectedYear]) {
+          member.tax[this.selectedYear].taxPaid = false;
+        }
+        this.loadTaxSummary();
       },
       error: (err) => {
         console.error('Error marking as unpaid:', err);
-        member.tax![this.selectedYear] = true; // Revert on failure
+        this.errorMessage = 'Failed to mark as unpaid';  
       }
     });
   }
   
-  
   onYearChange(): void {
     console.log("Year changed to:", this.selectedYear);
     this.selectHead();
-    // this.getFamilyHeads();
   }
-  
-  
   
   generateYears() {
     const currentYear = new Date().getFullYear();
@@ -245,18 +303,6 @@ availableYears: string[] = [];
     }
   }
   
-  getAllYearsSummary() {
-    let total = 0, paid = 0;
-  
-    this.members.forEach(member => {
-      const tax = this.calculateTax(member.dob);
-      total += tax;
-      if (member.tax?.[this.selectedYear]) paid += tax;
-    });
-  
-    return { total, paid, unpaid: total - paid };
-  }
-
   getSummary() {
     let totalTax = 0;
     let paidCount = 0;
@@ -268,10 +314,10 @@ availableYears: string[] = [];
     const targetMembers = this.selectedHead ? this.familyMembers : this.members;
   
     for (let member of targetMembers) {
-      const taxAmount = this.calculateTax(member.dob);
+      const taxAmount = this.getTaxAmount(member, this.selectedYear);
       totalTax += taxAmount;
   
-      if (member.tax?.[this.selectedYear]) {
+      if (member.tax?.[this.selectedYear]?.taxPaid) {
         paidCount++;
         paidAmount += taxAmount;
       } else {
@@ -290,19 +336,4 @@ availableYears: string[] = [];
       paidPlusUnpaidAmount: paidAmount + unpaidAmount
     };
   }
-  getTaxCollectedByYear(): { [year: string]: number } {
-    const taxByYear: { [year: string]: number } = {};
-  
-    this.members.forEach(member => {
-      if (!member.tax) return;
-      for (const [year, paid] of Object.entries(member.tax)) {
-        if (paid) {
-          taxByYear[year] = (taxByYear[year] || 0) + this.calculateTax(member.dob);
-        }
-      }
-    });
-  
-    return taxByYear;
-  }
-  
 }

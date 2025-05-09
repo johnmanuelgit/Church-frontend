@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TaxSummaryService } from '../../services/admin/tax-summary/tax-summary.service';
+import { TaxSummary, TaxSummaryService } from '../../services/admin/tax-summary/tax-summary.service';
 import { ViewChild, ElementRef } from '@angular/core';
 
 
@@ -52,7 +52,8 @@ export class IncomeExpenseComponent implements OnInit {
   
   selectedYear: string = new Date().getFullYear().toString();
   availableYears: string[] = [];
-  taxForSelectedYear: number = 0;
+taxForSelectedYear!: TaxSummary | null;
+
   
   // For edit functionality
   isEditingIncome: boolean = false;
@@ -110,7 +111,7 @@ export class IncomeExpenseComponent implements OnInit {
   }
   
   getTax(): void {
-    this.taxForSelectedYear = this.taxService.getTaxForYear(this.selectedYear);
+    this.taxForSelectedYear = this.taxService.getTaxDataForYear(this.selectedYear);
   }
     
   // INCOME FUNCTIONS
@@ -415,9 +416,10 @@ export class IncomeExpenseComponent implements OnInit {
     }
   }
   
-  get totalTaxFromLCF(): number {
-    return this.taxForSelectedYear;
-  }
+get totalTaxFromLCF(): number {
+  return this.taxForSelectedYear?.total || 0;
+}
+
 
   getSummary() {
     let filteredIncomes = [...this.incomeList];
