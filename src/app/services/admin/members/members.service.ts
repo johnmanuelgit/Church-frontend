@@ -2,51 +2,56 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+interface Member {
+  id: number | null;
+  memberNumber: number | null;
+  parentId: string | null;
+  name: string;
+  dateOfBirth: Date | null;
+  dateOfBaptism: Date | null;
+  dateOfConfirmation: Date | null;
+  dateOfMarriage: Date | null;
+  permanentAddress: string;
+  presentAddress: string;
+  mobileNumber: string;
+  formattedParentId?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class MembersService {
-  // Use direct API URL instead of environment
-  private apiUrl = 'https://stthomoschurch-backend.onrender.com/api/members';
+  private apiUrl = 'http://localhost:3000/api/members';
 
   constructor(private http: HttpClient) { }
 
-  getMembers(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getMembers(): Observable<Member[]> {
+    return this.http.get<Member[]>(this.apiUrl);
   }
 
-  addMember(member: any): Observable<any> {
-    // Ensure year is not undefined before sending to server
-    if (!member.year) {
-      member.year = new Date().getFullYear().toString();
-    }
-    return this.http.post<any>(this.apiUrl, member);
+  getMemberById(id: number): Observable<Member> {
+    return this.http.get<Member>(`${this.apiUrl}/${id}`);
   }
 
-  updateMember(id: number, member: any): Observable<any> {
-    // Ensure year is not undefined before sending to server
-    if (!member.year) {
-      member.year = new Date().getFullYear().toString();
-    }
-    return this.http.put<any>(`${this.apiUrl}/${id}`, member);
+  createMember(member: Member): Observable<Member> {
+    return this.http.post<Member>(this.apiUrl, member);
   }
 
-  deleteMember(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  updateMember(member: Member): Observable<Member> {
+    // Ensure we're using the correct ID for the PUT request
+    const id = member.id;
+    return this.http.put<Member>(`${this.apiUrl}/${id}`, member);
   }
 
-  updateMemberTaxStatus(id: number, taxPaid: boolean): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/unpaidedit/${id}`, { taxPaid });
+  deleteMember(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-  getAllMembers(): Observable<any[]> {
-    return this.http.get<any[]>('https://stthomoschurch-backend.onrender.com/api/members');
+
+  getFamilyMembers(headId: string): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiUrl}/family/${headId}`);
   }
-  getFamilyHeads(): Observable<any[]> {
-    return this.http.get<any[]>('https://stthomoschurch-backend.onrender.com/api/members/family-heads');
+
+  getFamilyHeads(): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiUrl}/heads`);
   }
-  
-  getFamilyMembersByHead(headId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/family-members/${headId}`);
-  }
-  
 }

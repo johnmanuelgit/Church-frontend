@@ -1,98 +1,251 @@
-<div class="w-screen h-screen container mx-auto p-5">
-    <h1 class="text-2xl font-bold mb-4 text-center">Menmbers Details</h1>
-    <form (ngSubmit)="OnSubmit()" #Form="ngForm" class="space-x-2 space-y-2 mb-5">
-      <input type="text"
-      [(ngModel)]="user.name"
-      name="name"
-      placeholder="Full Name"
-      required
-      class="border p-2 w-1/4 rounded">
+<div class="container mx-auto p-5">
+  <h1 class="text-2xl font-bold mb-4 text-center">Member Details</h1>
   
-      <input type="date" 
-      [(ngModel)]="user.dob"
-      name="dob"
-      placeholder="DOB"
-      required
-      class="border p-2 w-1/4 rounded">
-  
+  <!-- Form for adding/editing members -->
+  <form (ngSubmit)="onSubmit()" #memberForm="ngForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+    <div *ngIf="editMode" class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Member ID:</label>
+      <input type="text" [value]="member.id" disabled class="border p-2 w-full rounded bg-gray-100">
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Full Name:</label>
       <input type="text"
-      [(ngModel)]="user.nativeaddress"
-      name="nativeaddress"
-      placeholder="Native Address"
-      required
-      class="border p-2 w-1/4 rounded">
-  
-      <input type="text"
-      [(ngModel)]="user.currentaddress"
-      name="currentaddress"
-      placeholder="Current Address"
-      required
-      class="border p-2 w-1/4 rounded">
-  
-      <input type="number"
-      [(ngModel)]="user.mobilenum"
-      name="mobilenumber"
-      placeholder="Mobile Number"
-      required
-      class="border p-2 w-1/4 rounded">
-      <input type="text"
-      [(ngModel)]="user.baptism"
-      name="Baptism date & place"
-      placeholder="Enter Baptism Date & place"
-      required
-      class="border p-2 w-1/4 rounded">
-      <input type="text"
-      [(ngModel)]="user.solidifying"
-      name="Solidifying date & place"
-      placeholder="Enter Solidifying Date & place"
-      required
-      class="border p-2 w-1/4 rounded">
-      <label>Marriage Date :</label>
+        [(ngModel)]="member.name"
+        name="name"
+        placeholder="Full Name"
+        required
+        class="border p-2 w-full rounded">
+      <div *ngIf="submitted && memberForm.controls['name']?.errors" class="text-red-500 text-xs mt-1">
+        Name is required
+      </div>
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Date of Birth:</label>
       <input type="date"
-[(ngModel)]="user.marriagedate"
-name="marriagedate"
-placeholder="Marriage Date"
-class="border p-2 w-1/4 rounded">
-
-
-  
-      <select [(ngModel)]="user.familyHead" name="familyHead" class="border p-2 w-1/4 rounded">
-        <option value="">Select Family Head</option>
-        <option *ngFor="let head of getFamilyHeads()" [value]="head">{{ head }}</option>
+        [(ngModel)]="member.dateOfBirth"
+        name="dateOfBirth"
+        required
+        class="border p-2 w-full rounded">
+      <div *ngIf="submitted && memberForm.controls['dateOfBirth']?.errors" class="text-red-500 text-xs mt-1">
+        Date of birth is required
+      </div>
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Date of Baptism:</label>
+      <input type="date"
+        [(ngModel)]="member.dateOfBaptism"
+        name="dateOfBaptism"
+        class="border p-2 w-full rounded">
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Date of Confirmation:</label>
+      <input type="date"
+        [(ngModel)]="member.dateOfConfirmation"
+        name="dateOfConfirmation"
+        class="border p-2 w-full rounded">
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Date of Marriage:</label>
+      <input type="date"
+        [(ngModel)]="member.dateOfMarriage"
+        name="dateOfMarriage"
+        class="border p-2 w-full rounded">
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Permanent Address:</label>
+      <textarea
+        [(ngModel)]="member.permanentAddress"
+        name="permanentAddress"
+        placeholder="Permanent Address"
+        required
+        class="border p-2 w-full rounded"></textarea>
+      <div *ngIf="submitted && memberForm.controls['permanentAddress']?.errors" class="text-red-500 text-xs mt-1">
+        Permanent address is required
+      </div>
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Present Address:</label>
+      <textarea
+        [(ngModel)]="member.presentAddress"
+        name="presentAddress"
+        placeholder="Present Address"
+        required
+        class="border p-2 w-full rounded"></textarea>
+      <div *ngIf="submitted && memberForm.controls['presentAddress']?.errors" class="text-red-500 text-xs mt-1">
+        Present address is required
+      </div>
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Mobile Number:</label>
+      <input type="text"
+        [(ngModel)]="member.mobileNumber"
+        name="mobileNumber"
+        placeholder="Mobile Number"
+        required
+        pattern="[0-9]+"
+        class="border p-2 w-full rounded">
+      <div *ngIf="submitted && memberForm.controls['mobileNumber']?.errors" class="text-red-500 text-xs mt-1">
+        Valid mobile number is required
+      </div>
+    </div>
+    
+    <div class="mb-2">
+      <label class="block text-sm font-semibold mb-1">Family Head:</label>
+      <select [(ngModel)]="member.parentId" (change)="onFamilyHeadChange()" name="parentId" class="border p-2 w-full rounded">
+        <option [ngValue]="null">-- Head of Family --</option>
+        <option *ngFor="let head of familyHeads" [ngValue]="head.formattedParentId || head.parentId">
+          {{ head.name }}
+        </option>
       </select>
-    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-1/4">{{editIndex === -1? 'Add':'Update'}}</button>
-    </form>
-  <hr>
-    <thead class="table-auto w-full mt-6 border">
-      <tr class="bg-gray-100 text-left">
-        <th class="px-4 py-2">ID</th>
-        <th class="px-4 py-2">Name</th>
-        <th class="px-4 py-2">Date Of Birth</th>
-        <th class="px-4 py-2">Native Address</th>
-        <th class="px-4 py-2">Current Address</th>
-        <th class="px-4 py-2">Mobile Number</th>
-        <th class="px-4 py-2">Baptism <br>Date&Place</th>
-        <th class="px-4 py-2">Solidifying<br> Date&Place</th>
-        <th class="px-4 py-2">Marriage Date</th>
-        <th class="px-4 py-2">Edit&Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let m of members;let i=index" class="text-center border-t">
-        <td class="px-4 py-2">{{m.id}}</td>
-        <td class="px-4 py-2">{{m.name}}</td>
-        <td class="px-4 py-2">{{m.dob}}</td>
-        <td class="px-4 py-2">{{m.nativeaddress}}</td>
-        <td class="px-4 py-2">{{m.currentaddress}}</td>
-        <td class="px-4 py-2">{{m.mobilenum}}</td>
-        <td class="px-4 py-2">{{m.baptism}}</td>
-        <td class="px-4 py-2">{{m.solidifying}}</td>
-        <td class="px-4 py-2">{{m.marriagedate}}</td>
-        <td class="px-4 py-2">{{ m.familyHead }}</td>
-        <td class="px-4 py-2 space-x-2">
-          <button (click)="Edit(i)" class="bg-yellow-400 px-2 py-1 rounded">Edit</button>
-          <button (click)="Delete(i)" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
-        </td>
-      </tr>
-    </tbody>
+    </div>
+
+    <!-- Display generated family ID -->
+    <div class="mb-2" *ngIf="selectedFamilyHeadFormattedId">
+      <label class="block text-sm font-semibold mb-1">Family ID:</label>
+      <div class="border p-2 w-full rounded bg-gray-100">
+        {{ selectedFamilyHeadFormattedId }}
+      </div>
+    </div>
+    
+    <div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-start mt-4">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">
+        {{ editMode ? 'Update' : 'Add' }} Member
+      </button>
+      <button type="button" *ngIf="editMode" (click)="cancelEdit()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded ml-4">
+        Cancel
+      </button>
+    </div>
+  </form>
+  
+  <!-- Search and filter controls -->
+  <div class="flex flex-col md:flex-row gap-4 mb-4">
+    <div class="flex-1">
+      <input type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="filterMembers()"
+        placeholder="Search by name or mobile number" 
+        class="border p-2 w-full rounded">
+    </div>
+    <div>
+      <button (click)="exportToExcel()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center">
+        <span>Export to Excel</span>
+      </button>
+    </div>
   </div>
+  
+  <!-- Members Table -->
+  <div class="overflow-x-auto">
+    <table class="table-auto w-full mt-6 border">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">Member #</th>
+          <th class="px-4 py-2 cursor-pointer" (click)="sortBy('name')">
+            Name <span *ngIf="sortColumn === 'name'">[{{ sortDirection === 'asc' ? '↑' : '↓' }}]</span>
+          </th>
+          <th class="px-4 py-2">Date of Birth</th>
+          <th class="px-4 py-2">Mobile Number</th>
+          <th class="px-4 py-2">Family Head</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of filteredMembers" class="border-t hover:bg-gray-50">
+          <td class="px-4 py-2">{{m.id}}</td>
+          <td class="px-4 py-2">{{m.memberNumber}}</td>
+          <td class="px-4 py-2">{{m.name}}</td>
+          <td class="px-4 py-2">{{m.dateOfBirth | date:'dd/MM/yyyy'}}</td>
+          <td class="px-4 py-2">{{m.mobileNumber}}</td>
+          <td class="px-4 py-2">{{getFamilyHeadName(m.parentId)}}</td>
+          <td class="px-4 py-2 space-x-2">
+            <button (click)="viewDetails(m)" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">
+              View
+            </button>
+            <button (click)="editMember(m)" class="bg-yellow-400 hover:bg-yellow-500 px-2 py-1 rounded">
+              Edit
+            </button>
+            <button (click)="deleteMember(m.id)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredMembers.length === 0">
+          <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+            No members found
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Member details modal -->
+  <div *ngIf="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-screen overflow-y-auto">
+      <h2 class="text-xl font-bold mb-4 flex justify-between">
+        <span>Member Details</span>
+        <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700">
+          &times;
+        </button>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="font-semibold">ID:</p>
+          <p>{{selectedMember?.id}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Member Number:</p>
+          <p>{{selectedMember?.memberNumber}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Name:</p>
+          <p>{{selectedMember?.name}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Date of Birth:</p>
+          <p>{{selectedMember?.dateOfBirth | date:'dd/MM/yyyy'}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Date of Baptism:</p>
+          <p>{{selectedMember?.dateOfBaptism | date:'dd/MM/yyyy'}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Date of Confirmation:</p>
+          <p>{{selectedMember?.dateOfConfirmation | date:'dd/MM/yyyy'}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Date of Marriage:</p>
+          <p>{{selectedMember?.dateOfMarriage | date:'dd/MM/yyyy'}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Permanent Address:</p>
+          <p>{{selectedMember?.permanentAddress}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Present Address:</p>
+          <p>{{selectedMember?.presentAddress}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Mobile Number:</p>
+          <p>{{selectedMember?.mobileNumber}}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Family Head:</p>
+          <p>{{selectedMember ? getFamilyHeadName(selectedMember.parentId) : ''}}</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button (click)="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
