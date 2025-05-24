@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TaxSummaryService } from './tax-summary.service';
+import { TaxService } from './tax.service';
 
-describe('TaxSummaryService', () => {
-  let service: TaxSummaryService;
+describe('TaxService', () => {
+  let service: TaxService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TaxSummaryService);
+    service = TestBed.inject(TaxService);
   });
 
   it('should be created', () => {

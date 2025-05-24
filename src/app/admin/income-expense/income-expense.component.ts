@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TaxSummary, TaxSummaryService } from '../../services/admin/tax-summary/tax-summary.service';
 import { ViewChild, ElementRef } from '@angular/core';
+import { TaxService, TaxSummary } from '../../services/admin/tax/tax.service';
 
 
 
@@ -81,7 +81,7 @@ taxForSelectedYear!: TaxSummary | null;
   
   private apiBaseUrl = 'https://stthomoschurch-backend.onrender.com/api';
 
-  constructor(private http: HttpClient, private taxService: TaxSummaryService) {}
+  constructor(private http: HttpClient, private taxService: TaxService) {}
 
   ngOnInit(): void {
     this.generateYears();

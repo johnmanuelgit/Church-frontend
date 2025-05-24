@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
@@ -10,6 +10,10 @@ import { RouterLink, RouterModule } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  currentTime: string = '';
 
-}
+  ngOnInit(): void {
+    const now = new Date();
+    this.currentTime = now.toLocaleTimeString(); 
+}}

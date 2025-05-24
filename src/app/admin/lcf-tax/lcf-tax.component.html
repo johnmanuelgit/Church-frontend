@@ -1,338 +1,275 @@
-<div class="container mx-auto p-4 md:p-6 max-w-7xl">
+<!-- src/app/components/tax-management/tax-management.component.html -->
+<div class="tax-management-container">
   <!-- Header Section -->
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold text-indigo-700 mb-2">LCF Tax Management</h1>
-    <p class="text-gray-600">Manage and track member tax payments</p>
+  <div class="header-section">
+    <h1 class="main-title">LCF Tax Management</h1>
+    <p class="subtitle">Manage and track member tax payments</p>
   </div>
 
-  <!-- Notification Area -->
-  <div *ngIf="errorMessage" class="p-4 mb-6 bg-red-50 border-l-4 border-red-500 rounded shadow-sm">
-    <div class="flex items-center">
-      <div class="flex-shrink-0">
-        <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-        </svg>
-      </div>
-      <div class="ml-3 flex-1">
-        <p class="text-sm text-red-700">{{ errorMessage }}</p>
-      </div>
-      <button (click)="errorMessage = ''" class="text-red-500 hover:text-red-700">
-        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-        </svg>
-      </button>
-    </div>
-  </div>
+  <!-- Filter Controls -->
+  <div class="filter-section">
+    <mat-card class="filter-card">
+      <mat-card-content>
+        <div class="filter-row">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Family Selection</mat-label>
+            <mat-select [(value)]="selectedFamilyId" (selectionChange)="onFamilyChange()">
+              <mat-option value="All Members">All Members</mat-option>
+              <mat-option *ngFor="let family of familyHeads" [value]="family.familyId">
+                {{family.name}} Family ({{family.familyId}})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-  <div *ngIf="successMessage" class="p-4 mb-6 bg-green-50 border-l-4 border-green-500 rounded shadow-sm">
-    <div class="flex items-center">
-      <div class="flex-shrink-0">
-        <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-        </svg>
-      </div>
-      <div class="ml-3 flex-1">
-        <p class="text-sm text-green-700">{{ successMessage }}</p>
-      </div>
-      <button (click)="successMessage = ''" class="text-green-500 hover:text-green-700">
-        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-        </svg>
-      </button>
-    </div>
-  </div>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Year</mat-label>
+            <mat-select [(value)]="selectedYear" (selectionChange)="onYearChange()">
+              <mat-option *ngFor="let year of availableYears" [value]="year">
+                {{year}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-  <!-- Control Panel -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Family Head Selector -->
-      <div>
-        <label for="familyHead" class="block text-sm font-medium text-gray-700 mb-1">Family Head</label>
-        <select id="familyHead" [(ngModel)]="selectedHead" (change)="selectHead()" 
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border">
-          <option value="">All Members</option>
-          <option *ngFor="let head of familyHeads" [value]="head.id">{{ head.name }}</option>
-        </select>
-      </div>
-
-      <!-- Year Selector -->
-      <div>
-        <label for="yearSelect" class="block text-sm font-medium text-gray-700 mb-1">Year</label>
-        <select id="yearSelect" [(ngModel)]="selectedYear" (change)="onYearChange()" 
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border">
-          <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
-          <option value="all">All Years</option>
-        </select>
-      </div>
-
-      <!-- Actions -->
-      <div class="flex items-end">
-        <button (click)="exportToCSV()" 
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          <svg class="-ml-1 mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
-          </svg>
-          Export Report
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tax Configuration Panel -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-8" *ngIf="selectedYear !== 'all'">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-lg font-medium text-gray-900">Tax Rate Configuration for {{ selectedYear }}</h3>
-      <button *ngIf="!editingConfig" (click)="editTaxConfig(selectedYear)" 
-              class="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Edit Rates
-      </button>
-    </div>
-
-    <!-- Display current rates -->
-    <div *ngIf="!editingConfig" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <dt class="text-sm font-medium text-gray-500">Adult Tax (Age {{ taxConfig[selectedYear]?.adultAge }}+)</dt>
-        <dd class="mt-1 text-2xl font-semibold text-indigo-600">₹{{ taxConfig[selectedYear]?.adult }}</dd>
-      </div>
-      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <dt class="text-sm font-medium text-gray-500">Child Tax (Under {{ taxConfig[selectedYear]?.adultAge }})</dt>
-        <dd class="mt-1 text-2xl font-semibold text-indigo-600">₹{{ taxConfig[selectedYear]?.child }}</dd>
-      </div>
-      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <dt class="text-sm font-medium text-gray-500">Adult Age Threshold</dt>
-        <dd class="mt-1 text-2xl font-semibold text-indigo-600">{{ taxConfig[selectedYear]?.adultAge }} years</dd>
-      </div>
-    </div>
-
-    <!-- Edit config form -->
-    <div *ngIf="editingConfig" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Adult Tax (₹)</label>
-          <input type="number" [(ngModel)]="tempTaxConfig.adult" min="0" 
-                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2">
+          <button mat-raised-button color="primary" class="export-btn" (click)="exportReport()">
+            <mat-icon>download</mat-icon>
+            Export Report
+          </button>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Child Tax (₹)</label>
-          <input type="number" [(ngModel)]="tempTaxConfig.child" min="0" 
-                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Adult Age Threshold</label>
-          <input type="number" [(ngModel)]="tempTaxConfig.adultAge" min="0" 
-                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2">
-        </div>
-      </div>
-      <div class="flex justify-end space-x-3">
-        <button (click)="cancelTaxConfig()" 
-                class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Cancel
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Tax Rate Configuration -->
+  <div class="tax-rates-section" *ngIf="shouldShowTaxRateConfig()">
+    <mat-card class="rates-card">
+      <mat-card-header>
+        <mat-card-title>Tax Rate Configuration for {{selectedYear}}</mat-card-title>
+        <button mat-icon-button (click)="toggleEditRates()" class="edit-rates-btn">
+          <mat-icon>{{isEditingRates ? 'close' : 'edit'}}</mat-icon>
         </button>
-        <button (click)="saveTaxConfig()" 
-                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Save Changes
-        </button>
-      </div>
-    </div>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="rates-grid" *ngIf="!isEditingRates">
+          <div class="rate-item">
+            <h3>Adult Tax (Age 18+)</h3>
+            <p class="rate-amount">₹{{taxRates.adultTax}}</p>
+          </div>
+          <div class="rate-item">
+            <h3>Child Tax (Under 18)</h3>
+            <p class="rate-amount">₹{{taxRates.childTax}}</p>
+          </div>
+          <div class="rate-item">
+            <h3>Adult Age Threshold</h3>
+            <p class="rate-amount">{{taxRates.adultAgeThreshold}} years</p>
+          </div>
+        </div>
+
+        <div class="rates-edit-form" *ngIf="isEditingRates">
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Adult Tax Amount</mat-label>
+              <input matInput type="number" [(ngModel)]="taxRates.adultTax" min="0">
+              <span matPrefix>₹&nbsp;</span>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Child Tax Amount</mat-label>
+              <input matInput type="number" [(ngModel)]="taxRates.childTax" min="0">
+              <span matPrefix>₹&nbsp;</span>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Adult Age Threshold</mat-label>
+              <input matInput type="number" [(ngModel)]="taxRates.adultAgeThreshold" min="1" max="25">
+              <span matSuffix>&nbsp;years</span>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" (click)="saveRates()" [disabled]="isLoading">
+              <mat-icon>save</mat-icon>
+              Save Rates
+            </button>
+            <button mat-button (click)="toggleEditRates()">Cancel</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <!-- Summary Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <dt class="text-sm font-medium text-gray-500 truncate">Total Members</dt>
-        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ getSummary().totalMembers }}</dd>
-      </div>
-    </div>
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <dt class="text-sm font-medium text-gray-500 truncate">Paid Members</dt>
-        <dd class="mt-1 text-3xl font-semibold text-green-600">{{ getSummary().paidCount }}</dd>
-      </div>
-    </div>
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <dt class="text-sm font-medium text-gray-500 truncate">Unpaid Members</dt>
-        <dd class="mt-1 text-3xl font-semibold text-red-600">{{ getSummary().unpaidCount }}</dd>
-      </div>
-    </div>
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="px-4 py-5 sm:p-6">
-        <dt class="text-sm font-medium text-gray-500 truncate">Collection Rate</dt>
-        <dd class="mt-1 text-3xl font-semibold text-indigo-600">{{ getSummary().collectionRate }}%</dd>
-      </div>
+  <div class="summary-section">
+    <div class="summary-cards">
+      <mat-card class="summary-card total-members">
+        <mat-card-content>
+          <div class="card-content">
+            <div class="card-number">{{taxSummary.totalMembers}}</div>
+            <div class="card-label">Total Members</div>
+          </div>
+          <mat-icon class="card-icon">people</mat-icon>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card paid-members">
+        <mat-card-content>
+          <div class="card-content">
+            <div class="card-number">{{taxSummary.paidMembers}}</div>
+            <div class="card-label">Paid Members</div>
+          </div>
+          <mat-icon class="card-icon">check_circle</mat-icon>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card unpaid-members">
+        <mat-card-content>
+          <div class="card-content">
+            <div class="card-number">{{taxSummary.unpaidMembers}}</div>
+            <div class="card-label">Unpaid Members</div>
+          </div>
+          <mat-icon class="card-icon">cancel</mat-icon>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card collection-rate">
+        <mat-card-content>
+          <div class="card-content">
+            <div class="card-number">{{taxSummary.collectionRate}}%</div>
+            <div class="card-label">Collection Rate</div>
+          </div>
+          <mat-icon class="card-icon">trending_up</mat-icon>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 
   <!-- Members Table -->
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">
-        {{ selectedHead ? 'Family Members' : 'All Members' }} - {{ selectedYear === 'all' ? 'All Years' : selectedYear }}
-      </h3>
-      <p class="mt-1 text-sm text-gray-500">
-        {{ selectedHead ? familyMembers.length : members.length }} records found
-      </p>
-    </div>
-    
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tax Amount</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let member of (selectedHead ? familyMembers : members)" class="hover:bg-gray-50">
-            <!-- Name -->
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                  <span class="text-indigo-600 font-medium">{{ member.name.charAt(0) }}</span>
+  <div class="members-section">
+    <mat-card class="members-card">
+      <mat-card-header>
+        <mat-card-title>
+          {{getFamilyDisplayName(selectedFamilyId)}} - {{getYearDisplayText()}}
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{filteredMembers.length}} members found
+          <span *ngIf="selectedFamilyId !== 'All Members'"> in {{getFamilyDisplayName(selectedFamilyId)}}</span>
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Search Field -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search members...</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search by name or family ID">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Members Table -->
+        <div class="table-container" *ngIf="!isLoading">
+          <table mat-table [dataSource]="filteredMembers" class="members-table">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let member">
+                <div class="member-info">
+                  <div class="member-avatar">
+                    {{member.name.charAt(0).toUpperCase()}}
+                  </div>
+                  <div class="member-details">
+                    <div class="member-name">
+                      {{member.name}}
+                      <mat-chip *ngIf="member.isHeadOfFamily" class="family-head-chip">
+                        Family Head
+                      </mat-chip>
+                    </div>
+                    <div class="member-family">{{member.familyId}}</div>
+                  </div>
                 </div>
-                <div class="ml-4">
-                  <div class="text-sm font-medium text-gray-900">{{ member.name }}</div>
-                  <div class="text-sm text-gray-500">{{ member.mobilenum }}</div>
+              </td>
+            </ng-container>
+
+            <!-- Age Column -->
+            <ng-container matColumnDef="age">
+              <th mat-header-cell *matHeaderCellDef>Age</th>
+              <td mat-cell *matCellDef="let member">
+                <div class="age-info">
+                  <span class="age-number">{{member.age}}</span>
+                  <div class="birth-date">{{formatDate(member.dateOfBirth)}}</div>
                 </div>
-              </div>
-            </td>
-            
-            <!-- Age -->
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm text-gray-900">
-                <span *ngIf="selectedYear !== 'all'">{{ getAgeInYear(member.dateOfBirth || member.dob, +selectedYear) }}</span>
-                <span *ngIf="selectedYear === 'all'">{{ getAge(member.dateOfBirth || member.dob) }}</span>
-              </div>
-              <div class="text-sm text-gray-500">{{ member.dateOfBirth || member.dob | date }}</div>
-            </td>
-            
-            <!-- Tax Amount -->
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm font-medium text-gray-900">
-                ₹{{ getTaxAmount(member, selectedYear) }}
-              </div>
-            </td>
-            
-            <!-- Status -->
-            <td class="px-6 py-4 whitespace-nowrap">
-              <span *ngIf="selectedYear !== 'all'" 
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          {{ member.tax?.[selectedYear]?.taxPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                {{ member.tax?.[selectedYear]?.taxPaid ? 'Paid' : 'Unpaid' }}
-              </span>
-              <span *ngIf="selectedYear === 'all'" class="flex flex-wrap gap-1">
-                <span *ngFor="let taxDetail of getMemberYearlyTaxDetails(member).slice(0, 2)" 
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            {{ taxDetail.paid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                  {{ taxDetail.year }}: {{ taxDetail.paid ? 'Paid' : 'Unpaid' }}
-                </span>
-                <span *ngIf="getMemberYearlyTaxDetails(member).length > 2" 
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                  +{{ getMemberYearlyTaxDetails(member).length - 2 }} more
-                </span>
-              </span>
-            </td>
-            
-            <!-- Actions -->
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <div class="flex space-x-2">
-                <span *ngIf="selectedYear !== 'all'">
-                  <button *ngIf="!member.tax?.[selectedYear]?.taxPaid" 
-                          (click)="markAsPaid(member)"
-                          class="text-indigo-600 hover:text-indigo-900">
-                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                    </svg>
-                  </button>
-                  <button *ngIf="member.tax?.[selectedYear]?.taxPaid" 
-                          (click)="editPayment(member)"
-                          class="text-yellow-600 hover:text-yellow-900">
-                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                  </button>
-                </span>
-                <button *ngIf="selectedYear === 'all'"
-                        (click)="selectedYear = availableYears[0]; editTaxAmount(member);"
-                        class="text-indigo-600 hover:text-indigo-900">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-                  </svg>
+              </td>
+            </ng-container>
+
+            <!-- Tax Amount Column -->
+            <ng-container matColumnDef="taxAmount">
+              <th mat-header-cell *matHeaderCellDef>Tax Amount</th>
+              <td mat-cell *matCellDef="let member">
+                <div class="tax-amount">{{formatCurrency(member.taxAmount)}}</div>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let member">
+                <mat-chip [class]="member.isPaid ? 'status-paid' : 'status-unpaid'">
+                  {{member.status}}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let member">
+                <button 
+                  mat-icon-button 
+                  [color]="member.isPaid ? 'warn' : 'primary'"
+                  (click)="togglePaymentStatus(member)"
+                  [matTooltip]="member.isPaid ? 'Mark as Unpaid' : 'Mark as Paid'">
+                  <mat-icon>{{member.isPaid ? 'cancel' : 'check_circle'}}</mat-icon>
                 </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <!-- Summary Footer -->
-    <div class="bg-gray-50 px-6 py-3 border-t border-gray-200">
-      <div class="flex justify-between items-center">
-        <div class="text-sm text-gray-500">
-          Showing <span class="font-medium">{{ (selectedHead ? familyMembers : members).length }}</span> members
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
         </div>
-        <div class="text-sm font-medium text-gray-900">
-          Total Tax: ₹{{ getSummary().totalTax }} | 
-          Paid: ₹{{ getSummary().paidAmount }} | 
-          Unpaid: ₹{{ getSummary().unpaidAmount }}
+
+        <!-- Loading Spinner -->
+        <div class="loading-container" *ngIf="isLoading">
+          <mat-spinner></mat-spinner>
+          <p>Loading tax data...</p>
         </div>
-      </div>
-    </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!isLoading && filteredMembers.length === 0">
+          <mat-icon class="empty-icon">people_outline</mat-icon>
+          <h3>No members found</h3>
+          <p>No tax records found for the selected criteria.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
-  <!-- Detailed View for Family Members (All Years) -->
-  <div *ngIf="selectedHead && familyMembers.length > 0 && selectedYear === 'all'" class="space-y-4 mb-8">
-    <div *ngFor="let member of familyMembers" class="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div class="px-4 py-5 sm:px-6 border-b border-gray-200 bg-gray-50">
-        <div class="-ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
-          <div class="ml-4 mt-4">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">{{ member.name }}</h3>
-            <p class="mt-1 text-sm text-gray-500">
-              DOB: {{ member.dateOfBirth || member.dob | date }} | 
-              Age: {{ getAge(member.dateOfBirth || member.dob) }} | 
-              Total Tax: ₹{{ getTaxAmount(member, 'all') }}
-            </p>
-          </div>
-          <div class="ml-4 mt-4 flex-shrink-0">
-            <button type="button" (click)="selectedYear = availableYears[0]; editTaxAmount(member);"
-                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              Edit Tax Details
-            </button>
-          </div>
+  <!-- Summary Footer -->
+  <div class="footer-summary">
+    <mat-card class="footer-card">
+      <mat-card-content>
+        <div class="footer-stats">
+          <span class="stat-item">
+            <strong>Total Tax: {{formatCurrency(taxSummary.totalTaxAmount)}}</strong>
+          </span>
+          <span class="stat-divider">|</span>
+          <span class="stat-item">
+            <strong>Paid: {{formatCurrency(taxSummary.paidTaxAmount)}}</strong>
+          </span>
+          <span class="stat-divider">|</span>
+          <span class="stat-item">
+            <strong>Unpaid: {{formatCurrency(taxSummary.unpaidTaxAmount)}}</strong>
+          </span>
         </div>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tax Amount</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Date</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let taxDetail of getMemberYearlyTaxDetails(member)" class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ taxDetail.year }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getAgeInYear(member.dateOfBirth || member.dob, +taxDetail.year) }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{{ taxDetail.amount }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          {{ taxDetail.paid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                  {{ taxDetail.paid ? 'Paid' : 'Unpaid' }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ taxDetail.paymentDate || '—' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>
