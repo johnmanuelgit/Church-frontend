@@ -49,13 +49,9 @@ export class IncomeExpenseComponent implements OnInit {
   // Updated to follow interface definitions
   incomeList: Income[] = [];
   expenseList: Expense[] = [];
-  
   selectedYear: string = new Date().getFullYear().toString();
-  availableYears: string[] = [];
+availableYears: string[] = [];
 taxForSelectedYear!: TaxSummary | null;
-
-  
-  // For edit functionality
   isEditingIncome: boolean = false;
   isEditingExpense: boolean = false;
   editingIncomeId: any | null = null;
@@ -419,31 +415,31 @@ taxForSelectedYear!: TaxSummary | null;
 get totalTaxFromLCF(): number {
   return this.taxForSelectedYear?.total || 0;
 }
+getSummary() {
+  let filteredIncomes = [...this.incomeList];
+  let filteredExpenses = [...this.expenseList];
 
-
-  getSummary() {
-    let filteredIncomes = [...this.incomeList];
-    let filteredExpenses = [...this.expenseList];
-  
-    if (this.selectedYear !== 'All') {
-      const yearNum = parseInt(this.selectedYear);
-      filteredIncomes = filteredIncomes.filter(i => i.year === yearNum);
-      filteredExpenses = filteredExpenses.filter(e => e.year === yearNum);
-    }
-  
-    const totalIncome = filteredIncomes.reduce((sum, i) => sum + i.amount, 0);
-    const taxCollected = this.totalTaxFromLCF;
-    const totalWithTax = totalIncome + taxCollected;
-  
-    const totalExpense = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const balance = totalWithTax - totalExpense;
-  
-    return { totalIncome, totalWithTax, totalExpense, balance,totalTaxFromLCF: taxCollected,
-
-     };
-    
+  if (this.selectedYear !== 'All') {
+    const yearNum = parseInt(this.selectedYear);
+    filteredIncomes = filteredIncomes.filter(i => i.year === yearNum);
+    filteredExpenses = filteredExpenses.filter(e => e.year === yearNum);
   }
-  
+
+  const totalIncome = filteredIncomes.reduce((sum, i) => sum + i.amount, 0);
+  const totalTaxFromLCF = this.totalTaxFromLCF; // Use the getter method
+  const totalWithTax = totalIncome + totalTaxFromLCF;
+
+  const totalExpense = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const balance = totalWithTax - totalExpense;
+
+  return { 
+    totalIncome, 
+    totalWithTax, 
+    totalExpense, 
+    balance,
+    totalTaxFromLCF // Make sure this is included in return
+  };
+}
   // Export data to CSV
   exportToCSV(): void {
     const year = this.selectedYear;
