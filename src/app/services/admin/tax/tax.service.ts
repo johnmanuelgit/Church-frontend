@@ -51,7 +51,7 @@ export interface FamilyHead {
   providedIn: 'root'
 })
 export class TaxService {
-  private apiUrl = 'https://stthomoschurch-backend.onrender.com/api/tax';
+  private apiUrl = 'http://localhost:3000/api/tax';
   private taxData: TaxSummary[] = [];
   
   constructor(private http: HttpClient) {}
@@ -109,10 +109,9 @@ export class TaxService {
   }
 
   // Utility Methods
-  getFamilyHeads(): Observable<FamilyHead[]> {
-    return this.http.get<FamilyHead[]>(`${this.apiUrl}/family-heads`);
-  }
-
+getFamilyHeads(): Observable<FamilyHead[]> {
+  return this.http.get<FamilyHead[]>(`${this.apiUrl}/family-heads`);
+}
   getAvailableYears(): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/years`);
   }
@@ -166,5 +165,5 @@ getMemberPaymentForYear(memberId: string, year: number): Observable<TaxPayment[]
   return this.http.get<TaxPayment[]>(`${this.apiUrl}/payment/${memberId}?year=${year}`);
 }
 
-  
+
 }

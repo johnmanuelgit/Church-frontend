@@ -21,7 +21,7 @@ interface Member {
   providedIn: 'root'
 })
 export class MembersService {
-  private apiUrl = 'https://stthomoschurch-backend.onrender.com/api/members';
+  private apiUrl = 'https://church-backend-036s.onrender.com/api/members';
 
   constructor(private http: HttpClient) { }
 

@@ -1,15 +1,14 @@
-// src/app/admin/admin-login/admin-login.component.ts
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/admin/auth/auth.service';
 
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './admin-login.component.html',
   styleUrl: './admin-login.component.css'
 })

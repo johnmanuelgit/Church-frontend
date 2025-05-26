@@ -79,7 +79,7 @@ taxForSelectedYear!: TaxSummary | null;
     year: new Date().getFullYear()
   };
   
-  private apiBaseUrl = 'https://stthomoschurch-backend.onrender.com/api';
+  private apiBaseUrl = 'https://church-backend-036s.onrender.com/api';
 
   constructor(private http: HttpClient, private taxService: TaxService) {}
 

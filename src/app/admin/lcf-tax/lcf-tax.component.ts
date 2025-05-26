@@ -212,75 +212,68 @@ export class LcfTaxComponent implements OnInit {
     }
   }
 
-  async loadAllYearsMemberDetails(): Promise<void> {
-    try {
-      const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
+ // Update the displayedColumns when in "All Years" view
+async loadAllYearsMemberDetails(): Promise<void> {
+  try {
+    const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
+    
+    // Get all unique members first
+    const allMembers = await this.taxService.getAllMembers(familyFilter).toPromise();
+    
+    if (allMembers) {
+      const membersWithYearlyPayments: ExtendedTaxPayment[] = [];
+      const yearsToShow = this.getAvailableYearsForDisplay();
       
-      // Get all unique members first
-     const allMembers: any = await this.taxService.getAllMembers(familyFilter).toPromise();
-
-      
-      if (allMembers) {
-        // For each member, get their payment history across all years
-        const membersWithYearlyPayments: ExtendedTaxPayment[] = [];
+      for (const member of allMembers) {
+        const memberPayments: ExtendedTaxPayment = {
+          ...member,
+          yearlyPayments: {}
+        };
         
-        for (const member of allMembers) {
-          const memberPayments: ExtendedTaxPayment = {
-            ...member,
-            yearlyPayments: {}
-          };
-          
-          // Get payment data for each available year (excluding 'All Years')
-          const years = this.availableYears.filter(year => year !== 'All Years') as number[];
-          
-          for (const year of years) {
-            try {
-             const yearlyPayments = await this.taxService.getMemberPaymentForYear(member.memberId, year).toPromise();
-const yearlyPayment = yearlyPayments?.[0]; // Use the first record if available
+        for (const year of yearsToShow) {
+          try {
+            const yearlyPayments = await this.taxService.getMemberPaymentForYear(member._id, year).toPromise();
+            const yearlyPayment = yearlyPayments?.[0];
 
-if (yearlyPayment) {
-  memberPayments.yearlyPayments![year] = {
-    isPaid: yearlyPayment.isPaid,
-    status: yearlyPayment.status,
-    paidAmount: yearlyPayment.paidAmount,
-    taxAmount: yearlyPayment.taxAmount
-  };
-} else {
-  memberPayments.yearlyPayments![year] = {
-    isPaid: false,
-    status: 'Not Generated',
-    paidAmount: 0,
-    taxAmount: 0
-  };
-}
-            
-            } catch (error) {
-              console.warn(`No payment data for member ${member.memberId} for year ${year}`);
-              memberPayments.yearlyPayments![year] = {
-                isPaid: false,
-                status: 'Not Generated',
-                paidAmount: 0,
-                taxAmount: 0
-              };
-            }
+            memberPayments.yearlyPayments![year] = yearlyPayment ? {
+              isPaid: yearlyPayment.isPaid,
+              status: yearlyPayment.isPaid ? 'Paid' : 'Unpaid',
+              paidAmount: yearlyPayment.paidAmount,
+              taxAmount: yearlyPayment.taxAmount
+            } : {
+              isPaid: false,
+              status: 'Not Generated',
+              paidAmount: 0,
+              taxAmount: 0
+            };
+          } catch (error) {
+            memberPayments.yearlyPayments![year] = {
+              isPaid: false,
+              status: 'Not Generated',
+              paidAmount: 0,
+              taxAmount: 0
+            };
           }
-          
-          membersWithYearlyPayments.push(memberPayments);
         }
         
-        this.memberTaxDetails = membersWithYearlyPayments;
-        this.filteredMembers = [...membersWithYearlyPayments];
-        
-        // Update display columns for all years view
-        this.displayedColumns = ['name', 'age', 'yearlyStatus'];
-        
-        console.log('Loaded all years member details with yearly payments:', this.memberTaxDetails);
+        membersWithYearlyPayments.push(memberPayments);
       }
-    } catch (error) {
-      console.error('Error loading all years member details:', error);
+      
+      this.memberTaxDetails = membersWithYearlyPayments;
+      this.filteredMembers = [...membersWithYearlyPayments];
+      
+      // Update display columns to include yearly status
+      this.displayedColumns = [
+        'name', 
+        'age',
+        ...yearsToShow.map(year => `year-${year}`)
+      ];
     }
+  } catch (error) {
+    console.error('Error loading all years member details:', error);
+    this.showSnackBar('Error loading member details');
   }
-
+}
   async loadTaxSummary(): Promise<void> {
     try {
       if (this.selectedYear === 'All Years') {

@@ -24,7 +24,7 @@ interface ForgotPasswordResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://stthomoschurch-backend.onrender.com';
+  private apiUrl = 'https://church-backend-036s.onrender.com';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
   private userSubject = new BehaviorSubject<any>(this.getCurrentUser());
   private rememberMeKey = 'admin_remember';
