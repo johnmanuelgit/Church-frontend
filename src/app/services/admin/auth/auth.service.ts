@@ -24,7 +24,7 @@ interface ForgotPasswordResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'https://church-backend-036s.onrender.com/api/admin';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
   private userSubject = new BehaviorSubject<any>(this.getCurrentUser());
   private rememberMeKey = 'admin_remember';
@@ -34,7 +34,7 @@ export class AuthService {
     private router: Router
   ) {}
   login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/api/admin/login`, { username, password })
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password })
   
       .pipe(
         tap(response => {
@@ -73,8 +73,8 @@ export class AuthService {
       );
   }
 
- forgotPassword(email: string): Observable<ForgotPasswordResponse> {
-  return this.http.post<ForgotPasswordResponse>(`${this.apiUrl}/api/admin/forgot-password`, { email })
+  forgotPassword(email: string): Observable<ForgotPasswordResponse> {
+    return this.http.post<ForgotPasswordResponse>(`${this.apiUrl}/forgot-password`, { email })
       .pipe(
         catchError(error => {
           return throwError(() => error);
@@ -83,7 +83,7 @@ export class AuthService {
   }
 
   resetPassword(token: string, newPassword: string): Observable<ForgotPasswordResponse> {
-    return this.http.post<ForgotPasswordResponse>(`${this.apiUrl}api/admin/reset-password`, { 
+    return this.http.post<ForgotPasswordResponse>(`${this.apiUrl}/reset-password`, { 
       token, 
       newPassword 
     }).pipe(

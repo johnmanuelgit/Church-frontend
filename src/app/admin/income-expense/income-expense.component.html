@@ -1,175 +1,326 @@
-<!-- Updated HTML template with edit functionality -->
-<div class="container mx-auto p-5">
-  <h2 class="text-2xl font-bold mb-4 text-center">Varavu-Selavu Management</h2>
-
-  <!-- Year Select -->
-  <div class="mb-6">
-    <label class="block mb-2 font-bold">Select Year:</label>
-    <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange($event)" class="w-full p-2 border rounded">
-      <option value="All">All Years</option>
-      <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
-    </select>
+<div class="container mx-auto p-5 max-w-7xl">
+  <!-- Header Section -->
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Varavu-Selavu Management</h2>
+    <p class="text-gray-600">Track and manage temple income and expenses</p>
   </div>
-<div class="flex gap-8">
-  <!-- ADD/EDIT INCOME FORM -->
-  <div class="mb-8 w-1/2 p-5">
-    <h3 class="text-lg font-bold mb-2">{{ isEditingIncome ? 'Edit' : 'Add' }} Income</h3>
-    <form (ngSubmit)="isEditingIncome ? updateIncome() : addIncome()" class="grid gap-3 grid-cols-2">
-      <input type="text" placeholder="Donor Name" [(ngModel)]="newIncome.donorName" name="donorName" class="p-2 border rounded" required>
-      <input type="number" placeholder="Amount" [(ngModel)]="newIncome.amount" name="amount" class="p-2 border rounded" required>
-      <select [(ngModel)]="newIncome.donationType" name="donationType" class="p-2 border rounded" required>
-        <option value="" disabled selected>Select Donation Type</option>
-        <option *ngFor="let type of donationTypes" [value]="type">{{ type }}</option>
-        <option value="Other">Other</option>
-      </select>
+
+  <!-- Year Select and Summary Cards -->
+  <div class="mb-8">
+    <div class="flex flex-col md:flex-row gap-6 mb-6">
+      <!-- Year Selector -->
+      <div class="w-full md:w-1/4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Select Year</label>
+        <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange($event)" 
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="All">All Years</option>
+          <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+        </select>
+      </div>
       
-      <!-- Show this only if "Other" is selected -->
-      <input
-        *ngIf="newIncome.donationType === 'Other'"
-        type="text"
-        [(ngModel)]="newIncome.otherDonation"
-        name="otherDonation"
-        placeholder="Enter custom donation type"
-        class="p-2 border rounded"
-      />
-      <input type="date" [(ngModel)]="newIncome.date" name="date" class="p-2 border rounded" required>
-      <div class="col-span-2 flex space-x-2">
-        <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700">
-          {{ isEditingIncome ? 'Update Income' : 'Add Income' }}
-        </button>
-        <button *ngIf="isEditingIncome" type="button" (click)="cancelIncomeEdit()" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600">
-          Cancel
-        </button>
+      <!-- Summary Cards -->
+      <div class="w-full md:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-green-50 p-4 rounded-lg border border-green-100 shadow-sm">
+          <h3 class="text-sm font-medium text-green-800">Total Income</h3>
+          <p class="text-2xl font-bold text-green-600">₹{{ getSummary().totalIncome }}</p>
+        </div>
+        <div class="bg-red-50 p-4 rounded-lg border border-red-100 shadow-sm">
+          <h3 class="text-sm font-medium text-red-800">Total Expense</h3>
+          <p class="text-2xl font-bold text-red-600">₹{{ getSummary().totalExpense }}</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 shadow-sm">
+          <h3 class="text-sm font-medium text-blue-800">Balance</h3>
+          <p class="text-2xl font-bold text-blue-600">₹{{ getSummary().balance }}</p>
+        </div>
       </div>
-    </form>
+    </div>
   </div>
-  <div class="border-l border-black h-auto "></div>
 
-
-  <!-- ADD/EDIT EXPENSE FORM -->
-  <div class="mb-8 w-1/2 p-5">
-    <h3 class="text-lg font-bold mb-2">{{ isEditingExpense ? 'Edit' : 'Add' }} Expense</h3>
-    <form #editExpenseForm (ngSubmit)="isEditingExpense ? updateExpense() : addExpense()" class="grid gap-3 grid-cols-2" enctype="multipart/form-data">
-      <input type="text" placeholder="Reason" [(ngModel)]="newExpense.reason" name="reason" class="p-2 border rounded" required>
-      <input type="number" placeholder="Amount" [(ngModel)]="newExpense.amount" name="amount" class="p-2 border rounded" required>
-      <input type="text" placeholder="Responsible Person" [(ngModel)]="newExpense.responsiblePerson" name="responsiblePerson" class="p-2 border rounded" required>
-      <input type="text" placeholder="Bill By" [(ngModel)]="newExpense.billBy" name="billBy" class="p-2 border rounded" required>
-      <input type="date" [(ngModel)]="newExpense.date" name="date" class="p-2 border rounded" required>
-  
-      <!-- File input for bill image -->
-      <input type="file" (change)="onFileSelected($event)" accept="image/*" class="col-span-2 p-2 border rounded">
-  
-      <!-- Preview image (optional) -->
-      <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="col-span-2 w-32 h-32 object-cover rounded border" />
-  
-      <div class="col-span-2 flex space-x-2">
-        <button type="submit" class="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700">
-          {{ isEditingExpense ? 'Update Expense' : 'Add Expense' }}
-        </button>
-        <button *ngIf="isEditingExpense" type="button" (click)="cancelExpenseEdit()" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600">
-          Cancel
-        </button>
+  <!-- Forms Section -->
+  <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+    <div class="flex flex-col md:flex-row">
+      <!-- Income Form -->
+      <div class="w-full md:w-1/2 p-6 border-b md:border-b-0 md:border-r border-gray-200">
+        <div class="flex items-center mb-4">
+          <div class="h-8 w-1 bg-green-500 rounded-full mr-3"></div>
+          <h3 class="text-xl font-semibold text-gray-800">{{ isEditingIncome ? 'Edit' : 'Add' }} Income</h3>
+        </div>
+        
+        <form (ngSubmit)="isEditingIncome ? updateIncome() : addIncome()" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Donor Name</label>
+              <input type="text" placeholder="Enter donor name" [(ngModel)]="newIncome.donorName" name="donorName" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
+              <input type="number" placeholder="Enter amount" [(ngModel)]="newIncome.amount" name="amount" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Donation Type</label>
+              <select [(ngModel)]="newIncome.donationType" name="donationType" 
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                <option value="" disabled selected>Select type</option>
+                <option *ngFor="let type of donationTypes" [value]="type">{{ type }}</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            
+            <div *ngIf="newIncome.donationType === 'Other'">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Custom Type</label>
+              <input type="text" [(ngModel)]="newIncome.otherDonation" name="otherDonation" placeholder="Enter custom type"
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input type="date" [(ngModel)]="newIncome.date" name="date" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+            </div>
+          </div>
+          
+          <div class="flex space-x-3 pt-2">
+            <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+              {{ isEditingIncome ? 'Update Income' : 'Add Income' }}
+            </button>
+            <button *ngIf="isEditingIncome" type="button" (click)="cancelIncomeEdit()" 
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
-<hr class="border-t text-black my-4" />
-  <!-- Income List -->
-  <div class="mb-8 p-5">
-    <h3 class="text-xl font-semibold mb-3">Income Records</h3>
-    <div class="overflow-x-auto">
-      <table class="min-w-full bg-white border">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="py-2 px-3 border">Date</th>
-            <th class="py-2 px-3 border">Donor Name</th>
-            <th class="py-2 px-3 border">Donation Type</th>
-            <th class="py-2 px-3 border">Amount (₹)</th>
-            <th class="py-2 px-3 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let income of incomeList" class="border-b hover:bg-gray-50" [attr.id]="'income-' + (income.id || income._id)">
-            <td class="py-2 px-3 border">{{ income.date | date:'dd-MM-yyyy' }}</td>
-            <td class="py-2 px-3 border">{{ income.donorName }}</td>
-            <td class="py-2 px-3 border">{{ income.donationType }}</td>
-            <td class="py-2 px-3 border">₹{{ income.amount }}</td>
-            <td class="py-2 px-3 border flex space-x-2">
-              <button (click)="editIncome(income)" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
-                Edit
-              </button>
-              <button (click)="deleteIncome(income.id  || income._id || '')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
-                Delete
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="incomeList.length === 0">
-            <td colspan="5" class="py-4 text-center text-gray-500">No income records found</td>
-          </tr>
-        </tbody>
-      </table>
+      
+      <!-- Expense Form -->
+      <div class="w-full md:w-1/2 p-6">
+        <div class="flex items-center mb-4">
+          <div class="h-8 w-1 bg-red-500 rounded-full mr-3"></div>
+          <h3 class="text-xl font-semibold text-gray-800">{{ isEditingExpense ? 'Edit' : 'Add' }} Expense</h3>
+        </div>
+        
+        <form #editExpenseForm (ngSubmit)="isEditingExpense ? updateExpense() : addExpense()" class="space-y-4" enctype="multipart/form-data">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+              <input type="text" placeholder="Enter expense reason" [(ngModel)]="newExpense.reason" name="reason" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
+              <input type="number" placeholder="Enter amount" [(ngModel)]="newExpense.amount" name="amount" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Responsible Person</label>
+              <input type="text" placeholder="Enter name" [(ngModel)]="newExpense.responsiblePerson" name="responsiblePerson" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Bill By</label>
+              <input type="text" placeholder="Enter name" [(ngModel)]="newExpense.billBy" name="billBy" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input type="date" [(ngModel)]="newExpense.date" name="date" 
+                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+            </div>
+            
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Bill Image</label>
+              <div class="flex items-center space-x-4">
+                <label class="flex-1">
+                  <div class="relative cursor-pointer bg-white rounded-lg border border-gray-300 p-2 hover:border-red-500 transition duration-200">
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <div class="text-center py-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      <p class="text-sm text-gray-600 mt-1">Upload bill image</p>
+                    </div>
+                  </div>
+                </label>
+                <div *ngIf="previewUrl" class="flex-shrink-0">
+                  <img [src]="previewUrl" alt="Preview" class="w-16 h-16 object-cover rounded border border-gray-200" />
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex space-x-3 pt-2">
+            <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+              {{ isEditingExpense ? 'Update Expense' : 'Add Expense' }}
+            </button>
+            <button *ngIf="isEditingExpense" type="button" (click)="cancelExpenseEdit()" 
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-    <h3 class="text-xl font-semibold mt-2">Summary for {{ selectedYear }}</h3>
-    <li class="mt-2"><strong>Total Income:</strong> ₹{{ getSummary().totalIncome }}</li>
   </div>
-  <hr class="border-t text-red-500 font-bold" />
-  <!-- Expense List -->
-  <div class="mb-8 p-5">
-    <h3 class="text-xl font-semibold mb-3">Expense Records</h3>
-    <div class="overflow-x-auto">
-      <table class="min-w-full bg-white border">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="py-2 px-3 border">Date</th>
-            <th class="py-2 px-3 border">Reason</th>
-            <th class="py-2 px-3 border">Responsible Person</th>
-            <th class="py-2 px-3 border">Bill By</th>
-            <th class="py-2 px-3 border">Amount (₹)</th>
-            <th class="py-2 px-3 border">Bill Image</th>
-            <th class="py-2 px-3 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let expense of expenseList" class="border-b hover:bg-gray-50" [attr.id]="'expense-' + (expense.id || expense._id)">
-            <td class="py-2 px-3 border">{{ expense.date | date:'dd-MM-yyyy' }}</td>
-            <td class="py-2 px-3 border">{{ expense.reason }}</td>
-            <td class="py-2 px-3 border">{{ expense.responsiblePerson }}</td>
-            <td class="py-2 px-3 border">{{ expense.billBy }}</td>
-            <td class="py-2 px-3 border">₹{{ expense.amount }}</td>
-            <td class="py-2 px-3 border">
-              <a *ngIf="expense.billImage" [href]="expense.billImage" target="_blank" class="text-blue-600 hover:underline">
-                View Bill
-              </a>
-              <span *ngIf="!expense.billImage">No bill</span>
-            </td>
-            <td class="py-2 px-3 border flex space-x-2">
-              <button (click)="editExpense(expense)" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
-                Edit
-              </button>
-              <button (click)="deleteExpense(expense.id || expense._id || '')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
-                Delete
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="expenseList.length === 0">
-            <td colspan="7" class="py-4 text-center text-gray-500">No expense records found</td>
-          </tr>
-        </tbody>
-      </table>
+
+  <!-- Records Section -->
+  <div class="space-y-8">
+    <!-- Income Records -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="p-6">
+        <div class="flex items-center mb-4">
+          <div class="h-8 w-1 bg-green-500 rounded-full mr-3"></div>
+          <h3 class="text-xl font-semibold text-gray-800">Income Records</h3>
+          <span class="ml-auto bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+            {{ incomeList.length }} records
+          </span>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donor Name</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donation Type</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let income of incomeList" class="hover:bg-gray-50" [attr.id]="'income-' + (income.id || income._id)">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ income.date | date:'dd-MM-yyyy' }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ income.donorName }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ income.donationType }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">₹{{ income.amount }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-right space-x-2">
+                  <button (click)="editIncome(income)" class="text-blue-600 hover:text-blue-900 font-medium">
+                    Edit
+                  </button>
+                  <button (click)="deleteIncome(income.id || income._id || '')" class="text-red-600 hover:text-red-900 font-medium">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="incomeList.length === 0">
+                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No income records found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <h3 class="text-xl font-semibold mt-2 ">Summary for {{ selectedYear }}</h3>
-    <li class="mt-2"><strong>Total Expense:</strong> ₹{{ getSummary().totalExpense }}</li>
+    
+    <!-- Expense Records -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="p-6">
+        <div class="flex items-center mb-4">
+          <div class="h-8 w-1 bg-red-500 rounded-full mr-3"></div>
+          <h3 class="text-xl font-semibold text-gray-800">Expense Records</h3>
+          <span class="ml-auto bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+            {{ expenseList.length }} records
+          </span>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responsible</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bill By</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bill</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let expense of expenseList" class="hover:bg-gray-50" [attr.id]="'expense-' + (expense.id || expense._id)">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ expense.date | date:'dd-MM-yyyy' }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">{{ expense.reason }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ expense.responsiblePerson }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ expense.billBy }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">₹{{ expense.amount }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <a *ngIf="expense.billImage" [href]="expense.billImage" target="_blank" 
+                     class="text-blue-600 hover:text-blue-900 inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View
+                  </a>
+                  <span *ngIf="!expense.billImage" class="text-gray-400">-</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-right space-x-2">
+                  <button (click)="editExpense(expense)" class="text-blue-600 hover:text-blue-900 font-medium">
+                    Edit
+                  </button>
+                  <button (click)="deleteExpense(expense.id || expense._id || '')" class="text-red-600 hover:text-red-900 font-medium">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="expenseList.length === 0">
+                <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">No expense records found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
-<hr class="border-t text-black my-4" />
-  <!-- Summary Display -->
-  <div class="mt-4 p-5">
-    <h3 class="text-xl font-semibold mb-3">Summary for {{ selectedYear }}</h3>
-    <ul class="list-disc pl-5 space-y-1">
-      <li><strong>Total Income (without tax):</strong> ₹{{ getSummary().totalIncome }}</li>
-      <li><strong>Total Tax Collected:</strong> ₹{{ totalTaxFromLCF }}</li>
-      <li><strong>Total Income (with tax):</strong> ₹{{ getSummary().totalWithTax }}</li>
-      <li><strong>Total Expense:</strong> ₹{{ getSummary().totalExpense }}</li>
-      <li><strong>Balance:</strong> ₹{{ getSummary().balance }}</li>
-    </ul>
+
+  <!-- Detailed Summary Section -->
+  <div class="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="p-6">
+      <div class="flex items-center mb-4">
+        <div class="h-8 w-1 bg-blue-500 rounded-full mr-3"></div>
+        <h3 class="text-xl font-semibold text-gray-800">Financial Summary for {{ selectedYear }}</h3>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="text-lg font-medium text-gray-900 mb-3">Income Details</h4>
+          <ul class="space-y-2">
+            <li class="flex justify-between py-2 border-b border-gray-100">
+              <span class="text-gray-600">Total Income (without tax)</span>
+              <span class="font-medium">₹{{ getSummary().totalIncome }}</span>
+            </li>
+            <li class="flex justify-between py-2 border-b border-gray-100">
+              <span class="text-gray-600">Total Tax Collected</span>
+              <span class="font-medium">₹{{ totalTaxFromLCF }}</span>
+            </li>
+            <li class="flex justify-between py-2 border-b border-gray-100">
+              <span class="text-gray-600">Total Income (with tax)</span>
+              <span class="font-medium text-green-600">₹{{ getSummary().totalWithTax }}</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-medium text-gray-900 mb-3">Expense & Balance</h4>
+          <ul class="space-y-2">
+            <li class="flex justify-between py-2 border-b border-gray-100">
+              <span class="text-gray-600">Total Expenses</span>
+              <span class="font-medium text-red-600">₹{{ getSummary().totalExpense }}</span>
+            </li>
+            <li class="flex justify-between py-2">
+              <span class="text-gray-600 font-semibold">Net Balance</span>
+              <span class="font-bold text-lg" [ngClass]="{'text-green-600': getSummary().balance >= 0, 'text-red-600': getSummary().balance < 0}">
+                ₹{{ getSummary().balance }}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
