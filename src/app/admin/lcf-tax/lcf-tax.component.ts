@@ -122,18 +122,22 @@ export class LcfTaxComponent implements OnInit {
     }
   }
 
-  private generateAvailableYears(): void {
-    const currentYear = new Date().getFullYear();
-    const years: (number | string)[] = ['All Years']; // Add "All Years" option
-    
-    // Add years from 5 years ago to 5 years in the future
-    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
-      years.push(i);
-    }
-    
-    this.availableYears = years;
-    console.log('Generated available years:', this.availableYears);
+private generateAvailableYears(): void {
+  const currentYear = new Date().getFullYear();
+  const years: (number | string)[] = ['All Years']; // Add "All Years" option
+  
+  // Add years from 10 years ago to current year only (no future years)
+  for (let i = currentYear - 5; i <= currentYear; i++) {
+    years.push(i);
   }
+  
+  // Sort in descending order to show recent years first
+  const yearNumbers = years.filter(year => typeof year === 'number') as number[];
+  yearNumbers.sort((a, b) => b - a);
+  
+  this.availableYears = ['All Years', ...yearNumbers];
+  console.log('Generated available years:', this.availableYears);
+}
 
   async loadTaxData(): Promise<void> {
     try {

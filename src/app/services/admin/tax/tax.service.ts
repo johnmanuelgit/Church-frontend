@@ -52,7 +52,7 @@ export interface FamilyHead {
 })
 export class TaxService {
  
-  private apiUrl = 'https://church-backend-036s.onrender.com/api/tax';
+  private apiUrl = 'http://localhost:3000/api/tax';
   private taxData: TaxSummary[] = [];
   
   constructor(private http: HttpClient) {}
