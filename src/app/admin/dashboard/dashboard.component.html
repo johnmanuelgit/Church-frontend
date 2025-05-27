@@ -1,231 +1,280 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-100 bg-center bg-cover bg-no-repeat relative" style="background-image: url('assets/backround/bg-admin.jpg')">
-  <!-- Overlay with gradient -->
-  <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-indigo-900/70 backdrop-blur-sm"></div>
+  <!-- Enhanced overlay with subtle gradient animation -->
+  <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-indigo-900/70 to-purple-900/70 backdrop-blur-sm animate-gradient-shift"></div>
 
-  <!-- Dashboard Container -->
-  <div class="relative z-10 w-full max-w-4xl p-10 mx-4">
-    <div class="overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl transition-all duration-300">
-      <!-- Header -->
-      <div class="p-8 pb-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-t-2xl">
-        <div class="flex items-center justify-center space-x-3 mb-4">
-          <div class="p-2 bg-white/20 rounded-lg">
+  <!-- Dashboard Container with subtle floating effect -->
+  <div class="relative z-10 w-full max-w-5xl p-4 mx-4 transform transition-all duration-500 hover:scale-[1.002]">
+    <div class="overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-3xl">
+      <!-- Enhanced Header with animated gradient -->
+      <div class="p-8 pb-6 bg-gradient-to-r from-blue-600 via-indigo-700 to-purple-600 text-white rounded-t-2xl animate-gradient-x">
+        <div class="flex items-center justify-center space-x-3 mb-4 transform hover:scale-105 transition-transform duration-300">
+          <div class="p-2 bg-white/20 rounded-lg shadow-inner">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+          <div>
+            <h1 class="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+            <p class="text-center text-blue-100 mt-1 opacity-90">Manage all system sections from one centralized location</p>
+          </div>
         </div>
-        <p class="text-center text-blue-100">Manage all system sections from one centralized location</p>
       </div>
 
-      <!-- Navigation Links -->
+      <!-- Navigation Links with improved grid and animations -->
       <div class="p-8 pt-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Manage Users -->
-          <a class="group relative block p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-400 overflow-hidden"
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Manage Users Card -->
+          <a class="group relative block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-400 overflow-hidden transform hover:-translate-y-1"
              href="#">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="relative z-10 flex items-start">
-              <div class="p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-start space-x-4">
+              <div class="flex-shrink-0 p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </div>
-              <div class="ml-4">
+              <div>
                 <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Manage Users</h3>
-                <p class="mt-1 text-sm text-gray-500">Administer system users and permissions</p>
+                <p class="mt-1 text-sm text-gray-500 group-hover:text-gray-600">Administer system users and permissions</p>
+                <span class="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                  Access
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
-            <div class="relative z-10 mt-4 flex justify-end">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                Access
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
             </div>
           </a>
 
-          <!-- Members -->
-          <a class="group relative block p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-400 overflow-hidden"
+          <!-- Members Card -->
+          <a class="group relative block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:border-indigo-400 overflow-hidden transform hover:-translate-y-1"
              [routerLink]="['/members']">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="relative z-10 flex items-start">
-              <div class="p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-start space-x-4">
+              <div class="flex-shrink-0 p-3 rounded-lg bg-indigo-100 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <div class="ml-4">
-                <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Members</h3>
-                <p class="mt-1 text-sm text-gray-500">Manage all member records</p>
+              <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-indigo-700 transition-colors duration-300">Members</h3>
+                <p class="mt-1 text-sm text-gray-500 group-hover:text-gray-600">Manage all member records</p>
+                <span class="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                  Manage
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
-            <div class="relative z-10 mt-4 flex justify-end">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                Manage
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
             </div>
           </a>
 
-          <!-- Offering -->
-          <a class="group relative block p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-400 overflow-hidden"
+          <!-- Offering Card -->
+          <a class="group relative block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:border-green-400 overflow-hidden transform hover:-translate-y-1"
              href="#">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="relative z-10 flex items-start">
-              <div class="p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-teal-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-start space-x-4">
+              <div class="flex-shrink-0 p-3 rounded-lg bg-green-100 text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all duration-300 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div class="ml-4">
-                <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Offering</h3>
-                <p class="mt-1 text-sm text-gray-500">Manage offerings and donations</p>
+              <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors duration-300">Offering</h3>
+                <p class="mt-1 text-sm text-gray-500 group-hover:text-gray-600">Manage offerings and donations</p>
+                <span class="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 group-hover:bg-green-600 group-hover:text-white transition-all duration-300">
+                  Track
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
-            <div class="relative z-10 mt-4 flex justify-end">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                Track
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
             </div>
           </a>
 
-          <!-- LCF Tax -->
-          <a class="group relative block p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-400 overflow-hidden"
+          <!-- LCF Tax Card -->
+          <a class="group relative block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:border-amber-400 overflow-hidden transform hover:-translate-y-1"
              [routerLink]="['/lcftax']">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="relative z-10 flex items-start">
-              <div class="p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-start space-x-4">
+              <div class="flex-shrink-0 p-3 rounded-lg bg-amber-100 text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
                 </svg>
               </div>
-              <div class="ml-4">
-                <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors duration-300">LCF Tax</h3>
-                <p class="mt-1 text-sm text-gray-500">Manage tax records and filings</p>
+              <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-amber-700 transition-colors duration-300">LCF Tax</h3>
+                <p class="mt-1 text-sm text-gray-500 group-hover:text-gray-600">Manage tax records and filings</p>
+                <span class="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
+                  Process
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
-            <div class="relative z-10 mt-4 flex justify-end">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                Process
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
             </div>
           </a>
 
-          <!-- Members Subscription -->
-          <a class="group relative block p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-400 overflow-hidden"
+          <!-- Members Subscription Card -->
+          <a class="group relative block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:border-purple-400 overflow-hidden transform hover:-translate-y-1"
              [routerLink]="['/csimembers']">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="relative z-10 flex items-start">
-              <div class="p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-pink-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-start space-x-4">
+              <div class="flex-shrink-0 p-3 rounded-lg bg-purple-100 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
               </div>
-              <div class="ml-4">
-                <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Members Subscription</h3>
-                <p class="mt-1 text-sm text-gray-500">Manage CSI member subscriptions</p>
+              <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-purple-700 transition-colors duration-300">Members Subscription</h3>
+                <p class="mt-1 text-sm text-gray-500 group-hover:text-gray-600">Manage CSI member subscriptions</p>
+                <span class="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+                  Renew
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
-            <div class="relative z-10 mt-4 flex justify-end">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                Renew
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
             </div>
           </a>
 
-          <!-- Youth Members Subscription -->
-          <a class="group relative block p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-400 overflow-hidden"
+          <!-- Youth Members Subscription Card -->
+          <a class="group relative block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:border-rose-400 overflow-hidden transform hover:-translate-y-1"
              [routerLink]="['/youthmembers']">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="relative z-10 flex items-start">
-              <div class="p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-br from-rose-50/50 to-pink-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-start space-x-4">
+              <div class="flex-shrink-0 p-3 rounded-lg bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <div class="ml-4">
-                <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Youth Members</h3>
-                <p class="mt-1 text-sm text-gray-500">Manage youth member subscriptions</p>
+              <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-rose-700 transition-colors duration-300">Youth Members</h3>
+                <p class="mt-1 text-sm text-gray-500 group-hover:text-gray-600">Manage youth member subscriptions</p>
+                <span class="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300">
+                  Update
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
-            <div class="relative z-10 mt-4 flex justify-end">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                Update
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
             </div>
           </a>
 
-          <!-- Income & Expense -->
-          <a class="group relative block p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-400 overflow-hidden"
+          <!-- Income & Expense Card -->
+          <a class="group relative block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:border-emerald-400 overflow-hidden transform hover:-translate-y-1"
              [routerLink]="['/income&expense']">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="relative z-10 flex items-start">
-              <div class="p-3 rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-start space-x-4">
+              <div class="flex-shrink-0 p-3 rounded-lg bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div class="ml-4">
-                <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Income & Expense</h3>
-                <p class="mt-1 text-sm text-gray-500">Track financial transactions</p>
+              <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-emerald-700 transition-colors duration-300">Income & Expense</h3>
+                <p class="mt-1 text-sm text-gray-500 group-hover:text-gray-600">Track financial transactions</p>
+                <span class="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+                  View
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
-            <div class="relative z-10 mt-4 flex justify-end">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                View
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
             </div>
           </a>
         </div>
 
-        <!-- Quick Stats (optional) -->
-        <div class="mt-8 pt-6 border-t border-gray-200">
-          <h3 class="text-lg font-medium text-gray-800 mb-4">Quick Stats</h3>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-              <p class="text-sm text-blue-600 font-medium">Total Members</p>
-              <p class="text-2xl font-bold text-blue-800 mt-1">1,248</p>
+        <!-- Enhanced Quick Stats Section -->
+        <div class="mt-10 pt-8 border-t border-gray-200/70">
+          <h3 class="text-lg font-medium text-gray-800 mb-6 flex items-center">
+            <span class="w-1 h-6 bg-blue-500 rounded-full mr-2"></span>
+            <span>Quick Stats</span>
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500 font-medium">Total Members</p>
+                  <p class="text-2xl font-bold text-gray-800 mt-1 group-hover:text-blue-600 transition-colors">1,248</p>
+                </div>
+                <div class="p-3 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full w-3/4"></div>
+              </div>
             </div>
-            <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-              <p class="text-sm text-green-600 font-medium">Active Subs</p>
-              <p class="text-2xl font-bold text-green-800 mt-1">892</p>
+            
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500 font-medium">Active Subs</p>
+                  <p class="text-2xl font-bold text-gray-800 mt-1 group-hover:text-green-600 transition-colors">892</p>
+                </div>
+                <div class="p-3 rounded-lg bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-green-500 rounded-full w-5/6"></div>
+              </div>
             </div>
-            <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
-              <p class="text-sm text-amber-600 font-medium">Pending</p>
-              <p class="text-2xl font-bold text-amber-800 mt-1">42</p>
+            
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500 font-medium">Pending</p>
+                  <p class="text-2xl font-bold text-gray-800 mt-1 group-hover:text-amber-600 transition-colors">42</p>
+                </div>
+                <div class="p-3 rounded-lg bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-amber-500 rounded-full w-1/4"></div>
+              </div>
             </div>
-            <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
-              <p class="text-sm text-purple-600 font-medium">Revenue</p>
-              <p class="text-2xl font-bold text-purple-800 mt-1">$24,589</p>
+            
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500 font-medium">Revenue</p>
+                  <p class="text-2xl font-bold text-gray-800 mt-1 group-hover:text-purple-600 transition-colors">$24,589</p>
+                </div>
+                <div class="p-3 rounded-lg bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-3 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-purple-500 rounded-full w-4/5"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Footer -->
-      <div class="px-8 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-        <p class="text-sm text-gray-500">Last login: Today at {{currentTime}}</p>
-        <button class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center">
+      <!-- Enhanced Footer -->
+      <div class="px-8 py-5 bg-gray-50 border-t border-gray-200/70 flex items-center justify-between rounded-b-2xl">
+        <div class="flex items-center space-x-2">
+          <div class="p-1.5 bg-blue-100 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p class="text-sm text-gray-500">Last login: Today at {{currentTime}}</p>
+        </div>
+        <button class="text-sm text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 font-medium flex items-center px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
