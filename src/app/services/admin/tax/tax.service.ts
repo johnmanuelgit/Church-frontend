@@ -134,10 +134,6 @@ getFamilyHeads(): Observable<FamilyHead[]> {
     return this.http.get(`${this.apiUrl}/export/all-years`, { params });
   }
 
-  // Load all tax data from the backend
-  loadTaxData(): Observable<TaxSummary[]> {
-    return this.http.get<TaxSummary[]>(`${this.apiUrl}/tax/summary`);
-  }
 
   // Store the loaded tax data in memory
   setTaxData(data: TaxSummary[]): void {
