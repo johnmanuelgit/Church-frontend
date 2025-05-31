@@ -105,7 +105,7 @@ export class IncomeExpenseComponent implements OnInit{
   originalTaxRates: TaxRate = { ...this.taxRates };
   
   isLoading = false;
-  private apiBaseUrl = 'http://localhost:3000/api';
+  private apiBaseUrl = 'https://church-backend-036s.onrender.com/api';
 
   constructor(private http: HttpClient, private taxService: TaxService, private snackBar: MatSnackBar) {}
 
