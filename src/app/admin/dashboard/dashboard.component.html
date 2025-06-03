@@ -50,7 +50,7 @@
     <!-- Dashboard Cards Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <!-- Manage Users -->
-      <a href="#" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
+      <a *ngIf="showUser" [routerLink]="['/user']" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
         <div class="p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0 p-3 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
@@ -75,7 +75,7 @@
       </a>
 
       <!-- Members -->
-      <a [routerLink]="['/members']" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
+      <a  *ngIf="showMembers" [routerLink]="['/members']" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
         <div class="p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0 p-3 rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
@@ -100,7 +100,7 @@
       </a>
 
       <!-- LCF Tax -->
-      <a [routerLink]="['/lcftax']" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
+      <a *ngIf="showLCF" [routerLink]="['/lcftax']" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
         <div class="p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0 p-3 rounded-lg bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
@@ -125,7 +125,7 @@
       </a>
 
       <!-- Income & Expense -->
-      <a [routerLink]="['/income&expense']" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
+      <a *ngIf="showIncome" [routerLink]="['/income&expense']" class="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-md">
         <div class="p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0 p-3 rounded-lg bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">

@@ -11,9 +11,16 @@ import { RouterLink, RouterModule } from '@angular/router';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  currentTime: string = '';
+  currentTime = '';
+  access = JSON.parse(localStorage.getItem('admin_user') || '{"moduleAccess": {}}').moduleAccess || {};
+
+  showLCF = this.access.lcf;
+  showIncome = this.access.incomeExpense;
+  showMembers = this.access.members;
+  showUser = this.access.user;
 
   ngOnInit(): void {
     const now = new Date();
-    this.currentTime = now.toLocaleTimeString(); 
-}}
+    this.currentTime = now.toLocaleTimeString();
+  }
+}

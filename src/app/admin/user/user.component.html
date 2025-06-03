@@ -1,0 +1,66 @@
+<form (ngSubmit)="createAdmin()" class="space-y-4 border p-4 rounded">
+  <input type="text" [(ngModel)]="admin.username" name="name" placeholder="Name" required class="border p-2 w-full" />
+  <input type="email" [(ngModel)]="admin.email" name="email" placeholder="Email" required class="border p-2 w-full" />
+  <input type="password" [(ngModel)]="admin.password" name="password" placeholder="Password" required class="border p-2 w-full" />
+
+  <div class="font-bold">Module Access</div>
+ <label><input type="checkbox" [(ngModel)]="admin.moduleAccess.lcf" name="lcf" /> LCF</label>
+<label><input type="checkbox" [(ngModel)]="admin.moduleAccess.incomeExpense" name="incomeExpense" /> Income & Expense</label>
+<label><input type="checkbox" [(ngModel)]="admin.moduleAccess.members" name="members" /> Members</label>
+<label><input type="checkbox" [(ngModel)]="admin.moduleAccess.user" name="user" /> User Admin</label>
+
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Create Admin</button>
+</form>
+
+
+
+<div class="p-4 space-y-4">
+  <h2 class="text-xl font-bold">Admin List</h2>
+
+  <table class="w-full border text-left">
+    <thead>
+      <tr>
+        <th class="p-2 border">Name</th>
+        <th class="p-2 border">Email</th>
+        <th class="p-2 border">Access</th>
+        <th class="p-2 border">Active</th>
+        <th class="p-2 border">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let admin of admins">
+        <td class="p-2 border">{{ admin.username }}</td>
+        <td class="p-2 border">{{ admin.email }}</td>
+        <td class="p-2 border">
+          {{ admin.moduleAccess | json }}
+        </td>
+        <td class="p-2 border">{{ admin.isActive ? 'Yes' : 'No' }}</td>
+        <td class="p-2 border">
+          <button class="text-blue-500" (click)="edit(admin)">Edit</button> |
+          <button class="text-red-500" (click)="delete(admin._id!)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Edit Form -->
+  <div *ngIf="editMode && selectedAdmin" class="border p-4 mt-4 rounded bg-gray-50">
+    <h3 class="font-semibold">Edit Admin</h3>
+    <input class="border p-1 block my-2 w-full" [(ngModel)]="selectedAdmin.username" />
+    <input class="border p-1 block my-2 w-full" [(ngModel)]="selectedAdmin.email" />
+
+    <div>
+      <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.lcf" /> LCF</label>
+      <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.incomeExpense" /> Income & Expense</label>
+      <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.members" /> Members</label>
+            <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.user" /> User Admin</label>
+    </div>
+
+    <div>
+      <label><input type="checkbox" [(ngModel)]="selectedAdmin.isActive" /> Active</label>
+    </div>
+
+    <button class="bg-green-500 text-white px-3 py-1 mt-2" (click)="save()">Save</button>
+    <button class="bg-gray-400 text-white px-3 py-1 mt-2 ml-2" (click)="cancel()">Cancel</button>
+  </div>
+</div>

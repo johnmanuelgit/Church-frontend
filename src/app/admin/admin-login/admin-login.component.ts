@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
+// src/app/pages/admin-login/admin-login.component.ts
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/admin/auth/auth.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
@@ -10,29 +11,25 @@ import { AuthService } from '../../services/admin/auth/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './admin-login.component.html',
-  styleUrl: './admin-login.component.css'
+  styleUrls: ['./admin-login.component.css']
 })
 export class AdminLoginComponent {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
   successMessage: string = '';
-  
-  // Form states
   isLoading: boolean = false;
   isSubmitted: boolean = false;
   rememberMe: boolean = false;
-  
-  // Forgot password state
-  showForgotPassword: boolean = false;
-  resetEmail: string = '';
-  resetEmailSent: boolean = false;
 
-  // Validation properties
-  usernameError: string = '';
-  passwordError: string = '';
-  resetEmailError: string = '';
-
+  // Forgot-password state
+  showForgotPassword = false;
+  resetEmail = '';
+  resetEmailSent = false;
+  usernameError = '';
+  passwordError = '';
+  resetEmailError = '';
+ 
   constructor(
     private authService: AuthService,
     private router: Router
@@ -44,7 +41,6 @@ export class AdminLoginComponent {
     this.passwordError = '';
     let isValid = true;
 
-    // Validate username
     if (!this.username) {
       this.usernameError = 'Username is required';
       isValid = false;
@@ -53,7 +49,6 @@ export class AdminLoginComponent {
       isValid = false;
     }
 
-    // Validate password
     if (!this.password) {
       this.passwordError = 'Password is required';
       isValid = false;
@@ -65,35 +60,42 @@ export class AdminLoginComponent {
     return isValid;
   }
 
-  login() {
-    this.errorMessage = '';
-    this.successMessage = '';
+login() {
+  this.errorMessage = '';
+  this.successMessage = '';
 
-    // Validate form first
-    if (!this.validateForm()) {
-      return;
+  if (!this.validateForm()) {
+    return;
+  }
+
+  this.isLoading = true;
+
+  this.authService.login(this.username, this.password, this.rememberMe).subscribe({
+    next: (res) => {
+      console.log('Login response:', res);
+
+      if (res.status === 'success') {
+          const user = res.user;
+    localStorage.setItem('admin_user', JSON.stringify(user));
+        this.successMessage = res.message;
+      } else {
+          const user = res.user;
+
+        this.errorMessage = res.message || 'Login failed';
+         sessionStorage.setItem('admin_user', JSON.stringify(user));
+      }
+ this.router.navigate(['/admindash']);
+      this.isLoading = false; // ✅ Reset loading
+    },
+    error: (err) => {
+      console.error('Login error:', err);
+      this.errorMessage = err?.error?.message || 'Login failed';
+      this.isLoading = false; // ✅ Reset loading
     }
 
-    this.isLoading = true;
-
-    this.authService.login(this.username, this.password, this.rememberMe)
-      .subscribe({
-        next: (res) => {
-          this.isLoading = false;
-          this.successMessage = res.message || 'Login successful';
-          // Navigate to dashboard after successful login
-          this.router.navigate(['/admindash']).then(() => {
-            console.log('Navigated to /admindash');
-          });
-          
     
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.errorMessage = err.error?.message || 'Login failed. Please check your credentials.';
-        }
-      });
-  }
+  });
+}
 
   toggleForgotPassword() {
     this.showForgotPassword = !this.showForgotPassword;
@@ -106,19 +108,15 @@ export class AdminLoginComponent {
 
   validateResetEmail(): boolean {
     this.resetEmailError = '';
-    
     if (!this.resetEmail) {
       this.resetEmailError = 'Email is required';
       return false;
     }
-    
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.resetEmail)) {
       this.resetEmailError = 'Please enter a valid email address';
       return false;
     }
-    
     return true;
   }
 
@@ -129,15 +127,14 @@ export class AdminLoginComponent {
 
     this.isLoading = true;
     this.errorMessage = '';
-    
     this.authService.forgotPassword(this.resetEmail)
       .subscribe({
-        next: (res) => {
+        next: res => {
           this.isLoading = false;
           this.resetEmailSent = true;
-          this.successMessage = res.message || 'Password reset instructions have been sent to your email';
+          this.successMessage = res.message || 'Password reset instructions have been sent.';
         },
-        error: (err) => {
+        error: err => {
           this.isLoading = false;
           this.errorMessage = err.error?.message || 'Failed to send reset email. Please try again.';
         }

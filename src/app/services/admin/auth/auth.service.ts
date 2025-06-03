@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-
 interface LoginResponse {
   status: string;
   message: string;
@@ -12,6 +11,12 @@ interface LoginResponse {
     id: string;
     username: string;
     role?: string;
+    moduleAccess?: {
+      lcf: boolean;
+      incomeExpense: boolean;
+      members: boolean;
+      user: boolean;
+    };
   };
 }
 
@@ -24,7 +29,7 @@ interface ForgotPasswordResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://church-backend-036s.onrender.com/api/admin';
+  private apiUrl = 'http://localhost:3000/api/admin';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
   private userSubject = new BehaviorSubject<any>(this.getCurrentUser());
   private rememberMeKey = 'admin_remember';
@@ -33,36 +38,38 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {}
-  login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
+ login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password })
-  
       .pipe(
         tap(response => {
-          if (response.status === 'success') {
-            // Store authentication status
+          if (response.status === 'success' && response.user && response.token) {
+            // 1️⃣ Mark as authenticated
             localStorage.setItem('adminAuthenticated', 'true');
-            
-            // Store user data if available
-            if (response.user) {
-              if (rememberMe) {
-                localStorage.setItem('admin_user', JSON.stringify(response.user));
-                localStorage.setItem(this.rememberMeKey, 'true');
-              } else {
-                sessionStorage.setItem('admin_user', JSON.stringify(response.user));
-                localStorage.removeItem(this.rememberMeKey);
-              }
-              this.userSubject.next(response.user);
+
+            // 2️⃣ Store user data (including moduleAccess)
+            const userData = {
+              id: response.user.id,
+              username: response.user.username,
+              role: response.user.role,
+              moduleAccess: response.user.moduleAccess || { lcf: false, incomeExpense: false, members: false, user: false }
+            };
+
+            if (rememberMe) {
+              localStorage.setItem('admin_user', JSON.stringify(userData));
+              localStorage.setItem(this.rememberMeKey, 'true');
+            } else {
+              sessionStorage.setItem('admin_user', JSON.stringify(userData));
+              localStorage.removeItem(this.rememberMeKey);
             }
-            
-            // Store token if available
-            if (response.token) {
-              if (rememberMe) {
-                localStorage.setItem('admin_token', response.token);
-              } else {
-                sessionStorage.setItem('admin_token', response.token);
-              }
+            this.userSubject.next(userData);
+
+            // 3️⃣ Store token
+            if (rememberMe) {
+              localStorage.setItem('admin_token', response.token!);
+            } else {
+              sessionStorage.setItem('admin_token', response.token!);
             }
-            
+
             this.isAuthenticatedSubject.next(true);
           }
         }),
@@ -72,7 +79,6 @@ export class AuthService {
         })
       );
   }
-
   forgotPassword(email: string): Observable<ForgotPasswordResponse> {
     return this.http.post<ForgotPasswordResponse>(`${this.apiUrl}/forgot-password`, { email })
       .pipe(
