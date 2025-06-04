@@ -107,13 +107,9 @@ export class AuthService {
     localStorage.removeItem(this.rememberMeKey);
     sessionStorage.removeItem('admin_user');
     sessionStorage.removeItem('admin_token');
-    
-    // Update subjects
     this.isAuthenticatedSubject.next(false);
     this.userSubject.next(null);
-    
-    // Redirect to login page
-    this.router.navigate(['/admin/login']);
+    this.router.navigate(['/']);
   }
 
   isAuthenticated(): Observable<boolean> {

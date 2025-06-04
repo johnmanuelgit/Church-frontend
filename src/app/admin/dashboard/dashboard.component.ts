@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/admin/auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +13,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 export class DashboardComponent implements OnInit {
   currentTime = '';
   user: any = null;
-constructor (private router:Router){}
+constructor (private authService: AuthService){}
   ngOnInit(): void {
     const now = new Date();
     this.currentTime = now.toLocaleTimeString();
@@ -31,20 +32,13 @@ constructor (private router:Router){}
     return this.user?.role === 'admin';
   }
 
-  // ✅ Module access check (assuming user.moduleAccess is an object like { dashboard: true, users: false })
   hasModuleAccess(moduleName: string): boolean {
     if (this.isSuperAdmin()) return true;
     return this.user?.moduleAccess?.[moduleName] === true;
   }
 
    logout(): void {
-this.clear()
-    this.router.navigate(['/adminlogin']); 
-  }
-  clear(){
-    sessionStorage.removeItem('admin_user');
-    localStorage.removeItem('admin_user');
-    localStorage.removeItem('admin_remember');
+  this.authService.logout()
   }
 
 }
