@@ -1,10 +1,9 @@
 // src/app/pages/admin-login/admin-login.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/admin/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-admin-login',
@@ -13,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './admin-login.component.html',
   styleUrls: ['./admin-login.component.css']
 })
-export class AdminLoginComponent {
+export class AdminLoginComponent implements OnInit {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
@@ -34,6 +33,34 @@ export class AdminLoginComponent {
     private authService: AuthService,
     private router: Router
   ) {}
+
+  ngOnInit() {
+    // Check if user is already authenticated
+    this.authService.isAuthenticated().subscribe(isAuth => {
+      if (isAuth) {
+        this.router.navigate(['/admindash']);
+      }
+    });
+
+    // Load remember me preference
+    this.loadRememberMeData();
+  }
+
+  private loadRememberMeData() {
+    const rememberMe = localStorage.getItem('admin_remember');
+    if (rememberMe === 'true') {
+      const savedUser = localStorage.getItem('admin_user');
+      if (savedUser) {
+        try {
+          const userData = JSON.parse(savedUser);
+          this.username = userData.username || '';
+          this.rememberMe = true;
+        } catch (e) {
+          console.error('Error loading saved user data:', e);
+        }
+      }
+    }
+  }
 
   validateForm(): boolean {
     this.isSubmitted = true;
@@ -60,36 +87,40 @@ export class AdminLoginComponent {
     return isValid;
   }
 
-login() {
-  this.errorMessage = '';
-  this.successMessage = '';
+  login() {
+    this.errorMessage = '';
+    this.successMessage = '';
 
-  if (!this.validateForm()) {
-    return;
-  }
-
-  this.isLoading = true;
-
-  this.authService.login(this.username, this.password, this.rememberMe).subscribe({
-    next: (res) => {
-      console.log('Login response:', res);
-
-      if (res.status === 'success') {
-        this.successMessage = res.message;
-        this.router.navigate(['/admindash']);
-      } else {
-        this.errorMessage = res.message || 'Login failed';
-      }
-
-      this.isLoading = false;
-    },
-    error: (err) => {
-      console.error('Login error:', err);
-      this.errorMessage = err?.error?.message || 'Login failed';
-      this.isLoading = false;
+    if (!this.validateForm()) {
+      return;
     }
-  });
-}
+
+    this.isLoading = true;
+
+    this.authService.login(this.username, this.password, this.rememberMe).subscribe({
+      next: (res) => {
+        console.log('Login response:', res);
+
+        if (res.status === 'success') {
+          this.successMessage = res.message;
+          
+          // Small delay to show success message before redirect
+          setTimeout(() => {
+            this.router.navigate(['/admindash']);
+          }, 1000);
+        } else {
+          this.errorMessage = res.message || 'Login failed';
+        }
+
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+        this.errorMessage = err?.error?.message || 'Login failed. Please check your credentials.';
+        this.isLoading = false;
+      }
+    });
+  }
 
   toggleForgotPassword() {
     this.showForgotPassword = !this.showForgotPassword;
@@ -102,15 +133,18 @@ login() {
 
   validateResetEmail(): boolean {
     this.resetEmailError = '';
+    
     if (!this.resetEmail) {
       this.resetEmailError = 'Email is required';
       return false;
     }
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.resetEmail)) {
       this.resetEmailError = 'Please enter a valid email address';
       return false;
     }
+    
     return true;
   }
 
@@ -121,17 +155,39 @@ login() {
 
     this.isLoading = true;
     this.errorMessage = '';
-    this.authService.forgotPassword(this.resetEmail)
-      .subscribe({
-        next: res => {
-          this.isLoading = false;
+
+    this.authService.forgotPassword(this.resetEmail).subscribe({
+      next: (res) => {
+        console.log('Forgot password response:', res);
+        this.isLoading = false;
+        
+        if (res.status === 'success') {
           this.resetEmailSent = true;
-          this.successMessage = res.message || 'Password reset instructions have been sent.';
-        },
-        error: err => {
-          this.isLoading = false;
-          this.errorMessage = err.error?.message || 'Failed to send reset email. Please try again.';
+          this.successMessage = res.message || 'Password reset instructions have been sent to your email.';
+        } else {
+          this.errorMessage = res.message || 'Failed to send reset email.';
         }
-      });
+      },
+      error: (err) => {
+        console.error('Forgot password error:', err);
+        this.isLoading = false;
+        this.errorMessage = err.error?.message || 'Failed to send reset email. Please try again.';
+      }
+    });
+  }
+
+  // Helper method to reset the forgot password form
+  resetForgotPasswordForm() {
+    this.resetEmail = '';
+    this.resetEmailError = '';
+    this.resetEmailSent = false;
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  // Method to handle "try again" link in success message
+  tryAgain() {
+    this.resetEmailSent = false;
+    this.resetEmail = '';
   }
 }
