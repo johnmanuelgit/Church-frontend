@@ -75,25 +75,19 @@ login() {
       console.log('Login response:', res);
 
       if (res.status === 'success') {
-          const user = res.user;
-    localStorage.setItem('admin_user', JSON.stringify(user));
         this.successMessage = res.message;
+        this.router.navigate(['/admindash']);
       } else {
-          const user = res.user;
-
         this.errorMessage = res.message || 'Login failed';
-         sessionStorage.setItem('admin_user', JSON.stringify(user));
       }
- this.router.navigate(['/admindash']);
-      this.isLoading = false; // ✅ Reset loading
+
+      this.isLoading = false;
     },
     error: (err) => {
       console.error('Login error:', err);
       this.errorMessage = err?.error?.message || 'Login failed';
-      this.isLoading = false; // ✅ Reset loading
+      this.isLoading = false;
     }
-
-    
   });
 }
 

@@ -7,15 +7,15 @@ import { LcfTaxComponent } from './admin/lcf-tax/lcf-tax.component';
 import { IncomeExpenseComponent } from './admin/income-expense/income-expense.component';
 import { UserComponent } from './admin/user/user.component';
 import { ModuleAccessGuard } from './guards/module-access.guard';
+import { UserAdminComponent } from './admin/user-admin/user-admin.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'adminlogin', component: AdminLoginComponent },
+  {path:'user-admin-login',component:UserAdminComponent},
   {
     path: 'admindash',
-    component: DashboardComponent,
-    canActivate: [ModuleAccessGuard],
-    data: { module: 'dashboard' }
+    component: DashboardComponent
   },
   {
     path: 'members',
@@ -33,13 +33,13 @@ export const routes: Routes = [
     path: 'income&expense',
     component: IncomeExpenseComponent,
     canActivate: [ModuleAccessGuard],
-    data: { module: 'finance' }
+    data: { module: 'incomeExpense' }
   },
   {
     path: 'user',
     component: UserComponent,
     canActivate: [ModuleAccessGuard],
-    data: { module: 'users' }
+    data: { module: 'user' }
   }
 ];
 

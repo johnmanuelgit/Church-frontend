@@ -40,4 +40,5 @@ export class UserAdminService {
   deleteAdmin(id: string) {
     return this.http.delete(`${this.apiUrl}/delete-admin/${id}`);
   }
+  
 }

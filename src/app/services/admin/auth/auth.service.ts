@@ -167,4 +167,35 @@ export class AuthService {
     const user = this.getCurrentUser();
     return user && (user.role === 'admin' || user.role === 'administrator');
   }
+
+
+  // In auth.service.ts, add this method:
+userLogin(email: string, password: string): Observable<LoginResponse> {
+  return this.http.post<LoginResponse>(`${this.apiUrl}/user-login`, { email, password })
+    .pipe(
+      tap(response => {
+        if (response.status === 'success' && response.user && response.token) {
+          // Same storage logic as regular login
+          localStorage.setItem('adminAuthenticated', 'true');
+          
+          const userData = {
+            id: response.user.id,
+            username: response.user.username,
+            role: response.user.role,
+            moduleAccess: response.user.moduleAccess || { lcf: false, incomeExpense: false, members: false, user: false }
+          };
+
+          sessionStorage.setItem('admin_user', JSON.stringify(userData));
+          sessionStorage.setItem('admin_token', response.token!);
+          
+          this.userSubject.next(userData);
+          this.isAuthenticatedSubject.next(true);
+        }
+      }),
+      catchError(error => {
+        this.isAuthenticatedSubject.next(false);
+        return throwError(() => error);
+      })
+    );
+}
 }
