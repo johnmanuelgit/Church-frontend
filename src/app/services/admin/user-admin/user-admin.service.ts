@@ -20,7 +20,7 @@ export interface User {
   providedIn: 'root',
 })
 export class UserAdminService {
-  private apiUrl = 'http://localhost:3000/api/admin/superadmin';
+  private apiUrl = 'https://church-backend-036s.onrender.com/api/admin/superadmin';
 
   constructor(private http: HttpClient) {}
   
