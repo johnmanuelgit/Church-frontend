@@ -5,20 +5,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
 
 // Extended interface for member details with year-wise payments
 interface ExtendedTaxPayment extends TaxPayment {
@@ -33,20 +24,11 @@ interface ExtendedTaxPayment extends TaxPayment {
     FormsModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatToolbarModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     MatButtonModule,
     MatIconModule,
     MatTableModule,
-    MatChipsModule,
     MatProgressSpinnerModule,
-    MatTooltipModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule
+    MatTooltipModule
   ],
   templateUrl: './lcf-tax.component.html',
   styleUrls: ['./lcf-tax.component.css']
