@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +12,7 @@ import { RouterLink, RouterModule } from '@angular/router';
 export class DashboardComponent implements OnInit {
   currentTime = '';
   user: any = null;
-
+constructor (private router:Router){}
   ngOnInit(): void {
     const now = new Date();
     this.currentTime = now.toLocaleTimeString();
@@ -36,4 +36,15 @@ export class DashboardComponent implements OnInit {
     if (this.isSuperAdmin()) return true;
     return this.user?.moduleAccess?.[moduleName] === true;
   }
+
+   logout(): void {
+this.clear()
+    this.router.navigate(['/adminlogin']); 
+  }
+  clear(){
+    sessionStorage.removeItem('admin_user');
+    localStorage.removeItem('admin_user');
+    localStorage.removeItem('admin_remember');
+  }
+
 }

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-
 interface LoginResponse {
   status: string;
   message: string;
@@ -39,51 +38,38 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {}
-
-  login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
+ login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password })
       .pipe(
         tap(response => {
           if (response.status === 'success' && response.user && response.token) {
-            // Store authentication flag
+            // 1️⃣ Mark as authenticated
             localStorage.setItem('adminAuthenticated', 'true');
 
-            // Prepare user data
+            // 2️⃣ Store user data (including moduleAccess)
             const userData = {
               id: response.user.id,
               username: response.user.username,
               role: response.user.role,
-              moduleAccess: response.user.moduleAccess || { 
-                lcf: false, 
-                incomeExpense: false, 
-                members: false, 
-                user: false 
-              }
+              moduleAccess: response.user.moduleAccess || { lcf: false, incomeExpense: false, members: false, user: false }
             };
 
-            // Handle remember me functionality
             if (rememberMe) {
-              // Store in localStorage for persistent login
               localStorage.setItem('admin_user', JSON.stringify(userData));
-              localStorage.setItem('admin_token', response.token!);
               localStorage.setItem(this.rememberMeKey, 'true');
-              
-              // Clear session storage to avoid conflicts
-              sessionStorage.removeItem('admin_user');
-              sessionStorage.removeItem('admin_token');
             } else {
-              // Store in sessionStorage for session-only login
               sessionStorage.setItem('admin_user', JSON.stringify(userData));
-              sessionStorage.setItem('admin_token', response.token!);
-              
-              // Clear localStorage and remember me flag
-              localStorage.removeItem('admin_user');
-              localStorage.removeItem('admin_token');
               localStorage.removeItem(this.rememberMeKey);
             }
-
-            // Update subjects
             this.userSubject.next(userData);
+
+            // 3️⃣ Store token
+            if (rememberMe) {
+              localStorage.setItem('admin_token', response.token!);
+            } else {
+              sessionStorage.setItem('admin_token', response.token!);
+            }
+
             this.isAuthenticatedSubject.next(true);
           }
         }),
@@ -93,12 +79,10 @@ export class AuthService {
         })
       );
   }
-
   forgotPassword(email: string): Observable<ForgotPasswordResponse> {
     return this.http.post<ForgotPasswordResponse>(`${this.apiUrl}/forgot-password`, { email })
       .pipe(
         catchError(error => {
-          console.error('Forgot password error:', error);
           return throwError(() => error);
         })
       );
@@ -110,7 +94,6 @@ export class AuthService {
       newPassword 
     }).pipe(
       catchError(error => {
-        console.error('Reset password error:', error);
         return throwError(() => error);
       })
     );
@@ -138,47 +121,24 @@ export class AuthService {
   }
 
   private hasValidToken(): boolean {
-    // Check session storage first
-    const sessionToken = sessionStorage.getItem('admin_token');
-    if (sessionToken && sessionStorage.getItem('admin_user')) {
-      return true;
-    }
-
-    // Check localStorage if remember me was enabled
-    const rememberMe = localStorage.getItem(this.rememberMeKey);
-    if (rememberMe === 'true') {
-      const localToken = localStorage.getItem('admin_token');
-      const localUser = localStorage.getItem('admin_user');
-      return !!(localToken && localUser);
-    }
-
-    return false;
+    return (
+      sessionStorage.getItem('admin_token') !== null ||
+      (localStorage.getItem('adminAuthenticated') === 'true' && localStorage.getItem('admin_token') !== null)
+    );
   }
+  
 
   getCurrentUser(): any {
-    // Check session storage first (higher priority)
+    // Get user info from session or local storage
     const sessionUser = sessionStorage.getItem('admin_user');
     if (sessionUser) {
-      try {
-        return JSON.parse(sessionUser);
-      } catch (e) {
-        console.error('Error parsing session user:', e);
-        sessionStorage.removeItem('admin_user');
-      }
+      return JSON.parse(sessionUser);
     }
 
-    // Check localStorage if remember me was enabled
     const rememberMe = localStorage.getItem(this.rememberMeKey);
     if (rememberMe === 'true') {
       const localUser = localStorage.getItem('admin_user');
-      if (localUser) {
-        try {
-          return JSON.parse(localUser);
-        } catch (e) {
-          console.error('Error parsing local user:', e);
-          localStorage.removeItem('admin_user');
-        }
-      }
+      return localUser ? JSON.parse(localUser) : null;
     }
 
     return null;
@@ -189,13 +149,12 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    // Check session storage first (higher priority)
+    // Check session storage first, then check local storage if remember me was used
     const sessionToken = sessionStorage.getItem('admin_token');
     if (sessionToken) {
       return sessionToken;
     }
 
-    // Check localStorage if remember me was enabled
     const rememberMe = localStorage.getItem(this.rememberMeKey);
     if (rememberMe === 'true') {
       return localStorage.getItem('admin_token');
@@ -209,38 +168,34 @@ export class AuthService {
     return user && (user.role === 'admin' || user.role === 'administrator');
   }
 
-  // User login method
-  userLogin(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/user-login`, { email, password })
-      .pipe(
-        tap(response => {
-          if (response.status === 'success' && response.user && response.token) {
-            localStorage.setItem('adminAuthenticated', 'true');
-            
-            const userData = {
-              id: response.user.id,
-              username: response.user.username,
-              role: response.user.role,
-              moduleAccess: response.user.moduleAccess || { 
-                lcf: false, 
-                incomeExpense: false, 
-                members: false, 
-                user: false 
-              }
-            };
 
-            // Store in session storage (no remember me for user login)
-            sessionStorage.setItem('admin_user', JSON.stringify(userData));
-            sessionStorage.setItem('admin_token', response.token!);
-            
-            this.userSubject.next(userData);
-            this.isAuthenticatedSubject.next(true);
-          }
-        }),
-        catchError(error => {
-          this.isAuthenticatedSubject.next(false);
-          return throwError(() => error);
-        })
-      );
-  }
+  // In auth.service.ts, add this method:
+userLogin(email: string, password: string): Observable<LoginResponse> {
+  return this.http.post<LoginResponse>(`${this.apiUrl}/user-login`, { email, password })
+    .pipe(
+      tap(response => {
+        if (response.status === 'success' && response.user && response.token) {
+          // Same storage logic as regular login
+          localStorage.setItem('adminAuthenticated', 'true');
+          
+          const userData = {
+            id: response.user.id,
+            username: response.user.username,
+            role: response.user.role,
+            moduleAccess: response.user.moduleAccess || { lcf: false, incomeExpense: false, members: false, user: false }
+          };
+
+          sessionStorage.setItem('admin_user', JSON.stringify(userData));
+          sessionStorage.setItem('admin_token', response.token!);
+          
+          this.userSubject.next(userData);
+          this.isAuthenticatedSubject.next(true);
+        }
+      }),
+      catchError(error => {
+        this.isAuthenticatedSubject.next(false);
+        return throwError(() => error);
+      })
+    );
+}
 }
