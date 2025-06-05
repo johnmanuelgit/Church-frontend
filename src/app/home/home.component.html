@@ -1,62 +1,106 @@
-<div class="relative bg-cover bg-center h-screen bg-[url('assets/backround/bg-home.jpg')]">
-  <div class="fixed w-full h-full backdrop-blur-sm">
-    <nav>
-      <div class="max-w-7xl mx-auto px-2 sm:px6 lg:px8">
-        <div class="relative flex items-center justify-between h-30">
-          <img src="assets\icon\st thomos church.png" alt="Logo" class="h-25 w-25 mr-2">
-          <span class="text-2xl font-extrabold text-white">St Thomas Church</span>
+<div class="min-h-screen bg-cover bg-center bg-[url('assets/backround/bg-home.jpg')] relative">
+  <!-- Overlay with blur -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+  
+  <!-- Navigation -->
+  <nav class="relative z-50 bg-gray-900 bg-opacity-80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo and Church Name -->
+        <div class="flex-shrink-0 flex items-center">
+          <img src="assets/icon/st thomos church.png" alt="St Thomas Church Logo" 
+               class="h-12 w-12 object-contain md:h-12 md:w-12 md:object-cover">
+          <span class="ml-3 text-2xl font-bold text-white hidden sm:block">St Thomas Church</span>
+        </div>
 
-          <div class="hidden md:block">
-            <div class="ml-10 flex space-x-4">
-              <a class="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-              <a class="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                [routerLink]="['allmembers']">Members</a>
-              <div class="relative inline-block text-center">
-                <a class="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium relative inline-block"
-                  (mouseenter)="open()" (mouseleave)="close()">Offerings</a>
-                <ul class="absolute mt-1 w-40 bg-gray-700 rounded-md shadow-lg z-10" *ngIf="Offeringlist">
-                  <li>
-                    <a href="#"
-                      class="block px-4 py-2 text-white rounded-md hover:bg-gray-400 hover:text-black">Maintenance</a>
-                  </li>
-                  <li>
-                    <a href="#"
-                      class="block px-4 py-2 text-white rounded-md hover:bg-gray-400 hover:text-black">Offering
-                      Cover</a>
-                  </li>
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-white rounded-md hover:bg-gray-400 hover:text-black">Special
-                      Offering</a>
-                  </li>
-                </ul>
+        <!-- Desktop Menu -->
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-center space-x-1">
+            <a class="text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200">Home</a>
+            <a class="text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
+              [routerLink]="['allmembers']">Members</a>
+            
+            <!-- Dropdown -->
+            <div class="relative group">
+              <button class="text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium flex items-center transition duration-200">
+                Offerings
+                <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div class="absolute left-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                <a href="#" class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200">Maintenance</a>
+                <a href="#" class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200">Offering Cover</a>
+                <a href="#" class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200">Special Offering</a>
               </div>
-              <a class="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">LCF
-                Tax</a>
-              <a class="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Members
-                Subscription</a>
-              <a class="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Youth
-                Subscription</a>
-              <a class="text-white bg-gray-500 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                [routerLink]="['/user-admin-login']">Login</a>
-              <button [routerLink]="['/adminlogin']"
-                class="text-white bg-gray-500 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Admin
-                Login</button>
+            </div>
+            
+            <a class="text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200">LCF Tax</a>
+            <a class="text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200">Members Subscription</a>
+            <a class="text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200">Youth Subscription</a>
+            
+            <div class="ml-4 flex items-center space-x-2">
+              <a [routerLink]="['/user-admin-login']" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium text-white transition duration-200">Login</a>
+              <button [routerLink]="['/adminlogin']" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md text-sm font-medium text-white transition duration-200">Admin Login</button>
             </div>
           </div>
         </div>
+
+        <!-- Mobile menu button -->
+        <div class="md:hidden">
+          <button type="button" class="text-white hover:text-gray-300 focus:outline-none" (click)="toggleMobileMenu()">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
       </div>
-    </nav>
-    <div class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-      <h1 class="text-4xl md:text-6xl font-bold mb-4">Experience God's Love and Grace</h1>
-      <p class="text-lg md:text-2xl mb-8">Join us every Sunday at 9:00 AM - All are welcome!</p>
-      <div class="space-x-4">
-        <button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition duration-300" (click)="livelink()">
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="md:hidden" *ngIf="mobileMenuOpen">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-800 bg-opacity-90">
+        <a class="block text-white hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">Home</a>
+        <a class="block text-white hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium" [routerLink]="['allmembers']">Members</a>
+        <a class="block text-white hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">Offerings</a>
+        <a class="block text-white hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">LCF Tax</a>
+        <a class="block text-white hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">Members Subscription</a>
+        <a class="block text-white hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium">Youth Subscription</a>
+        <div class="pt-4 border-t border-gray-700">
+          <a [routerLink]="['/user-admin-login']" class="block w-full text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium text-white mb-2">Login</a>
+          <button [routerLink]="['/adminlogin']" class="block w-full text-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md text-base font-medium text-white">Admin Login</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Content -->
+  <div class="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] text-center text-white px-4">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+        Experience God's Love <span class="text-blue-300">&</span> Grace
+      </h1>
+      <p class="text-lg md:text-xl lg:text-2xl mb-10 max-w-2xl mx-auto text-gray-200">
+        Join us every Sunday at 9:00 AM for worship and fellowship. All are welcome in our community!
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button class="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium text-lg transition duration-300 transform hover:scale-105 shadow-lg" 
+                (click)="livelink()">
           Join Us Live
         </button>
-        <button class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg transition duration-300">
-          <a>About</a>
+        <button class="px-8 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-lg font-medium text-lg transition duration-300 transform hover:scale-105">
+          Learn More
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Floating elements (optional) -->
+  <div class="absolute bottom-3 md:bottom-5 left-0 right-0 flex justify-center space-x-6 z-10">
+    <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-full p-2 animate-bounce">
+      <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
     </div>
   </div>
 </div>

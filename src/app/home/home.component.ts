@@ -11,6 +11,7 @@ import { RouterLink, RouterModule } from '@angular/router';
 })
 export class HomeComponent {
   Offeringlist = false;
+  mobileMenuOpen=false;
   open() {
     this.Offeringlist = true
   }
@@ -19,5 +20,9 @@ export class HomeComponent {
   }
   livelink() {
     window.open('https://www.youtube.com/@stthomaschurch2337/streams', '_blank')
+  }
+
+  toggleMobileMenu(){
+ this.mobileMenuOpen=!this.mobileMenuOpen;
   }
 }
