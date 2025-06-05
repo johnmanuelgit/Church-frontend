@@ -35,7 +35,7 @@ interface ForgotUsernameResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/admin';
+  private apiUrl = 'https://church-backend-036s.onrender.com/api/admin';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
   private userSubject = new BehaviorSubject<any>(this.getCurrentUser());
   private rememberMeKey = 'admin_remember';
