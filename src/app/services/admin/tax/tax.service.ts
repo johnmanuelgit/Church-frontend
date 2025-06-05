@@ -51,11 +51,11 @@ export interface FamilyHead {
   providedIn: 'root'
 })
 export class TaxService {
- 
+
   private apiUrl = 'https://church-backend-036s.onrender.com/api/tax';
   private taxData: TaxSummary[] = [];
-  
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
 
   // Tax Rate Management
   getTaxRates(year: number): Observable<TaxRate> {
@@ -110,9 +110,9 @@ export class TaxService {
   }
 
   // Utility Methods
-getFamilyHeads(): Observable<FamilyHead[]> {
-  return this.http.get<FamilyHead[]>(`${this.apiUrl}/family-heads`);
-}
+  getFamilyHeads(): Observable<FamilyHead[]> {
+    return this.http.get<FamilyHead[]>(`${this.apiUrl}/family-heads`);
+  }
   getAvailableYears(): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/years`);
   }
@@ -152,15 +152,15 @@ getFamilyHeads(): Observable<FamilyHead[]> {
   }
 
   getAllMembers(familyId?: string): Observable<TaxPayment[]> {
-  const params: any = {};
-  if (familyId) {
-    params.familyId = familyId;
+    const params: any = {};
+    if (familyId) {
+      params.familyId = familyId;
+    }
+    return this.http.get<TaxPayment[]>(`${this.apiUrl}/members`, { params });
   }
-  return this.http.get<TaxPayment[]>(`${this.apiUrl}/members`, { params });
-}
-getMemberPaymentForYear(memberId: string, year: number): Observable<TaxPayment[]> {
-  return this.http.get<TaxPayment[]>(`${this.apiUrl}/payment/${memberId}?year=${year}`);
-}
+  getMemberPaymentForYear(memberId: string, year: number): Observable<TaxPayment[]> {
+    return this.http.get<TaxPayment[]>(`${this.apiUrl}/payment/${memberId}?year=${year}`);
+  }
 
 
 }

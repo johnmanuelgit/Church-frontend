@@ -1,8 +1,8 @@
-<!-- admin-login.component.html -->
+<!-- admin-login.component.html - FIXED VERSION -->
 <div class="min-h-screen flex items-center justify-center bg-gray-50">
   <!-- Background pattern -->
   <div class="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
-  
+
   <!-- Login Container -->
   <div class="relative z-10 w-full max-w-md px-4 mx-auto">
     <div class="overflow-hidden bg-white rounded-xl shadow-2xl border border-gray-100">
@@ -10,205 +10,294 @@
       <div class="p-6 text-center border-b border-gray-100">
         <div class="flex justify-center mb-4">
           <div class="w-14 h-14 rounded-lg bg-indigo-600 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
         </div>
         <h2 class="text-2xl font-bold text-gray-800">Admin Portal</h2>
         <p class="mt-1 text-gray-500 text-sm">Secure access to your dashboard</p>
       </div>
-      
-      <!-- Main Form Section -->
-      <div class="p-6" *ngIf="!showForgotPassword">
+
+      <!-- Main Login Form Section -->
+      <div class="p-6" *ngIf="!showForgotPassword && !showForgotUsername">
         <form #loginForm="ngForm" (ngSubmit)="login()">
           <!-- Username Input Group -->
           <div class="mb-4">
-            <label for="username" class="block mb-1 text-sm font-medium text-gray-700">Username</label>
+            <div class="flex items-center justify-between mb-1">
+              <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+              <button type="button" (click)="toggleForgotUsername()"
+                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+                Forgot username?
+              </button>
+            </div>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <input
-                id="username"
-                name="username"
-                #usernameInput="ngModel"
-                [(ngModel)]="username"
-                required
-                minlength="3"
-                placeholder="Enter your username"
+              <input id="username" name="username" #usernameInput="ngModel" [(ngModel)]="username" required
+                minlength="3" placeholder="Enter your username"
                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-gray-700"
-                [ngClass]="{'border-red-500': (usernameInput.invalid && (isSubmitted || usernameInput.touched)) || usernameError, 'border-gray-200': !(usernameInput.invalid && (isSubmitted || usernameInput.touched)) && !usernameError}"
-              />
+                [ngClass]="{'border-red-500': (usernameInput.invalid && (isSubmitted || usernameInput.touched)) || usernameError, 'border-gray-200': !(usernameInput.invalid && (isSubmitted || usernameInput.touched)) && !usernameError}" />
             </div>
             <div *ngIf="usernameError" class="mt-1 text-xs text-red-600">
               {{ usernameError }}
             </div>
           </div>
-          
+
           <!-- Password Input Group -->
           <div class="mb-5">
             <div class="flex items-center justify-between mb-1">
               <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-              <button 
-                type="button" 
-                (click)="toggleForgotPassword()" 
-                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-              >
+              <button type="button" (click)="toggleForgotPassword()"
+                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
                 Forgot password?
               </button>
             </div>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <input
-                id="password"
-                name="password"
-                #passwordInput="ngModel"
-                [(ngModel)]="password"
-                required
-                minlength="6"
-                placeholder="Enter your password"
-                type="password"
+              <input id="password" name="password" #passwordInput="ngModel" [(ngModel)]="password" required
+                minlength="6" placeholder="Enter your password" type="password"
                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-gray-700"
-                [ngClass]="{'border-red-500': (passwordInput.invalid && (isSubmitted || passwordInput.touched)) || passwordError, 'border-gray-200': !(passwordInput.invalid && (isSubmitted || passwordInput.touched)) && !passwordError}"
-              />
+                [ngClass]="{'border-red-500': (passwordInput.invalid && (isSubmitted || passwordInput.touched)) || passwordError, 'border-gray-200': !(passwordInput.invalid && (isSubmitted || passwordInput.touched)) && !passwordError}" />
             </div>
             <div *ngIf="passwordError" class="mt-1 text-xs text-red-600">
               {{ passwordError }}
             </div>
           </div>
-          
+
           <!-- Remember me checkbox -->
           <div class="flex items-center mb-6">
             <div class="flex items-center">
-              <input
-                id="remember"
-                name="rememberMe"
-                [(ngModel)]="rememberMe"
-                type="checkbox"
-                class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
-              />
+              <input id="remember" name="rememberMe" [(ngModel)]="rememberMe" type="checkbox"
+                class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
               <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
             </div>
           </div>
-          
+
           <!-- Error Message -->
-          <div *ngIf="errorMessage" class="p-3 mb-4 text-sm rounded-lg bg-red-50 text-red-700 border border-red-100 flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div *ngIf="errorMessage"
+            class="p-3 mb-4 text-sm rounded-lg bg-red-50 text-red-700 border border-red-100 flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>{{ errorMessage }}</span>
           </div>
-          
+
           <!-- Success Message -->
-          <div *ngIf="successMessage" class="p-3 mb-4 text-sm rounded-lg bg-green-50 text-green-700 border border-green-100 flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div *ngIf="successMessage"
+            class="p-3 mb-4 text-sm rounded-lg bg-green-50 text-green-700 border border-green-100 flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
             <span>{{ successMessage }}</span>
           </div>
-          
+
           <!-- Login Button -->
-          <button
-            type="submit"
+          <button type="submit"
             class="w-full flex justify-center items-center py-2.5 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition-all duration-300 disabled:opacity-70"
-            [disabled]="isLoading"
-          >
+            [disabled]="isLoading">
             <span *ngIf="!isLoading" class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
               Sign In
             </span>
             <span *ngIf="isLoading" class="flex items-center">
-              <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
               </svg>
               Processing...
             </span>
           </button>
         </form>
       </div>
-      
-      <!-- Forgot Password Form -->
-      <div class="p-6" *ngIf="showForgotPassword">
+
+      <!-- Forgot Username Form -->
+      <div class="p-6" *ngIf="showForgotUsername">
         <div class="mb-5 flex items-center">
-          <button 
-            type="button" 
-            (click)="toggleForgotPassword()" 
-            class="p-1 mr-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button type="button" (click)="toggleForgotUsername()"
+            class="p-1 mr-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h3 class="text-xl font-semibold text-gray-800">Reset Password</h3>
+          <h3 class="text-xl font-semibold text-gray-800">Recover Username</h3>
         </div>
-        
-        <div *ngIf="!resetEmailSent">
+
+        <div *ngIf="!usernameRecoveryEmailSent">
           <p class="mb-4 text-sm text-gray-600">
-            Enter your email address and we'll send you a link to reset your password.
+            Enter your email address and we'll send you your username.
           </p>
-          
-          <!-- Email Input Group -->
+
+          <!-- Email Input Group for Username Recovery -->
           <div class="mb-5">
-            <label for="resetEmail" class="block mb-1 text-sm font-medium text-gray-700">Email Address</label>
+            <label for="usernameRecoveryEmail" class="block mb-1 text-sm font-medium text-gray-700">Email Address</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <input
-                id="resetEmail"
-                [(ngModel)]="resetEmail"
-                placeholder="Enter your email address"
-                type="email"
+              <input id="usernameRecoveryEmail" [(ngModel)]="usernameRecoveryEmail" 
+                placeholder="Enter your email address" type="email"
                 class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-gray-700"
-                [ngClass]="{'border-red-500': resetEmailError, 'border-gray-200': !resetEmailError}"
-              />
+                [ngClass]="{'border-red-500': usernameRecoveryEmailError, 'border-gray-200': !usernameRecoveryEmailError}" />
             </div>
-            <div *ngIf="resetEmailError" class="mt-1 text-xs text-red-600">
-              {{ resetEmailError }}
+            <div *ngIf="usernameRecoveryEmailError" class="mt-1 text-xs text-red-600">
+              {{ usernameRecoveryEmailError }}
             </div>
           </div>
-          
+
           <!-- Error Message -->
-          <div *ngIf="errorMessage" class="p-3 mb-4 text-sm rounded-lg bg-red-50 text-red-700 border border-red-100 flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div *ngIf="errorMessage"
+            class="p-3 mb-4 text-sm rounded-lg bg-red-50 text-red-700 border border-red-100 flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>{{ errorMessage }}</span>
           </div>
-          
-          <!-- Send Reset Link Button -->
-          <button
-            (click)="requestPasswordReset()"
+
+          <!-- Send Username Button -->
+          <button (click)="requestUsername()"
             class="w-full flex justify-center items-center py-2.5 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition-all duration-300 disabled:opacity-70"
-            [disabled]="isLoading"
-          >
-            <span *ngIf="!isLoading">Send Reset Link</span>
+            [disabled]="isLoading">
+            <span *ngIf="!isLoading">Send Username</span>
             <span *ngIf="isLoading" class="flex items-center">
-              <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
               </svg>
               Processing...
             </span>
           </button>
         </div>
-        
+
+        <!-- Success State for Username Recovery -->
+        <div *ngIf="usernameRecoveryEmailSent" class="text-center py-4">
+          <div
+            class="inline-flex items-center justify-center p-3 bg-green-50 text-green-600 rounded-full mb-4 border border-green-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Check Your Email</h3>
+          <p class="text-gray-600 mb-4 text-sm">
+            We've sent your username to your email address.
+          </p>
+          <p class="text-gray-500 text-xs mb-6">
+            Didn't receive the email? Check your spam folder or <a href="#" (click)="resetUsernameRecoveryForm()" class="text-indigo-600 hover:underline">try
+              again</a>.
+          </p>
+          <button (click)="toggleForgotUsername()" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">
+            ← Back to login
+          </button>
+        </div>
+      </div>
+
+      <!-- Forgot Password Form -->
+      <div class="p-6" *ngIf="showForgotPassword">
+        <div class="mb-5 flex items-center">
+          <button type="button" (click)="toggleForgotPassword()"
+            class="p-1 mr-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h3 class="text-xl font-semibold text-gray-800">Reset Password</h3>
+        </div>
+
+        <div *ngIf="!resetEmailSent">
+          <p class="mb-4 text-sm text-gray-600">
+            Enter your email address and we'll send you a link to reset your password.
+          </p>
+
+          <!-- Email Input Group -->
+          <div class="mb-5">
+            <label for="resetEmail" class="block mb-1 text-sm font-medium text-gray-700">Email Address</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <input id="resetEmail" [(ngModel)]="resetEmail" placeholder="Enter your email address" type="email"
+                class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-gray-700"
+                [ngClass]="{'border-red-500': resetEmailError, 'border-gray-200': !resetEmailError}" />
+            </div>
+            <div *ngIf="resetEmailError" class="mt-1 text-xs text-red-600">
+              {{ resetEmailError }}
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="errorMessage"
+            class="p-3 mb-4 text-sm rounded-lg bg-red-50 text-red-700 border border-red-100 flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Send Reset Link Button -->
+          <button (click)="requestPasswordReset()"
+            class="w-full flex justify-center items-center py-2.5 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition-all duration-300 disabled:opacity-70"
+            [disabled]="isLoading">
+            <span *ngIf="!isLoading">Send Reset Link</span>
+            <span *ngIf="isLoading" class="flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+              </svg>
+              Processing...
+            </span>
+          </button>
+        </div>
+
         <!-- Success State -->
         <div *ngIf="resetEmailSent" class="text-center py-4">
-          <div class="inline-flex items-center justify-center p-3 bg-green-50 text-green-600 rounded-full mb-4 border border-green-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div
+            class="inline-flex items-center justify-center p-3 bg-green-50 text-green-600 rounded-full mb-4 border border-green-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
@@ -217,12 +306,10 @@
             We've sent password reset instructions to your email address.
           </p>
           <p class="text-gray-500 text-xs mb-6">
-            Didn't receive the email? Check your spam folder or <a href="#" class="text-indigo-600 hover:underline">try again</a>.
+            Didn't receive the email? Check your spam folder or <a href="#" (click)="tryAgain()" class="text-indigo-600 hover:underline">try
+              again</a>.
           </p>
-          <button
-            (click)="toggleForgotPassword()"
-            class="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
-          >
+          <button (click)="toggleForgotPassword()" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">
             ← Back to login
           </button>
         </div>

@@ -7,61 +7,62 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
+
 export class UserComponent implements OnInit {
   admins: User[] = [];
   editMode: boolean = false;
   selectedAdmin: User | null = null;
-// In user.component.ts
-admin: User = {
-  username: '',  // Changed from 'name' to 'username'
-  email: '',
-  password: '',
-  role: 'admin',
-  isActive: true,
-  moduleAccess: {
-    lcf: false,
-    incomeExpense: false,
-    members: false,
-    user: false
-  }
-};
+  // In user.component.ts
+  admin: User = {
+    username: '',  // Changed from 'name' to 'username'
+    email: '',
+    password: '',
+    role: 'admin',
+    isActive: true,
+    moduleAccess: {
+      lcf: false,
+      incomeExpense: false,
+      members: false,
+      user: false
+    }
+  };
 
 
-  constructor(private useradminService: UserAdminService) {}
+  constructor(private useradminService: UserAdminService) { }
 
   ngOnInit() {
     this.loadAdmins();
   }
 
-createAdmin() {
-  console.log(this.admin);
+  createAdmin() {
+    console.log(this.admin);
 
-  this.useradminService.createAdminBySuperAdmin(this.admin).subscribe({
-    next: () => {
-      alert('Admin created successfully');
-      this.loadAdmins(); // <-- Refresh list
-     // In user.component.ts
-this.admin = {
-  username: '',  // Changed from 'name' to 'username'
-  email: '',
-  password: '',
-  role: 'admin',
-  isActive: true,
-  moduleAccess: {
-    lcf: false,
-    incomeExpense: false,
-    members: false,
-    user: false
+    this.useradminService.createAdminBySuperAdmin(this.admin).subscribe({
+      next: () => {
+        alert('Admin created successfully');
+        this.loadAdmins(); // <-- Refresh list
+        // In user.component.ts
+        this.admin = {
+          username: '',  // Changed from 'name' to 'username'
+          email: '',
+          password: '',
+          role: 'admin',
+          isActive: true,
+          moduleAccess: {
+            lcf: false,
+            incomeExpense: false,
+            members: false,
+            user: false
+          }
+        };
+      },
+      error: err => alert('Error: ' + err.message)
+    });
   }
-};
-    },
-    error: err => alert('Error: ' + err.message)
-  });
-}
 
   loadAdmins() {
     this.useradminService.getAllAdmins().subscribe(data => this.admins = data);

@@ -11,13 +11,13 @@
       <!-- Year Selector -->
       <div class="w-full md:w-1/4">
         <label class="block text-sm font-medium text-gray-700 mb-1">Select Year</label>
-        <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange($event)" 
-                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-      
+        <select [(ngModel)]="selectedYear" (ngModelChange)="onYearChange($event)"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
           <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
         </select>
       </div>
-      
+
       <!-- Summary Cards -->
       <!-- <div class="w-1/2 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-green-50 p-4 rounded-lg border border-green-100 shadow-sm">
@@ -45,104 +45,121 @@
           <div class="h-8 w-1 bg-green-500 rounded-full mr-3"></div>
           <h3 class="text-xl font-semibold text-gray-800">{{ isEditingIncome ? 'Edit' : 'Add' }} Income</h3>
         </div>
-        
+
         <form (ngSubmit)="isEditingIncome ? updateIncome() : addIncome()" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Donor Name</label>
-              <input type="text" placeholder="Enter donor name" [(ngModel)]="newIncome.donorName" name="donorName" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+              <input type="text" placeholder="Enter donor name" [(ngModel)]="newIncome.donorName" name="donorName"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                required>
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
-              <input type="number" placeholder="Enter amount" [(ngModel)]="newIncome.amount" name="amount" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+              <input type="number" placeholder="Enter amount" [(ngModel)]="newIncome.amount" name="amount"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                required>
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Donation Type</label>
-              <select [(ngModel)]="newIncome.donationType" name="donationType" 
-                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+              <select [(ngModel)]="newIncome.donationType" name="donationType"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                required>
                 <option value="" disabled selected>Select type</option>
                 <option *ngFor="let type of donationTypes" [value]="type">{{ type }}</option>
                 <option value="Other">Other</option>
               </select>
             </div>
-            
+
             <div *ngIf="newIncome.donationType === 'Other'">
               <label class="block text-sm font-medium text-gray-700 mb-1">Custom Type</label>
-              <input type="text" [(ngModel)]="newIncome.otherDonation" name="otherDonation" placeholder="Enter custom type"
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+              <input type="text" [(ngModel)]="newIncome.otherDonation" name="otherDonation"
+                placeholder="Enter custom type"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-              <input type="date" [(ngModel)]="newIncome.date" name="date" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+              <input type="date" [(ngModel)]="newIncome.date" name="date"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                required>
             </div>
           </div>
-          
+
           <div class="flex space-x-3 pt-2">
-            <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+            <button type="submit"
+              class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
               {{ isEditingIncome ? 'Update Income' : 'Add Income' }}
             </button>
-            <button *ngIf="isEditingIncome" type="button" (click)="cancelIncomeEdit()" 
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
+            <button *ngIf="isEditingIncome" type="button" (click)="cancelIncomeEdit()"
+              class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
               Cancel
             </button>
           </div>
         </form>
       </div>
-      
+
       <!-- Expense Form -->
       <div class="w-full md:w-1/2 p-6">
         <div class="flex items-center mb-4">
           <div class="h-8 w-1 bg-red-500 rounded-full mr-3"></div>
           <h3 class="text-xl font-semibold text-gray-800">{{ isEditingExpense ? 'Edit' : 'Add' }} Expense</h3>
         </div>
-        
-        <form #editExpenseForm (ngSubmit)="isEditingExpense ? updateExpense() : addExpense()" class="space-y-4" enctype="multipart/form-data">
+
+        <form #editExpenseForm (ngSubmit)="isEditingExpense ? updateExpense() : addExpense()" class="space-y-4"
+          enctype="multipart/form-data">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
-              <input type="text" placeholder="Enter expense reason" [(ngModel)]="newExpense.reason" name="reason" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+              <input type="text" placeholder="Enter expense reason" [(ngModel)]="newExpense.reason" name="reason"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                required>
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
-              <input type="number" placeholder="Enter amount" [(ngModel)]="newExpense.amount" name="amount" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+              <input type="number" placeholder="Enter amount" [(ngModel)]="newExpense.amount" name="amount"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                required>
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Responsible Person</label>
-              <input type="text" placeholder="Enter name" [(ngModel)]="newExpense.responsiblePerson" name="responsiblePerson" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+              <input type="text" placeholder="Enter name" [(ngModel)]="newExpense.responsiblePerson"
+                name="responsiblePerson"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                required>
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Bill By</label>
-              <input type="text" placeholder="Enter name" [(ngModel)]="newExpense.billBy" name="billBy" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+              <input type="text" placeholder="Enter name" [(ngModel)]="newExpense.billBy" name="billBy"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                required>
             </div>
-            
+
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-              <input type="date" [(ngModel)]="newExpense.date" name="date" 
-                     class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" required>
+              <input type="date" [(ngModel)]="newExpense.date" name="date"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                required>
             </div>
-            
+
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-1">Bill Image</label>
               <div class="flex items-center space-x-4">
                 <label class="flex-1">
-                  <div class="relative cursor-pointer bg-white rounded-lg border border-gray-300 p-2 hover:border-red-500 transition duration-200">
-                    <input type="file" (change)="onFileSelected($event)" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                  <div
+                    class="relative cursor-pointer bg-white rounded-lg border border-gray-300 p-2 hover:border-red-500 transition duration-200">
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <div class="text-center py-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto text-gray-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
                       <p class="text-sm text-gray-600 mt-1">Upload bill image</p>
                     </div>
@@ -154,13 +171,14 @@
               </div>
             </div>
           </div>
-          
+
           <div class="flex space-x-3 pt-2">
-            <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+            <button type="submit"
+              class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
               {{ isEditingExpense ? 'Update Expense' : 'Add Expense' }}
             </button>
-            <button *ngIf="isEditingExpense" type="button" (click)="cancelExpenseEdit()" 
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
+            <button *ngIf="isEditingExpense" type="button" (click)="cancelExpenseEdit()"
+              class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
               Cancel
             </button>
           </div>
@@ -181,20 +199,26 @@
             {{ incomeList.length }} records
           </span>
         </div>
-        
+
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donor Name</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donation Type</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Donor Name</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Donation Type</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Amount</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr *ngFor="let income of incomeList" class="hover:bg-gray-50" [attr.id]="'income-' + (income.id || income._id)">
+              <tr *ngFor="let income of incomeList" class="hover:bg-gray-50"
+                [attr.id]="'income-' + (income.id || income._id)">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ income.date | date:'dd-MM-yyyy' }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ income.donorName }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ income.donationType }}</td>
@@ -203,7 +227,8 @@
                   <button (click)="editIncome(income)" class="text-blue-600 hover:text-blue-900 font-medium">
                     Edit
                   </button>
-                  <button (click)="deleteIncome(income.id || income._id || '')" class="text-red-600 hover:text-red-900 font-medium">
+                  <button (click)="deleteIncome(income.id || income._id || '')"
+                    class="text-red-600 hover:text-red-900 font-medium">
                     Delete
                   </button>
                 </td>
@@ -216,7 +241,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Expense Records -->
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
       <div class="p-6">
@@ -227,33 +252,45 @@
             {{ expenseList.length }} records
           </span>
         </div>
-        
+
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responsible</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bill By</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bill</th>
-                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Reason</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Responsible</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bill By</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Amount</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bill</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr *ngFor="let expense of expenseList" class="hover:bg-gray-50" [attr.id]="'expense-' + (expense.id || expense._id)">
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ expense.date | date:'dd-MM-yyyy' }}</td>
+              <tr *ngFor="let expense of expenseList" class="hover:bg-gray-50"
+                [attr.id]="'expense-' + (expense.id || expense._id)">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ expense.date | date:'dd-MM-yyyy' }}
+                </td>
                 <td class="px-6 py-4 text-sm text-gray-900">{{ expense.reason }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ expense.responsiblePerson }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ expense.billBy }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">₹{{ expense.amount }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <a *ngIf="expense.billImage" [href]="expense.billImage" target="_blank" 
-                     class="text-blue-600 hover:text-blue-900 inline-flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <a *ngIf="expense.billImage" [href]="expense.billImage" target="_blank"
+                    class="text-blue-600 hover:text-blue-900 inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                     View
                   </a>
@@ -263,7 +300,8 @@
                   <button (click)="editExpense(expense)" class="text-blue-600 hover:text-blue-900 font-medium">
                     Edit
                   </button>
-                  <button (click)="deleteExpense(expense.id || expense._id || '')" class="text-red-600 hover:text-red-900 font-medium">
+                  <button (click)="deleteExpense(expense.id || expense._id || '')"
+                    class="text-red-600 hover:text-red-900 font-medium">
                     Delete
                   </button>
                 </td>
@@ -285,7 +323,7 @@
         <div class="h-8 w-1 bg-blue-500 rounded-full mr-3"></div>
         <h3 class="text-xl font-semibold text-gray-800">Financial Summary for {{ selectedYear }}</h3>
       </div>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <h4 class="text-lg font-medium text-gray-900 mb-3">Income Details</h4>
@@ -304,7 +342,7 @@
             </li>
           </ul>
         </div>
-        
+
         <div>
           <h4 class="text-lg font-medium text-gray-900 mb-3">Expense & Balance</h4>
           <ul class="space-y-2">
@@ -314,7 +352,8 @@
             </li>
             <li class="flex justify-between py-2">
               <span class="text-gray-600 font-semibold">Net Balance</span>
-              <span class="font-bold text-lg" [ngClass]="{'text-green-600': getSummary().balance >= 0, 'text-red-600': getSummary().balance < 0}">
+              <span class="font-bold text-lg"
+                [ngClass]="{'text-green-600': getSummary().balance >= 0, 'text-red-600': getSummary().balance < 0}">
                 ₹{{ getSummary().balance }}
               </span>
             </li>
@@ -324,4 +363,3 @@
     </div>
   </div>
 </div>
-

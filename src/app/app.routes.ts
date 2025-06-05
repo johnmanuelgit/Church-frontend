@@ -8,11 +8,13 @@ import { IncomeExpenseComponent } from './admin/income-expense/income-expense.co
 import { UserComponent } from './admin/user/user.component';
 import { ModuleAccessGuard } from './guards/module-access.guard';
 import { UserAdminComponent } from './admin/user-admin/user-admin.component';
+import { ResetPasswordComponent } from './admin/reset-password/reset-password.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'adminlogin', component: AdminLoginComponent },
   {path:'user-admin-login',component:UserAdminComponent},
+   { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: 'admindash',
     component: DashboardComponent

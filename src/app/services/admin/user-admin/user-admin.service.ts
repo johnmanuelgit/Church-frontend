@@ -22,10 +22,10 @@ export interface User {
 export class UserAdminService {
   private apiUrl = 'https://church-backend-036s.onrender.com/api/admin/superadmin';
 
-  constructor(private http: HttpClient) {}
-  
+  constructor(private http: HttpClient) { }
 
-  createAdminBySuperAdmin(user:any) {
+
+  createAdminBySuperAdmin(user: any) {
     return this.http.post(`${this.apiUrl}/create-admin`, user);
   }
 
@@ -40,5 +40,5 @@ export class UserAdminService {
   deleteAdmin(id: string) {
     return this.http.delete(`${this.apiUrl}/delete-admin/${id}`);
   }
-  
+
 }

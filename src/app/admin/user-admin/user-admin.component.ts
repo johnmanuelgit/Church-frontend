@@ -26,9 +26,9 @@ export class UserAdminComponent {
   rememberMe: boolean = false;
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   /**
    * Validates the form fields
@@ -64,7 +64,7 @@ export class UserAdminComponent {
    */
   login(): void {
     this.errorMessage = '';
-    
+
     if (!this.validate()) {
       return;
     }
@@ -103,9 +103,9 @@ export class UserAdminComponent {
    * @param err - Error object
    */
   private handleLoginError(err: any): void {
-    this.errorMessage = err?.error?.message || 
-                       err?.message || 
-                       'Login failed. Please try again later.';
+    this.errorMessage = err?.error?.message ||
+      err?.message ||
+      'Login failed. Please try again later.';
     this.isLoading = false;
     console.error('Login error:', err);
   }

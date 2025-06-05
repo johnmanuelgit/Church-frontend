@@ -39,7 +39,7 @@ export class LcfTaxComponent implements OnInit {
   selectedFamilyId: string = 'All Members';
   availableYears: (number | string)[] = [];
   familyHeads: FamilyHead[] = [];
-  
+
   // Tax configuration - Initialize with proper structure
   taxRates: TaxRate = {
     year: new Date().getFullYear(),
@@ -51,7 +51,7 @@ export class LcfTaxComponent implements OnInit {
 
   // Store original rates for cancel functionality
   originalTaxRates: TaxRate = { ...this.taxRates };
-  
+
   taxSummary: TaxSummary = {
     totalMembers: 0,
     paidMembers: 0,
@@ -67,7 +67,7 @@ export class LcfTaxComponent implements OnInit {
   // Member details
   memberTaxDetails: ExtendedTaxPayment[] = [];
   filteredMembers: ExtendedTaxPayment[] = [];
-  
+
   // UI state
   isEditingRates = false;
   isLoading = false;
@@ -78,7 +78,7 @@ export class LcfTaxComponent implements OnInit {
     private taxService: TaxService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadInitialData();
@@ -89,11 +89,11 @@ export class LcfTaxComponent implements OnInit {
     try {
       // Generate years automatically (current year + 5 previous years + 5 future years)
       this.generateAvailableYears();
-      
+
       // Load family heads
       this.familyHeads = await this.taxService.getFamilyHeads().toPromise() || [];
       console.log('Family heads:', this.familyHeads);
-      
+
       // Load tax data for current year
       await this.loadTaxData();
     } catch (error) {
@@ -107,12 +107,12 @@ export class LcfTaxComponent implements OnInit {
   private generateAvailableYears(): void {
     const currentYear = new Date().getFullYear();
     const years: (number | string)[] = ['All Years']; // Add "All Years" option
-    
+
     // Add years from 5 years ago to 5 years in the future
     for (let i = currentYear - 5; i <= currentYear + 1; i++) {
       years.push(i);
     }
-    
+
     this.availableYears = years;
     console.log('Generated available years:', this.availableYears);
   }
@@ -127,7 +127,7 @@ export class LcfTaxComponent implements OnInit {
 
       const year = this.selectedYear as number;
       console.log('Loading tax data for year:', year);
-      
+
       // Load tax rates first
       const taxRatesResponse = await this.taxService.getTaxRates(year).toPromise();
       if (taxRatesResponse) {
@@ -135,11 +135,11 @@ export class LcfTaxComponent implements OnInit {
         this.originalTaxRates = { ...taxRatesResponse };
         console.log('Loaded tax rates:', this.taxRates);
       }
-      
+
       // Generate tax payments if they don't exist
       await this.taxService.generateTaxPayments(year).toPromise();
       console.log('Generated tax payments for year:', year);
-      
+
       // Load summary and details
       await Promise.all([
         this.loadTaxSummary(),
@@ -156,7 +156,7 @@ export class LcfTaxComponent implements OnInit {
       // Load summary data for all years
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
       const allYearsSummary = await this.taxService.getAllYearsSummary(familyFilter).toPromise();
-      
+
       if (allYearsSummary) {
         // Aggregate all years data
         this.taxSummary = allYearsSummary.reduce((acc, yearData) => ({
@@ -182,8 +182,8 @@ export class LcfTaxComponent implements OnInit {
         });
 
         // Calculate overall collection rate
-        this.taxSummary.collectionRate = this.taxSummary.totalMembers > 0 
-          ? Math.round((this.taxSummary.paidMembers / this.taxSummary.totalMembers) * 100) 
+        this.taxSummary.collectionRate = this.taxSummary.totalMembers > 0
+          ? Math.round((this.taxSummary.paidMembers / this.taxSummary.totalMembers) * 100)
           : 0;
       }
 
@@ -194,68 +194,68 @@ export class LcfTaxComponent implements OnInit {
     }
   }
 
- // Update the displayedColumns when in "All Years" view
-async loadAllYearsMemberDetails(): Promise<void> {
-  try {
-    const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
-    
-    // Get all unique members first
-    const allMembers = await this.taxService.getAllMembers(familyFilter).toPromise();
-    
-    if (allMembers) {
-      const membersWithYearlyPayments: ExtendedTaxPayment[] = [];
-      const yearsToShow = this.getAvailableYearsForDisplay();
-      
-      for (const member of allMembers) {
-        const memberPayments: ExtendedTaxPayment = {
-          ...member,
-          yearlyPayments: {}
-        };
-        
-        for (const year of yearsToShow) {
-          try {
-            const yearlyPayments = await this.taxService.getMemberPaymentForYear(member._id, year).toPromise();
-            const yearlyPayment = yearlyPayments?.[0];
+  // Update the displayedColumns when in "All Years" view
+  async loadAllYearsMemberDetails(): Promise<void> {
+    try {
+      const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
 
-            memberPayments.yearlyPayments![year] = yearlyPayment ? {
-              isPaid: yearlyPayment.isPaid,
-              status: yearlyPayment.isPaid ? 'Paid' : 'Unpaid',
-              paidAmount: yearlyPayment.paidAmount,
-              taxAmount: yearlyPayment.taxAmount
-            } : {
-              isPaid: false,
-              status: 'Not Generated',
-              paidAmount: 0,
-              taxAmount: 0
-            };
-          } catch (error) {
-            memberPayments.yearlyPayments![year] = {
-              isPaid: false,
-              status: 'Not Generated',
-              paidAmount: 0,
-              taxAmount: 0
-            };
+      // Get all unique members first
+      const allMembers = await this.taxService.getAllMembers(familyFilter).toPromise();
+
+      if (allMembers) {
+        const membersWithYearlyPayments: ExtendedTaxPayment[] = [];
+        const yearsToShow = this.getAvailableYearsForDisplay();
+
+        for (const member of allMembers) {
+          const memberPayments: ExtendedTaxPayment = {
+            ...member,
+            yearlyPayments: {}
+          };
+
+          for (const year of yearsToShow) {
+            try {
+              const yearlyPayments = await this.taxService.getMemberPaymentForYear(member._id, year).toPromise();
+              const yearlyPayment = yearlyPayments?.[0];
+
+              memberPayments.yearlyPayments![year] = yearlyPayment ? {
+                isPaid: yearlyPayment.isPaid,
+                status: yearlyPayment.isPaid ? 'Paid' : 'Unpaid',
+                paidAmount: yearlyPayment.paidAmount,
+                taxAmount: yearlyPayment.taxAmount
+              } : {
+                isPaid: false,
+                status: 'Not Generated',
+                paidAmount: 0,
+                taxAmount: 0
+              };
+            } catch (error) {
+              memberPayments.yearlyPayments![year] = {
+                isPaid: false,
+                status: 'Not Generated',
+                paidAmount: 0,
+                taxAmount: 0
+              };
+            }
           }
+
+          membersWithYearlyPayments.push(memberPayments);
         }
-        
-        membersWithYearlyPayments.push(memberPayments);
+
+        this.memberTaxDetails = membersWithYearlyPayments;
+        this.filteredMembers = [...membersWithYearlyPayments];
+
+        // Update display columns to include yearly status
+        this.displayedColumns = [
+          'name',
+          'age',
+          ...yearsToShow.map(year => `year-${year}`)
+        ];
       }
-      
-      this.memberTaxDetails = membersWithYearlyPayments;
-      this.filteredMembers = [...membersWithYearlyPayments];
-      
-      // Update display columns to include yearly status
-      this.displayedColumns = [
-        'name', 
-        'age',
-        ...yearsToShow.map(year => `year-${year}`)
-      ];
+    } catch (error) {
+      console.error('Error loading all years member details:', error);
+      this.showSnackBar('Error loading member details');
     }
-  } catch (error) {
-    console.error('Error loading all years member details:', error);
-    this.showSnackBar('Error loading member details');
   }
-}
   async loadTaxSummary(): Promise<void> {
     try {
       if (this.selectedYear === 'All Years') {
@@ -266,7 +266,7 @@ async loadAllYearsMemberDetails(): Promise<void> {
       // Use family head's familyId for filtering, not the head's name
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
       const summary = await this.taxService.getTaxSummary(this.selectedYear as number, familyFilter).toPromise();
-      
+
       if (summary) {
         this.taxSummary = summary;
         console.log('Loaded tax summary:', this.taxSummary);
@@ -286,14 +286,14 @@ async loadAllYearsMemberDetails(): Promise<void> {
       // Use family head's familyId for filtering, not the head's name
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
       const details = await this.taxService.getMemberTaxDetails(this.selectedYear as number, familyFilter).toPromise();
-      
+
       if (details) {
         this.memberTaxDetails = details;
         this.filteredMembers = [...details];
-        
+
         // Reset display columns for single year view
         this.displayedColumns = ['name', 'age', 'taxAmount', 'status', 'actions'];
-        
+
         console.log('Loaded member details:', this.memberTaxDetails);
       }
     } catch (error) {
@@ -347,7 +347,7 @@ async loadAllYearsMemberDetails(): Promise<void> {
 
     try {
       this.isSavingRates = true;
-      
+
       // Prepare the update payload
       const updatePayload = {
         adultTax: Number(this.taxRates.adultTax),
@@ -358,17 +358,17 @@ async loadAllYearsMemberDetails(): Promise<void> {
       console.log('Update payload:', updatePayload);
 
       const updatedRates = await this.taxService.updateTaxRates(this.selectedYear as number, updatePayload).toPromise();
-      
+
       if (updatedRates) {
         this.taxRates = updatedRates;
         this.originalTaxRates = { ...updatedRates };
         this.isEditingRates = false;
         this.showSnackBar('Tax rates updated successfully. Member tax amounts will be recalculated.');
         console.log('Rates saved successfully:', updatedRates);
-        
+
         // Regenerate tax payments with new rates (this will update member tax amounts)
         await this.taxService.generateTaxPayments(this.selectedYear as number).toPromise();
-        
+
         // Reload data to reflect changes
         await this.loadTaxData();
       }
@@ -406,13 +406,13 @@ async loadAllYearsMemberDetails(): Promise<void> {
     try {
       const newStatus = !payment.isPaid;
       const paidAmount = newStatus ? payment.taxAmount : 0;
-      
+
       console.log('Toggling payment status:', {
         paymentId: payment._id,
         newStatus,
         paidAmount
       });
-      
+
       const updatePayload = {
         isPaid: newStatus,
         paidAmount: paidAmount,
@@ -420,14 +420,14 @@ async loadAllYearsMemberDetails(): Promise<void> {
       };
 
       await this.taxService.updatePaymentStatus(payment._id, updatePayload).toPromise();
-      
+
       // Update local data
       payment.isPaid = newStatus;
       payment.paidAmount = paidAmount;
       payment.status = newStatus ? 'Paid' : 'Unpaid';
-      
+
       this.showSnackBar(`Payment ${newStatus ? 'marked as paid' : 'marked as unpaid'}`);
-      
+
       // Refresh summary
       await this.loadTaxSummary();
     } catch (error) {
@@ -440,13 +440,13 @@ async loadAllYearsMemberDetails(): Promise<void> {
     try {
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
       let reportData;
-      
+
       if (this.selectedYear === 'All Years') {
         reportData = await this.taxService.exportAllYearsReport(familyFilter).toPromise();
       } else {
         reportData = await this.taxService.exportTaxReport(this.selectedYear as number, familyFilter).toPromise();
       }
-      
+
       if (reportData && reportData.data) {
         // Convert to CSV and download
         this.downloadCSV(reportData.data);
@@ -473,17 +473,17 @@ async loadAllYearsMemberDetails(): Promise<void> {
 
   private convertToCSV(data: any[]): string {
     if (!data.length) return '';
-    
+
     const headers = Object.keys(data[0]);
     const csvHeaders = headers.join(',');
-    const csvRows = data.map(row => 
+    const csvRows = data.map(row =>
       headers.map(header => {
         const value = row[header] || '';
         // Escape quotes and wrap in quotes if contains comma
         return `"${String(value).replace(/"/g, '""')}"`;
       }).join(',')
     );
-    
+
     return [csvHeaders, ...csvRows].join('\n');
   }
 
@@ -493,7 +493,7 @@ async loadAllYearsMemberDetails(): Promise<void> {
     return family ? `${family.name} Family` : familyId;
   }
 
-    // Get family head name by family ID
+  // Get family head name by family ID
   getFamilyHeadName(familyId: string): string {
     const family = this.familyHeads.find(f => f.familyId === familyId);
     return family ? family.name : '';

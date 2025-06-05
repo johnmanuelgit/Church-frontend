@@ -41,7 +41,7 @@ interface Expense {
   styleUrl: './income-expense.component.css'
 })
 
-export class IncomeExpenseComponent implements OnInit{
+export class IncomeExpenseComponent implements OnInit {
   @ViewChild('editExpenseForm') editExpenseFormRef!: ElementRef;
   donationTypes = ['Offering', 'Donation', 'Other'];
   selectedDonation = '';
@@ -49,7 +49,7 @@ export class IncomeExpenseComponent implements OnInit{
   formData = new FormData();
   previewUrl: string | ArrayBuffer | null = null;
   selectedFamilyId: string = 'All Members';
-  
+
   // Updated to follow interface definitions
   incomeList: Income[] = [];
   expenseList: Expense[] = [];
@@ -62,7 +62,7 @@ export class IncomeExpenseComponent implements OnInit{
   familyHeads: FamilyHead[] = [];
   memberTaxDetails: ExtendedTaxPayment[] = [];
   availableYears: (number | string)[] = [];
-  
+
   newIncome: Income = {
     donorName: '',
     amount: 0,
@@ -70,7 +70,7 @@ export class IncomeExpenseComponent implements OnInit{
     date: new Date().toISOString().split('T')[0],
     year: new Date().getFullYear()
   };
-  
+
   taxSummary: TaxSummary = {
     totalMembers: 0,
     paidMembers: 0,
@@ -82,7 +82,7 @@ export class IncomeExpenseComponent implements OnInit{
     year: new Date().getFullYear(),
     total: 0
   };
-  
+
   newExpense: Expense = {
     reason: '',
     amount: 0,
@@ -91,7 +91,7 @@ export class IncomeExpenseComponent implements OnInit{
     date: new Date().toISOString().split('T')[0],
     year: new Date().getFullYear()
   };
-  
+
   taxRates: TaxRate = {
     year: new Date().getFullYear(),
     adultTax: 1000,
@@ -99,15 +99,15 @@ export class IncomeExpenseComponent implements OnInit{
     adultAgeThreshold: 18,
     isActive: true
   };
-  
+
   displayedColumns: string[] = ['name', 'age', 'taxAmount', 'status', 'actions'];
   filteredMembers: ExtendedTaxPayment[] = [];
   originalTaxRates: TaxRate = { ...this.taxRates };
-  
+
   isLoading = false;
   private apiBaseUrl = 'https://church-backend-036s.onrender.com/api';
 
-  constructor(private http: HttpClient, private taxService: TaxService, private snackBar: MatSnackBar) {}
+  constructor(private http: HttpClient, private taxService: TaxService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.generateYears();
@@ -120,18 +120,18 @@ export class IncomeExpenseComponent implements OnInit{
     try {
       // Generate years automatically (current year + 5 previous years + 5 future years)
       this.generateAvailableYears();
-      
+
       // Load family heads
       this.familyHeads = await this.taxService.getFamilyHeads().toPromise() || [];
       console.log('Family heads:', this.familyHeads);
-      
+
       // Load tax service data first
       await this.loadTaxServiceData();
-      
+
       // Load income and expense data
       this.loadIncomes();
       this.loadExpenses();
-      
+
       // Load tax data for current year
       await this.loadTaxData();
     } catch (error) {
@@ -154,7 +154,7 @@ export class IncomeExpenseComponent implements OnInit{
       console.error('Error loading tax service data:', error);
     }
   }
-  
+
   async loadTaxData(): Promise<void> {
     try {
       if (this.selectedYear === 'All Years') {
@@ -165,7 +165,7 @@ export class IncomeExpenseComponent implements OnInit{
 
       const year = this.selectedYear as number;
       console.log('Loading tax data for year:', year);
-      
+
       // Load tax rates first
       const taxRatesResponse = await this.taxService.getTaxRates(year).toPromise();
       if (taxRatesResponse) {
@@ -173,11 +173,11 @@ export class IncomeExpenseComponent implements OnInit{
         this.originalTaxRates = { ...taxRatesResponse };
         console.log('Loaded tax rates:', this.taxRates);
       }
-      
+
       // Generate tax payments if they don't exist
       await this.taxService.generateTaxPayments(year).toPromise();
       console.log('Generated tax payments for year:', year);
-      
+
       // Load summary and details
       await Promise.all([
         this.loadTaxSummary(),
@@ -207,7 +207,7 @@ export class IncomeExpenseComponent implements OnInit{
       // Use family head's familyId for filtering, not the head's name
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
       const summary = await this.taxService.getTaxSummary(this.selectedYear as number, familyFilter).toPromise();
-      
+
       if (summary) {
         this.taxSummary = summary;
         console.log('Loaded tax summary:', this.taxSummary);
@@ -227,14 +227,14 @@ export class IncomeExpenseComponent implements OnInit{
       // Use family head's familyId for filtering, not the head's name
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
       const details = await this.taxService.getMemberTaxDetails(this.selectedYear as number, familyFilter).toPromise();
-      
+
       if (details) {
         this.memberTaxDetails = details;
         this.filteredMembers = [...details];
-        
+
         // Reset display columns for single year view
         this.displayedColumns = ['name', 'age', 'taxAmount', 'status', 'actions'];
-        
+
         console.log('Loaded member details:', this.memberTaxDetails);
       }
     } catch (error) {
@@ -247,7 +247,7 @@ export class IncomeExpenseComponent implements OnInit{
       // Load summary data for all years
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
       const allYearsSummary = await this.taxService.getAllYearsSummary(familyFilter).toPromise();
-      
+
       if (allYearsSummary) {
         // Aggregate all years data
         this.taxSummary = allYearsSummary.reduce((acc, yearData) => ({
@@ -273,8 +273,8 @@ export class IncomeExpenseComponent implements OnInit{
         });
 
         // Calculate overall collection rate
-        this.taxSummary.collectionRate = this.taxSummary.totalMembers > 0 
-          ? Math.round((this.taxSummary.paidMembers / this.taxSummary.totalMembers) * 100) 
+        this.taxSummary.collectionRate = this.taxSummary.totalMembers > 0
+          ? Math.round((this.taxSummary.paidMembers / this.taxSummary.totalMembers) * 100)
           : 0;
       }
 
@@ -289,20 +289,20 @@ export class IncomeExpenseComponent implements OnInit{
   async loadAllYearsMemberDetails(): Promise<void> {
     try {
       const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
-      
+
       // Get all unique members first
       const allMembers = await this.taxService.getAllMembers(familyFilter).toPromise();
-      
+
       if (allMembers) {
         const membersWithYearlyPayments: ExtendedTaxPayment[] = [];
         const yearsToShow = this.getAvailableYearsForDisplay();
-        
+
         for (const member of allMembers) {
           const memberPayments: ExtendedTaxPayment = {
             ...member,
             yearlyPayments: {}
           };
-          
+
           for (const year of yearsToShow) {
             try {
               const yearlyPayments = await this.taxService.getMemberPaymentForYear(member._id, year).toPromise();
@@ -328,16 +328,16 @@ export class IncomeExpenseComponent implements OnInit{
               };
             }
           }
-          
+
           membersWithYearlyPayments.push(memberPayments);
         }
-        
+
         this.memberTaxDetails = membersWithYearlyPayments;
         this.filteredMembers = [...membersWithYearlyPayments];
-        
+
         // Update display columns to include yearly status
         this.displayedColumns = [
-          'name', 
+          'name',
           'age',
           ...yearsToShow.map(year => `year-${year}`)
         ];
@@ -351,12 +351,12 @@ export class IncomeExpenseComponent implements OnInit{
   private generateAvailableYears(): void {
     const currentYear = new Date().getFullYear();
     const years: (number | string)[] = ['All Years']; // Add "All Years" option
-    
+
     // Add years from 5 years ago to 5 years in the future
     for (let i = currentYear - 5; i <= currentYear + 1; i++) {
       years.push(i);
     }
-    
+
     this.availableYears = years;
     console.log('Generated available years:', this.availableYears);
   }
@@ -373,7 +373,7 @@ export class IncomeExpenseComponent implements OnInit{
     // Reload tax data when year changes
     this.loadTaxData();
   }
-  
+
   getTax(): void {
     this.taxForSelectedYear = this.taxService.getTaxDataForYear(String(this.selectedYear));
     console.log('Tax for selected year:', this.taxForSelectedYear);
@@ -408,27 +408,27 @@ export class IncomeExpenseComponent implements OnInit{
     const totalExpense = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
     const balance = totalWithTax - totalExpense;
 
-    return { 
-      totalIncome, 
-      totalWithTax, 
-      totalExpense, 
+    return {
+      totalIncome,
+      totalWithTax,
+      totalExpense,
       balance,
       totalTaxFromLCF // Make sure this is included in return
     };
   }
-    
+
   // INCOME FUNCTIONS
   addIncome(): void {
     const payload = {
       ...this.newIncome,
       year: Number(this.selectedYear),
     };
-    
+
     // Handle the "Other" donation type case
     if (payload.donationType === 'Other' && payload.otherDonation) {
       payload.donationType = payload.otherDonation;
     }
-    
+
     this.http.post(`${this.apiBaseUrl}/in/incomes`, payload)
       .subscribe({
         next: () => {
@@ -441,11 +441,11 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
+
   editIncome(income: Income): void {
     this.isEditingIncome = true;
     this.editingIncomeId = income.id || income._id;
-    
+
     // Clone the income object to avoid direct reference
     this.newIncome = {
       donorName: income.donorName,
@@ -454,43 +454,43 @@ export class IncomeExpenseComponent implements OnInit{
       date: new Date(income.date).toISOString().split('T')[0],
       year: income.year
     };
-    
+
     // If it's a custom donation type
     if (!this.donationTypes.includes(income.donationType) && income.donationType !== 'Other') {
       this.newIncome.donationType = 'Other';
       this.newIncome.otherDonation = income.donationType;
     }
-      // 🔽 Scroll to the form
-      setTimeout(() => {
-        this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      }, 100); // Wait for DOM to render
+    // 🔽 Scroll to the form
+    setTimeout(() => {
+      this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }, 100); // Wait for DOM to render
   }
-  
+
   updateIncome(): void {
     if (!this.editingIncomeId) {
       console.error('No income ID to update');
       return;
     }
-    
+
     const payload = {
       ...this.newIncome,
       year: Number(this.selectedYear)
     };
-    
+
     // Handle the "Other" donation type
     if (payload.donationType === 'Other' && payload.otherDonation) {
       payload.donationType = payload.otherDonation;
     }
-    
+
     this.http.put(`${this.apiBaseUrl}/in/incomes/${this.editingIncomeId}`, payload)
       .subscribe({
         next: () => {
           this.loadIncomes();
           this.cancelIncomeEdit();
-            // 🔽 Scroll to the form
-    setTimeout(() => {
-      this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-    }, 100); // Wait for DOM to render
+          // 🔽 Scroll to the form
+          setTimeout(() => {
+            this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+          }, 100); // Wait for DOM to render
         },
         error: (err) => {
           console.error('Error updating income:', err);
@@ -498,7 +498,7 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
+
   deleteIncome(id: string): void {
     if (confirm('Are you sure you want to delete this income record?')) {
       this.http.delete(`${this.apiBaseUrl}/in/incomes/${id}`)
@@ -513,13 +513,13 @@ export class IncomeExpenseComponent implements OnInit{
         });
     }
   }
-  
+
   cancelIncomeEdit(): void {
     this.isEditingIncome = false;
     this.editingIncomeId = null;
     this.resetIncomeForm();
   }
-  
+
   resetIncomeForm(): void {
     this.newIncome = {
       donorName: '',
@@ -529,7 +529,7 @@ export class IncomeExpenseComponent implements OnInit{
       year: Number(this.selectedYear)
     };
   }
-  
+
   // EXPENSE FUNCTIONS
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -542,22 +542,22 @@ export class IncomeExpenseComponent implements OnInit{
       reader.readAsDataURL(file);
     }
   }
-  
+
   addExpense(): void {
     // Create a new FormData object to avoid appending to previous data
     this.formData = new FormData();
-    
+
     // Add year to the expense
     const expenseWithYear = {
       ...this.newExpense,
       year: Number(this.selectedYear)
     };
-    
+
     // Append all expense data to form data
     for (const key in expenseWithYear) {
       this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
     }
-    
+
     this.http.post(`${this.apiBaseUrl}/out/expenses`, this.formData)
       .subscribe({
         next: () => {
@@ -571,11 +571,11 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
+
   editExpense(expense: Expense): void {
     this.isEditingExpense = true;
     this.editingExpenseId = expense.id || expense._id;
-  
+
     // Clone the expense object
     this.newExpense = {
       reason: expense.reason,
@@ -586,39 +586,39 @@ export class IncomeExpenseComponent implements OnInit{
       year: expense.year,
       billImage: expense.billImage
     };
-  
+
     this.formData = new FormData();
     this.previewUrl = expense.billImage ?? null;
-  
+
     // 🔽 Scroll to the form
     setTimeout(() => {
       this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
     }, 100); // Wait for DOM to render
   }
-  
+
   updateExpense(): void {
     if (!this.editingExpenseId) {
       console.error('No expense ID to update');
       return;
     }
-  
+
     this.formData = new FormData();
     const expenseWithYear = {
       ...this.newExpense,
       year: Number(this.selectedYear)
     };
-  
+
     for (const key in expenseWithYear) {
       this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
     }
-  
+
     this.http.put(`${this.apiBaseUrl}/out/expenses/${this.editingExpenseId}`, this.formData)
       .subscribe({
         next: () => {
           const updatedId = this.editingExpenseId;
           this.loadExpenses();
           this.cancelExpenseEdit();
-  
+
           // 🔽 After a short delay, scroll to updated row
           setTimeout(() => {
             const el = document.getElementById(`expense-${updatedId}`);
@@ -633,8 +633,8 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
-  
+
+
   deleteExpense(id: string): void {
     if (confirm('Are you sure you want to delete this expense record?')) {
       this.http.delete(`${this.apiBaseUrl}/out/expenses/${id}`)
@@ -649,13 +649,13 @@ export class IncomeExpenseComponent implements OnInit{
         });
     }
   }
-  
+
   cancelExpenseEdit(): void {
     this.isEditingExpense = false;
     this.editingExpenseId = null;
     this.resetExpenseForm();
   }
-  
+
   resetExpenseForm(): void {
     this.newExpense = {
       reason: '',
@@ -672,11 +672,11 @@ export class IncomeExpenseComponent implements OnInit{
   // DATA LOADING FUNCTIONS
   loadIncomes(): void {
     let url = `${this.apiBaseUrl}/in/incomes`;
-    
+
     if (this.selectedYear !== 'All' && this.selectedYear !== 'All Years') {
       url += `?year=${this.selectedYear}`;
     }
-  
+
     this.http.get<Income[]>(url)
       .subscribe({
         next: (data) => {
@@ -687,16 +687,16 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
+
 
   loadExpenses(): void {
     let url = `${this.apiBaseUrl}/out/expenses`;
-    
+
     // Add year filter if not "All"
     if (this.selectedYear !== 'All' && this.selectedYear !== 'All Years') {
       url += `?year=${this.selectedYear}`;
     }
-    
+
     this.http.get<Expense[]>(url)
       .subscribe({
         next: (data) => {
@@ -707,13 +707,13 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
+
   // UTILITY FUNCTIONS
   generateYears(): void {
     const currentYear = new Date().getFullYear();
     const startYear = 2020;
     this.availableYears = [];
-  
+
     for (let y = currentYear + 1; y >= startYear; y--) {
       this.availableYears.push(y.toString());
     }
@@ -726,32 +726,32 @@ export class IncomeExpenseComponent implements OnInit{
       const date = new Date(income.date).toLocaleDateString();
       return `"${date}","${income.donorName}","${income.donationType}","${income.amount}"`;
     });
-    
+
     const expenseData = this.expenseList.map(expense => {
       const date = new Date(expense.date).toLocaleDateString();
       return `"${date}","${expense.reason}","${expense.responsiblePerson}","${expense.billBy}","${expense.amount}"`;
     });
-    
+
     const summary = this.getSummary();
-    
+
     let csvContent = "Income Records - " + year + "\n";
     csvContent += "Date,Donor Name,Donation Type,Amount(₹)\n";
     csvContent += incomeData.join('\n') + "\n\n";
-    
+
     csvContent += "Expense Records - " + year + "\n";
     csvContent += "Date,Reason,Responsible Person,Bill By,Amount(₹)\n";
     csvContent += expenseData.join('\n') + "\n\n";
-    
+
     csvContent += "Summary\n";
     csvContent += `Total Tax Collected,₹${summary.totalTaxFromLCF}\n`;
     csvContent += `Total Income (without tax),₹${summary.totalIncome}\n`;
     csvContent += `Total Income (with tax),₹${summary.totalWithTax}\n`;
     csvContent += `Total Expense,₹${summary.totalExpense}\n`;
     csvContent += `Balance,₹${summary.balance}\n`;
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
-    
+
     // Create download link
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
@@ -761,15 +761,15 @@ export class IncomeExpenseComponent implements OnInit{
     a.click();
     document.body.removeChild(a);
   }
-  
+
   // Filter functions
   filterByDonationType(type: string): void {
     let url = `${this.apiBaseUrl}/in/incomes?donationType=${type}`;
-    
+
     if (this.selectedYear !== 'All' && this.selectedYear !== 'All Years') {
       url += `&year=${this.selectedYear}`;
     }
-    
+
     this.http.get<Income[]>(url)
       .subscribe({
         next: (data) => {
@@ -780,19 +780,19 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
+
   searchIncomesByDonor(searchTerm: string): void {
     if (!searchTerm.trim()) {
       this.loadIncomes();
       return;
     }
-    
+
     let url = `${this.apiBaseUrl}/in/incomes/search?term=${searchTerm}`;
-    
+
     if (this.selectedYear !== 'All' && this.selectedYear !== 'All Years') {
       url += `&year=${this.selectedYear}`;
     }
-    
+
     this.http.get<Income[]>(url)
       .subscribe({
         next: (data) => {
@@ -803,19 +803,19 @@ export class IncomeExpenseComponent implements OnInit{
         }
       });
   }
-  
+
   searchExpensesByReason(searchTerm: string): void {
     if (!searchTerm.trim()) {
       this.loadExpenses();
       return;
     }
-    
+
     let url = `${this.apiBaseUrl}/out/expenses/search?term=${searchTerm}`;
-    
+
     if (this.selectedYear !== 'All' && this.selectedYear !== 'All Years') {
       url += `&year=${this.selectedYear}`;
     }
-    
+
     this.http.get<Expense[]>(url)
       .subscribe({
         next: (data) => {

@@ -13,7 +13,7 @@ import { AuthService } from '../../services/admin/auth/auth.service';
 export class DashboardComponent implements OnInit {
   currentTime = '';
   user: any = null;
-constructor (private authService: AuthService){}
+  constructor(private authService: AuthService) { }
   ngOnInit(): void {
     const now = new Date();
     this.currentTime = now.toLocaleTimeString();
@@ -37,8 +37,8 @@ constructor (private authService: AuthService){}
     return this.user?.moduleAccess?.[moduleName] === true;
   }
 
-   logout(): void {
-  this.authService.logout()
+  logout(): void {
+    this.authService.logout()
   }
 
 }

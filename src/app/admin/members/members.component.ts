@@ -106,12 +106,12 @@ export class MembersComponent implements OnInit {
             this.filteredMembers = [...this.members];
             this.sortMembers();
           }
-          
+
           // If this member is a family head, refresh the family heads list
           if (updatedMember.isHeadOfFamily) {
             this.loadFamilyHeads();
           }
-          
+
           this.resetForm();
         },
         error: (error) => {
@@ -123,12 +123,12 @@ export class MembersComponent implements OnInit {
         next: (newMember) => {
           this.members.push(newMember);
           this.filteredMembers = [...this.members];
-          
+
           // If this member is a family head, refresh the family heads list
           if (newMember.isHeadOfFamily) {
             this.loadFamilyHeads();
           }
-          
+
           this.sortMembers();
           this.resetForm();
         },
@@ -211,7 +211,7 @@ export class MembersComponent implements OnInit {
         next: () => {
           this.members = this.members.filter(m => m.id !== id);
           this.filteredMembers = this.filteredMembers.filter(m => m.id !== id);
-          
+
           // Refresh the family heads list in case a head was deleted
           this.loadFamilyHeads();
         },
@@ -274,11 +274,11 @@ export class MembersComponent implements OnInit {
         comparison = a.name.localeCompare(b.name);
       }
       // Add more sort columns as needed
-      
+
       return this.sortDirection === 'asc' ? comparison : -comparison;
     });
   }
-  
+
   exportToExcel(): void {
     const exportData = this.filteredMembers.map(member => {
       return {
@@ -295,7 +295,7 @@ export class MembersComponent implements OnInit {
         'Family Head': member.isHeadOfFamily ? 'Yes' : this.getFamilyHeadName(member.familyId)
       };
     });
-  
+
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Members');
@@ -306,7 +306,7 @@ export class MembersComponent implements OnInit {
   // Add missing method - getFamilyHeadName
   getFamilyHeadName(familyId: string | null): string {
     if (!familyId) return 'N/A';
-    
+
     const familyHead = this.familyHeads.find(head => head.familyId === familyId);
     return familyHead ? familyHead.name : 'Unknown';
   }
