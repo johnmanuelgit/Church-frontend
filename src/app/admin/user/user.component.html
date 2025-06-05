@@ -1,66 +1,176 @@
-<form (ngSubmit)="createAdmin()" class="space-y-4 border p-4 rounded">
-  <input type="text" [(ngModel)]="admin.username" name="name" placeholder="Name" required class="border p-2 w-full" />
-  <input type="email" [(ngModel)]="admin.email" name="email" placeholder="Email" required class="border p-2 w-full" />
-  <input type="password" [(ngModel)]="admin.password" name="password" placeholder="Password" required class="border p-2 w-full" />
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">User Admin</h1>
+  </div>
 
-  <div class="font-bold">Module Access</div>
- <label><input type="checkbox" [(ngModel)]="admin.moduleAccess.lcf" name="lcf" /> LCF</label>
-<label><input type="checkbox" [(ngModel)]="admin.moduleAccess.incomeExpense" name="incomeExpense" /> Income & Expense</label>
-<label><input type="checkbox" [(ngModel)]="admin.moduleAccess.members" name="members" /> Members</label>
-<label><input type="checkbox" [(ngModel)]="admin.moduleAccess.user" name="user" /> User Admin</label>
+  <!-- Create Admin Card -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Create New Admin</h2>
+    <form (ngSubmit)="createAdmin()" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input type="text" [(ngModel)]="admin.username" name="name" placeholder="Enter full name" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input type="email" [(ngModel)]="admin.email" name="email" placeholder="Enter email address" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input type="password" [(ngModel)]="admin.password" name="password" placeholder="Create password" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+      </div>
 
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Create Admin</button>
-</form>
+      <div class="pt-2">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Module Access</label>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" [(ngModel)]="admin.moduleAccess.lcf" name="lcf" 
+                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+            <span>LCF</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" [(ngModel)]="admin.moduleAccess.incomeExpense" name="incomeExpense" 
+                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+            <span>Income & Expense</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" [(ngModel)]="admin.moduleAccess.members" name="members" 
+                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+            <span>Members</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" [(ngModel)]="admin.moduleAccess.user" name="user" 
+                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+            <span>User Admin</span>
+          </label>
+        </div>
+      </div>
 
+      <div class="pt-4">
+        <button type="submit" 
+                class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
+          Create Admin
+        </button>
+      </div>
+    </form>
+  </div>
 
-
-<div class="p-4 space-y-4">
-  <h2 class="text-xl font-bold">Admin List</h2>
-
-  <table class="w-full border text-left">
-    <thead>
-      <tr>
-        <th class="p-2 border">Name</th>
-        <th class="p-2 border">Email</th>
-        <th class="p-2 border">Access</th>
-        <th class="p-2 border">Active</th>
-        <th class="p-2 border">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let admin of admins">
-        <td class="p-2 border">{{ admin.username }}</td>
-        <td class="p-2 border">{{ admin.email }}</td>
-        <td class="p-2 border">
-          {{ admin.moduleAccess | json }}
-        </td>
-        <td class="p-2 border">{{ admin.isActive ? 'Yes' : 'No' }}</td>
-        <td class="p-2 border">
-          <button class="text-blue-500" (click)="edit(admin)">Edit</button> |
-          <button class="text-red-500" (click)="delete(admin._id!)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Edit Form -->
-  <div *ngIf="editMode && selectedAdmin" class="border p-4 mt-4 rounded bg-gray-50">
-    <h3 class="font-semibold">Edit Admin</h3>
-    <input class="border p-1 block my-2 w-full" [(ngModel)]="selectedAdmin.username" />
-    <input class="border p-1 block my-2 w-full" [(ngModel)]="selectedAdmin.email" />
-
-    <div>
-      <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.lcf" /> LCF</label>
-      <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.incomeExpense" /> Income & Expense</label>
-      <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.members" /> Members</label>
-            <label><input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.user" /> User Admin</label>
+  <!-- Admin List Card -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-700">Admin List</h2>
     </div>
-
-    <div>
-      <label><input type="checkbox" [(ngModel)]="selectedAdmin.isActive" /> Active</label>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Access</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let admin of admins" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="font-medium text-gray-900">{{ admin.username }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ admin.email }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex flex-wrap gap-1">
+                <span *ngIf="admin.moduleAccess.lcf" class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">LCF</span>
+                <span *ngIf="admin.moduleAccess.incomeExpense" class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Income</span>
+                <span *ngIf="admin.moduleAccess.members" class="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">Members</span>
+                <span *ngIf="admin.moduleAccess.user" class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">User Admin</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span [ngClass]="{'bg-green-100 text-green-800': admin.isActive, 'bg-red-100 text-red-800': !admin.isActive}" 
+                    class="px-2 py-1 text-xs rounded-full">
+                {{ admin.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button (click)="edit(admin)" class="text-blue-600 hover:text-blue-900 mr-4">Edit</button>
+              <button (click)="delete(admin._id!)" class="text-red-600 hover:text-red-900">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <button class="bg-green-500 text-white px-3 py-1 mt-2" (click)="save()">Save</button>
-    <button class="bg-gray-400 text-white px-3 py-1 mt-2 ml-2" (click)="cancel()">Cancel</button>
+  <!-- Edit Modal -->
+  <div *ngIf="editMode && selectedAdmin" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800">Edit Admin</h3>
+      </div>
+      
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input [(ngModel)]="selectedAdmin.username" 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input [(ngModel)]="selectedAdmin.email" 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Module Access</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.lcf" 
+                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+              <span>LCF</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.incomeExpense" 
+                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+              <span>Income & Expense</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.members" 
+                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+              <span>Members</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" [(ngModel)]="selectedAdmin.moduleAccess.user" 
+                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+              <span>User Admin</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="flex items-center">
+          <input type="checkbox" [(ngModel)]="selectedAdmin.isActive" id="activeCheckbox" 
+                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+          <label for="activeCheckbox" class="ml-2 block text-sm text-gray-700">Active</label>
+        </div>
+      </div>
+      
+      <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+        <button (click)="cancel()" 
+                class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Cancel
+        </button>
+        <button (click)="save()" 
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Save Changes
+        </button>
+      </div>
+    </div>
   </div>
 </div>

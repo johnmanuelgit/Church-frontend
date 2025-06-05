@@ -109,7 +109,7 @@ export class LcfTaxComponent implements OnInit {
     const years: (number | string)[] = ['All Years']; // Add "All Years" option
     
     // Add years from 5 years ago to 5 years in the future
-    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+    for (let i = currentYear - 5; i <= currentYear + 1; i++) {
       years.push(i);
     }
     
