@@ -23,6 +23,7 @@ export class UserAdminComponent {
   errorMessage: string = '';
   isLoading: boolean = false;
   errors: FormErrors = {};
+  showPassword:boolean =false;
   rememberMe: boolean = false;
 
   constructor(
@@ -74,6 +75,7 @@ export class UserAdminComponent {
     this.authService.userLogin(this.email, this.password).subscribe({
       next: (res) => {
         this.handleLoginResponse(res);
+        this.isLoading = true;
       },
       error: (err) => {
         this.handleLoginError(err);

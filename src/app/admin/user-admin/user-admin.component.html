@@ -1,138 +1,59 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
+<div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
   <div class="w-full max-w-md">
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-      <!-- Header Section with improved gradient -->
-      <div class="bg-gradient-to-r from-indigo-600 to-blue-800 p-8 text-center">
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+      <!-- Header Section - Simplified -->
+      <div class="bg-white p-8 text-center border-b border-gray-200">
         <div class="flex justify-center mb-4">
-          <div class="p-3 bg-white bg-opacity-20 rounded-full">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4">
-              </path>
+          <div class="p-3 rounded-lg bg-blue-50">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
         </div>
-        <h1 class="text-2xl font-bold text-white tracking-tight">Admin Portal</h1>
-        <p class="text-blue-100 mt-2 text-sm">Secure access to your dashboard</p>
+        <h1 class="text-2xl font-semibold text-gray-800">User Admin </h1>
+        <h2 class="text-lg font-semibold text-gray-800">Login Portal</h2>
+        <p class="text-gray-500 mt-1 text-sm">Sign in to continue</p>
       </div>
 
-      <!-- Form Section with improved spacing -->
+      <!-- Form Section - Clean and Minimal -->
       <div class="p-8">
-        <form (ngSubmit)="login()" class="space-y-6">
+        <form (ngSubmit)="login()" class="space-y-5">
           <!-- Email Field -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-            <div class="relative rounded-lg shadow-sm">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-                </svg>
-              </div>
-              <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="admin@example.com" required
-                [class.border-red-300]="errors['email']"
-                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150">
-            </div>
-            <div *ngIf="errors['email']" class="mt-2 text-sm text-red-600 flex items-start">
-              <svg class="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clip-rule="evenodd"></path>
-              </svg>
-              {{ errors['email'] }}
-            </div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="your@email.com" required
+              class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition">
           </div>
 
           <!-- Password Field -->
           <div>
-            <div class="flex justify-between items-center mb-2">
+            <div class="flex justify-between items-center mb-1">
               <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+              <a href="#" class="text-xs text-blue-600 hover:text-blue-800">Forgot?</a>
             </div>
-            <div class="relative rounded-lg shadow-sm">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd"
-                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                    clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <input type="password" id="password" [(ngModel)]="password" name="password" placeholder="••••••••"
-                required minlength="8" [class.border-red-300]="errors['password']"
-                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition duration-150">
-              <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <svg class="h-5 w-5 text-gray-400 hover:text-gray-500" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                  </path>
-                </svg>
-              </button>
-            </div>
-            <div *ngIf="errors['password']" class="mt-2 text-sm text-red-600 flex items-start">
-              <svg class="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clip-rule="evenodd"></path>
-              </svg>
-              {{ errors['password'] }}
-            </div>
+            <input type="password" id="password" [(ngModel)]="password" name="password" placeholder="••••••••" required
+              class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition">
           </div>
 
-          <!-- Remember Me & Two Factor -->
-          <div class="flex items-center justify-end">
-            <div class="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
-            </div>
+          <!-- Remember Me -->
+          <div class="flex items-center">
+            <input id="remember-me" name="remember-me" type="checkbox"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
           </div>
 
-          <!-- Error Message -->
-          <div *ngIf="errorMessage" class="rounded-lg bg-red-50 p-4 border border-red-100">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clip-rule="evenodd"></path>
-                </svg>
-              </div>
-              <div class="ml-3">
-                <h3 class="text-sm font-medium text-red-800">{{ errorMessage }}</h3>
-              </div>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
+          <!-- Submit Button - Simple and Clean -->
           <button type="submit" [disabled]="isLoading"
-            class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 disabled:opacity-70 disabled:cursor-not-allowed">
-            <span *ngIf="!isLoading" class="flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                </path>
-              </svg>
-              Sign in
-            </span>
-            <span *ngIf="isLoading" class="flex items-center">
-              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                </path>
-              </svg>
-              Authenticating...
-            </span>
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
+            <span *ngIf="!isLoading">Sign in</span>
+            <span *ngIf="isLoading">Signing in...</span>
           </button>
         </form>
       </div>
 
-      <!-- Footer Section -->
-      <div class="bg-gray-50 px-8 py-5 text-center border-t border-gray-100">
-        <p class="text-xs text-gray-400 mt-1">© 2025 St. Thomas Church. All rights reserved.</p>
+      <!-- Footer Section - Minimal -->
+      <div class="bg-gray-50 px-8 py-4 text-center border-t border-gray-200">
+        <p class="text-xs text-gray-500">© 2025 St. Thomas Church</p>
       </div>
     </div>
   </div>
