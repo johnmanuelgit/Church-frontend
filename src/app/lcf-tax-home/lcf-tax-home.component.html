@@ -1,0 +1,96 @@
+<div class="container mx-auto p-5 max-w-7xl">
+  <!-- Header -->
+  <div class="text-center mb-5">
+    <h2 class="text-3xl font-bold text-gray-800">LCF Tax Status</h2>
+    <p class="text-gray-600">View tax status of members</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
+    <!-- Year Filter -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Select Year</label>
+      <select [(ngModel)]="selectedYear" (change)="onYearChange()" class="w-full border rounded p-2">
+        <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+
+    <!-- Family Filter -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Select Family</label>
+      <select [(ngModel)]="selectedFamilyId" (change)="onFamilyChange()" class="w-full border rounded p-2">
+        <option value="All Members">All Members</option>
+        <option *ngFor="let family of familyHeads" [value]="family.familyId">
+          {{ family.name }} Family
+        </option>
+      </select>
+    </div>
+
+    <!-- Paid/Unpaid Filter -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Payment Status</label>
+      <select [(ngModel)]="selectedStatus" (change)="applyFilters()" class="w-full border rounded p-2">
+        <option value="All">All</option>
+        <option value="Paid">Paid</option>
+        <option value="Unpaid">Unpaid</option>
+      </select>
+    </div>
+
+    <!-- Search Box -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Search by ID/Name</label>
+      <input type="text" [(ngModel)]="searchText" (input)="applyFilters()" placeholder="Search..." class="w-full border rounded p-2" />
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+    <div class="p-4 border rounded shadow bg-green-50">
+      <h3 class="font-bold text-lg">Total Members</h3>
+      <p class="text-2xl">{{ taxSummary.totalMembers }}</p>
+    </div>
+    <div class="p-4 border rounded shadow bg-blue-50">
+      <h3 class="font-bold text-lg">Paid Members</h3>
+      <p class="text-2xl">{{ taxSummary.paidMembers }}</p>
+    </div>
+    <div class="p-4 border rounded shadow bg-red-50">
+      <h3 class="font-bold text-lg">Unpaid Members</h3>
+      <p class="text-2xl">{{ taxSummary.unpaidMembers }}</p>
+    </div>
+  </div>
+
+  <!-- Members Table -->
+  <div class="overflow-auto">
+    <table class="min-w-full table-auto border">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="px-4 py-2 border">Name</th>
+          <th class="px-4 py-2 border">Age</th>
+          <th class="px-4 py-2 border">Family ID</th>
+          <th class="px-4 py-2 border">Tax Amount</th>
+          <th class="px-4 py-2 border">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of filteredMembers">
+          <td class="px-4 py-2 border">{{ member.name }}</td>
+          <td class="px-4 py-2 border">{{ member.age }}</td>
+          <td class="px-4 py-2 border">{{ member.familyId }}</td>
+          <td class="px-4 py-2 border">{{ formatCurrency(member.taxAmount) }}</td>
+          <td class="px-4 py-2 border">
+            <span [ngClass]="{
+              'text-green-600 font-semibold': member.isPaid,
+              'text-red-600 font-semibold': !member.isPaid
+            }">
+              {{ member.isPaid ? 'Paid' : 'Unpaid' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="filteredMembers.length === 0" class="text-center text-gray-500 mt-5">
+      No members found.
+    </div>
+  </div>
+</div>

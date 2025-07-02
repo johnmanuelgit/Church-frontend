@@ -10,12 +10,29 @@ import { ModuleAccessGuard } from './guards/module-access.guard';
 import { UserAdminComponent } from './admin/user-admin/user-admin.component';
 import { ResetPasswordComponent } from './admin/reset-password/reset-password.component';
 import { ChristmasTaxComponent } from './admin/christmas-tax/christmas-tax.component';
+import { MembersHomeComponent } from './members-home/members-home.component';
+import { XmasTaxHomeComponent } from './xmas-tax-home/xmas-tax-home.component';
+import { LcfTaxHomeComponent } from './lcf-tax-home/lcf-tax-home.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'adminlogin', component: AdminLoginComponent },
-  {path:'user-admin-login',component:UserAdminComponent},
-   { path: 'reset-password', component: ResetPasswordComponent },
+{path:'lcf-home',component:LcfTaxHomeComponent},
+{path:'members-home',component:MembersHomeComponent},
+{path:'xmas-home',component:XmasTaxHomeComponent},
+
+  //  admin
+  { 
+     path: 'adminlogin',
+     component: AdminLoginComponent 
+    },
+  {
+    path:'user-admin-login',
+    component:UserAdminComponent
+  },
+   {
+     path: 'reset-password',
+     component: ResetPasswordComponent
+   },
   {
     path: 'admindash',
     component: DashboardComponent

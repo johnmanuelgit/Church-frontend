@@ -27,7 +27,7 @@ export class ModuleAccessGuard implements CanActivate {
     // ✅ Regular admins need specific module access
     const hasAccess = user.moduleAccess?.[requiredModule];
     if (!hasAccess) {
-      this.router.navigate(['/unauthorized']);
+      this.router.navigate(['']);
       return false;
     }
 

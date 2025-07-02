@@ -21,9 +21,9 @@
         <!-- Desktop Menu -->
         <div class="hidden md:block">
           <div class="ml-10 flex items-center space-x-1">
-            <a class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200">Home</a>
+            <a [routerLink]="['']" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200">Home</a>
             <a class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-              [routerLink]="['allmembers']">Members</a>
+              [routerLink]="['members-home']">Members</a>
             
             <!-- Services Dropdown -->
             <div class="relative group">
@@ -40,26 +40,8 @@
                 <a href="#" class="block px-4 py-2.5 text-white/90 hover:text-white hover:bg-white/5 rounded-md transition duration-200 text-sm">All Night Prayer</a>
               </div>
             </div>
-            
-            <!-- Offerings Dropdown -->
-            <div class="relative group">
-              <button class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium flex items-center transition-all duration-200">
-                Offerings
-                <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-              </button>
-              <div class="absolute left-0 mt-1 w-48 bg-gray-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 border border-gray-700">
-                <a href="#" class="block px-4 py-2.5 text-white/90 hover:text-white hover:bg-white/5 rounded-md transition duration-200 text-sm">Maintenance</a>
-                <a href="#" class="block px-4 py-2.5 text-white/90 hover:text-white hover:bg-white/5 rounded-md transition duration-200 text-sm">Offering Cover</a>
-                <a href="#" class="block px-4 py-2.5 text-white/90 hover:text-white hover:bg-white/5 rounded-md transition duration-200 text-sm">Special Offering</a>
-              </div>
-            </div>
-            
-            <a class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200">LCF Tax</a>
-            <a class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200">Members Subscription</a>
-            <a class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200">Youth Subscription</a>
-            
+                     <a [routerLink]="['/xmas-home']" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200">Chritmas Tax</a>
+            <a [routerLink]="['/lcf-home']" class="text-white/90 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200">LCF Tax</a>
             <div class="ml-4 flex items-center space-x-2">
               <a [routerLink]="['/user-admin-login']" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm p-1 text-center ">User Admin Login</a>
               <button [routerLink]="['/adminlogin']" class="p-1 bg-purple-700 hover:bg-indigo-700 rounded-lg text-sm font-medium text-white transition-all duration-200 shadow-md hover:shadow-indigo-500/20">Admin Login</button>

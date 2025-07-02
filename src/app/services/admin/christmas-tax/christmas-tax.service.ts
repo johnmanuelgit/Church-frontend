@@ -158,6 +158,4 @@ export class ChristmasTaxService {
   getMemberPaymentForYear(memberId: string, year: number): Observable<TaxPayment[]> {
     return this.http.get<TaxPayment[]>(`${this.apiUrl}/payment/${memberId}?year=${year}`);
   }
-
-
 }
