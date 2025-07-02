@@ -3,11 +3,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { RouterOutlet } from '@angular/router';
 import { LoaderService } from './services/loader/loader.service';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from "./header/header.component";
+import { FooterComponent } from "./footer/footer.component";
 
 @Component({
   selector: 'app-root',
   standalone:true,
-  imports: [RouterOutlet,MatProgressSpinner,CommonModule],
+  imports: [RouterOutlet, MatProgressSpinner, CommonModule, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
