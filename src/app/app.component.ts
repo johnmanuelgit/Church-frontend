@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { RouterOutlet } from '@angular/router';
+import { Route, Router, RouterOutlet } from '@angular/router';
 import { LoaderService } from './services/loader/loader.service';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "./header/header.component";
@@ -15,8 +15,14 @@ import { FooterComponent } from "./footer/footer.component";
 })
 export class AppComponent {
     isLoading$;
+    isAdminRoute = false;
 
-constructor(private loader:LoaderService){this.isLoading$ = this.loader.isLoading;
+constructor(private loader:LoaderService,private router:Router)
+{
+  this.isLoading$ = this.loader.isLoading;
+  this.router.events.subscribe(() => {
+      this.isAdminRoute = this.router.url.startsWith('/admindash');
+    });
 }
   
 

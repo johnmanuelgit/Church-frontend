@@ -25,7 +25,7 @@ interface Member {
   styleUrl: './members-home.component.css'
 })
 export class MembersHomeComponent implements OnInit {
-
+currentDate: Date = new Date();
   members: Member[] = [];
   filteredMembers: Member[] = [];
   familyHeads: Member[] = [];
@@ -112,4 +112,10 @@ export class MembersHomeComponent implements OnInit {
     const date = new Date().toISOString().split('T')[0];
     XLSX.writeFile(workbook, `Member_Details_${date}.xlsx`);
   }
+  resetFilters() {
+  this.searchText = '';
+  this.searchFamilyId = '';
+  this.selectedHeadId = '';
+  this.applyFilters();
+}
 }

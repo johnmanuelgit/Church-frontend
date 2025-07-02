@@ -1,11 +1,11 @@
 <div *ngIf="isLoading$ | async" class="fixed inset-0 bg-black/30 backdrop-blur flex items-center justify-center z-50">
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
-<app-header></app-header>
+<app-header *ngIf="!isAdminRoute" ></app-header>
 
-<main class="mt-20 w-full h-screen">
+<main [class.mt-20]="!isAdminRoute">
   <router-outlet></router-outlet>
 </main>
 
-<app-footer></app-footer>
+<app-footer *ngIf="!isAdminRoute"></app-footer>
 

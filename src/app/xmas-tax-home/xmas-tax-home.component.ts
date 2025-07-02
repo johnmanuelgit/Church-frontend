@@ -136,4 +136,11 @@ export class XmasTaxHomeComponent implements OnInit {
   formatCurrency(amount: number): string {
     return `₹${amount.toLocaleString()}`;
   }
+ resetFilters() {
+    this.selectedYear = new Date().getFullYear().toString();
+    this.selectedFamilyId = 'All Members';
+    this.selectedStatus = 'All';
+    this.searchText = '';
+    this.applyFilters();
+  }
 }
