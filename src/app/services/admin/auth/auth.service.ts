@@ -17,6 +17,7 @@ interface LoginResponse {
       incomeExpense: boolean;
       members: boolean;
       user: boolean;
+      xmas:boolean;
     };
   };
 }
@@ -35,7 +36,7 @@ interface ForgotUsernameResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://church-backend-036s.onrender.com/api/admin';
+  private apiUrl = 'api/admin';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
   private userSubject = new BehaviorSubject<any>(this.getCurrentUser());
   private rememberMeKey = 'admin_remember';
@@ -60,7 +61,8 @@ export class AuthService {
                 lcf: false, 
                 incomeExpense: false, 
                 members: false, 
-                user: false 
+                user: false ,
+                xmas:false
               }
             };
 
@@ -250,7 +252,8 @@ forgotUsername(email: string): Observable<ForgotUsernameResponse> {
                 lcf: false, 
                 incomeExpense: false, 
                 members: false, 
-                user: false 
+                user: false ,
+                xmas:false
               }
             };
 

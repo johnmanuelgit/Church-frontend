@@ -27,7 +27,8 @@ export class UserComponent implements OnInit {
       lcf: false,
       incomeExpense: false,
       members: false,
-      user: false
+      user: false,
+      xmas:false
     }
   };
 
@@ -56,7 +57,8 @@ export class UserComponent implements OnInit {
             lcf: false,
             incomeExpense: false,
             members: false,
-            user: false
+            user: false,
+            xmas:false
           }
         };
       },

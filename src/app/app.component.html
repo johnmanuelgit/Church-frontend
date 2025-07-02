@@ -1,1 +1,5 @@
+<div *ngIf="isLoading$ | async" class="fixed inset-0 bg-black/30 backdrop-blur flex items-center justify-center z-50">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
 <router-outlet></router-outlet>

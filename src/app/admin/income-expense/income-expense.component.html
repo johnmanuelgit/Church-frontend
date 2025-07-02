@@ -317,49 +317,54 @@
   </div>
 
   <!-- Detailed Summary Section -->
-  <div class="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
-    <div class="p-6">
-      <div class="flex items-center mb-4">
-        <div class="h-8 w-1 bg-blue-500 rounded-full mr-3"></div>
-        <h3 class="text-xl font-semibold text-gray-800">Financial Summary for {{ selectedYear }}</h3>
+ <!-- Detailed Summary Section -->
+<div class="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
+  <div class="p-6">
+    <div class="flex items-center mb-4">
+      <div class="h-8 w-1 bg-blue-500 rounded-full mr-3"></div>
+      <h3 class="text-xl font-semibold text-gray-800">Financial Summary for {{ selectedYear }}</h3>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h4 class="text-lg font-medium text-gray-900 mb-3">Income Details</h4>
+        <ul class="space-y-2">
+          <li class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">Total Income (without tax)</span>
+            <span class="font-medium">₹{{ getSummary().totalIncome }}</span>
+          </li>
+          <li class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">Total LCF Tax Collected</span>
+            <span class="font-medium">₹{{ totalTaxFromLCF }}</span>
+          </li>
+          <li class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">Total Christmas Tax Collected</span>
+            <span class="font-medium">₹{{ totalChristmasTax }}</span>
+          </li>
+          <li class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">Total Income (with all taxes)</span>
+            <span class="font-medium text-green-600">₹{{ getSummary().totalWithTax + totalChristmasTax }}</span>
+          </li>
+        </ul>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h4 class="text-lg font-medium text-gray-900 mb-3">Income Details</h4>
-          <ul class="space-y-2">
-            <li class="flex justify-between py-2 border-b border-gray-100">
-              <span class="text-gray-600">Total Income (without tax)</span>
-              <span class="font-medium">₹{{ getSummary().totalIncome }}</span>
-            </li>
-            <li class="flex justify-between py-2 border-b border-gray-100">
-              <span class="text-gray-600">Total Tax Collected</span>
-              <span class="font-medium">₹{{ totalTaxFromLCF }}</span>
-            </li>
-            <li class="flex justify-between py-2 border-b border-gray-100">
-              <span class="text-gray-600">Total Income (with tax)</span>
-              <span class="font-medium text-green-600">₹{{ getSummary().totalWithTax }}</span>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="text-lg font-medium text-gray-900 mb-3">Expense & Balance</h4>
-          <ul class="space-y-2">
-            <li class="flex justify-between py-2 border-b border-gray-100">
-              <span class="text-gray-600">Total Expenses</span>
-              <span class="font-medium text-red-600">₹{{ getSummary().totalExpense }}</span>
-            </li>
-            <li class="flex justify-between py-2">
-              <span class="text-gray-600 font-semibold">Net Balance</span>
-              <span class="font-bold text-lg"
-                [ngClass]="{'text-green-600': getSummary().balance >= 0, 'text-red-600': getSummary().balance < 0}">
-                ₹{{ getSummary().balance }}
-              </span>
-            </li>
-          </ul>
-        </div>
+      <div>
+        <h4 class="text-lg font-medium text-gray-900 mb-3">Expense & Balance</h4>
+        <ul class="space-y-2">
+          <li class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">Total Expenses</span>
+            <span class="font-medium text-red-600">₹{{ getSummary().totalExpense }}</span>
+          </li>
+          <li class="flex justify-between py-2">
+            <span class="text-gray-600 font-semibold">Net Balance</span>
+            <span class="font-bold text-lg"
+              [ngClass]="{'text-green-600': (getSummary().totalWithTax + totalChristmasTax - getSummary().totalExpense) >= 0, 'text-red-600': (getSummary().totalWithTax + totalChristmasTax - getSummary().totalExpense) < 0}">
+              ₹{{ getSummary().totalWithTax + totalChristmasTax - getSummary().totalExpense }}
+            </span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
+</div>
 </div>

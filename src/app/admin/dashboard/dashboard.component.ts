@@ -17,13 +17,11 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     const now = new Date();
     this.currentTime = now.toLocaleTimeString();
-
-    // ✅ Load user from sessionStorage or localStorage
     const userJson = sessionStorage.getItem('admin_user') || localStorage.getItem('admin_user');
     this.user = userJson ? JSON.parse(userJson) : null;
   }
 
-  // ✅ Role checkers
+
   isSuperAdmin(): boolean {
     return this.user?.role === 'superadmin';
   }

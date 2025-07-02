@@ -9,6 +9,7 @@ import { UserComponent } from './admin/user/user.component';
 import { ModuleAccessGuard } from './guards/module-access.guard';
 import { UserAdminComponent } from './admin/user-admin/user-admin.component';
 import { ResetPasswordComponent } from './admin/reset-password/reset-password.component';
+import { ChristmasTaxComponent } from './admin/christmas-tax/christmas-tax.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,6 +43,12 @@ export const routes: Routes = [
     component: UserComponent,
     canActivate: [ModuleAccessGuard],
     data: { module: 'user' }
+  },
+  {
+    path:'xmas-tax',
+    component:ChristmasTaxComponent,
+    canActivate:[ModuleAccessGuard],
+    data:{module:'xmas'}
   }
 ];
 

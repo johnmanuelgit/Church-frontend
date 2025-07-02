@@ -1,8 +1,6 @@
-// src/app/services/tax.service.ts
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
 export interface TaxRate {
   _id?: string;
   year: number;
@@ -50,9 +48,8 @@ export interface FamilyHead {
 @Injectable({
   providedIn: 'root'
 })
-export class TaxService {
-
-  private apiUrl = 'api/tax';
+export class ChristmasTaxService {
+  private apiUrl = 'api/xmas-tax';
   private taxData: TaxSummary[] = [];
 
   constructor(private http: HttpClient) { }

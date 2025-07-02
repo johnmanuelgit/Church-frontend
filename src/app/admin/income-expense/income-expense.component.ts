@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ViewChild, ElementRef } from '@angular/core';
 import { FamilyHead, TaxPayment, TaxRate, TaxService, TaxSummary } from '../../services/admin/tax/tax.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ChristmasTaxService } from '../../services/admin/christmas-tax/christmas-tax.service';
 
 interface ExtendedTaxPayment extends TaxPayment {
   yearlyPayments?: { [year: number]: { isPaid: boolean; status: string; paidAmount: number; taxAmount: number } };
@@ -99,15 +100,30 @@ export class IncomeExpenseComponent implements OnInit {
     adultAgeThreshold: 18,
     isActive: true
   };
+christmasTaxSummary: TaxSummary = {
+  totalMembers: 0,
+  paidMembers: 0,
+  unpaidMembers: 0,
+  collectionRate: 0,
+  totalTaxAmount: 0,
+  paidTaxAmount: 0,
+  unpaidTaxAmount: 0,
+  year: new Date().getFullYear(),
+  total: 0
+};
+  christmasTaxForSelectedYear!: TaxSummary | null;
+christmasMemberTaxDetails: ExtendedTaxPayment[] = [];
+filteredChristmasMembers: ExtendedTaxPayment[] = [];
+currentFile: File | null = null;
 
   displayedColumns: string[] = ['name', 'age', 'taxAmount', 'status', 'actions'];
   filteredMembers: ExtendedTaxPayment[] = [];
   originalTaxRates: TaxRate = { ...this.taxRates };
 
   isLoading = false;
-  private apiBaseUrl = 'https://church-backend-036s.onrender.com/api';
+  private apiBaseUrl = 'api';
 
-  constructor(private http: HttpClient, private taxService: TaxService, private snackBar: MatSnackBar) { }
+  constructor(private http: HttpClient, private taxService: TaxService, private snackBar: MatSnackBar,private christmasTaxService:ChristmasTaxService ) { }
 
   ngOnInit(): void {
     this.generateYears();
@@ -131,6 +147,7 @@ export class IncomeExpenseComponent implements OnInit {
       // Load income and expense data
       this.loadIncomes();
       this.loadExpenses();
+      this.loadChristmasTaxData()
 
       // Load tax data for current year
       await this.loadTaxData();
@@ -826,4 +843,167 @@ export class IncomeExpenseComponent implements OnInit {
         }
       });
   }
+  async loadChristmasTaxData(): Promise<void> {
+  try {
+    if (this.selectedYear === 'All Years') {
+      await this.loadAllYearsChristmasSummary();
+      return;
+    }
+
+    const year = this.selectedYear as number;
+    console.log('Loading Christmas tax data for year:', year);
+
+    // Generate Christmas tax payments if they don't exist
+    await this.christmasTaxService.generateTaxPayments(year).toPromise();
+    console.log('Generated Christmas tax payments for year:', year);
+
+    // Load summary and details
+    await Promise.all([
+      this.loadChristmasTaxSummary(),
+      this.loadChristmasMemberDetails()
+    ]);
+  } catch (error) {
+    this.showSnackBar('Error loading Christmas tax data');
+    console.error('Error loading Christmas tax data:', error);
+  }
+}
+
+async loadChristmasTaxSummary(): Promise<void> {
+  try {
+    if (this.selectedYear === 'All Years') {
+      await this.loadAllYearsChristmasSummary();
+      return;
+    }
+
+    const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
+    const summary = await this.christmasTaxService.getTaxSummary(this.selectedYear as number, familyFilter).toPromise();
+
+    if (summary) {
+      this.christmasTaxSummary = summary;
+      console.log('Loaded Christmas tax summary:', this.christmasTaxSummary);
+    }
+  } catch (error) {
+    console.error('Error loading Christmas tax summary:', error);
+  }
+}
+
+async loadChristmasMemberDetails(): Promise<void> {
+  try {
+    if (this.selectedYear === 'All Years') {
+      await this.loadAllYearsChristmasMemberDetails();
+      return;
+    }
+
+    const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
+    const details = await this.christmasTaxService.getMemberTaxDetails(this.selectedYear as number, familyFilter).toPromise();
+
+    if (details) {
+      this.christmasMemberTaxDetails = details;
+      this.filteredChristmasMembers = [...details];
+      console.log('Loaded Christmas member details:', this.christmasMemberTaxDetails);
+    }
+  } catch (error) {
+    console.error('Error loading Christmas member details:', error);
+  }
+}
+
+async loadAllYearsChristmasSummary(): Promise<void> {
+  try {
+    const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
+    const allYearsSummary = await this.christmasTaxService.getAllYearsSummary(familyFilter).toPromise();
+
+    if (allYearsSummary) {
+      this.christmasTaxSummary = allYearsSummary.reduce((acc, yearData) => ({
+        totalMembers: acc.totalMembers + yearData.totalMembers,
+        paidMembers: acc.paidMembers + yearData.paidMembers,
+        unpaidMembers: acc.unpaidMembers + yearData.unpaidMembers,
+        collectionRate: 0,
+        totalTaxAmount: acc.totalTaxAmount + yearData.totalTaxAmount,
+        paidTaxAmount: acc.paidTaxAmount + yearData.paidTaxAmount,
+        unpaidTaxAmount: acc.unpaidTaxAmount + yearData.unpaidTaxAmount,
+        year: 0,
+        total: acc.total + yearData.total
+      }), {
+        totalMembers: 0,
+        paidMembers: 0,
+        unpaidMembers: 0,
+        collectionRate: 0,
+        totalTaxAmount: 0,
+        paidTaxAmount: 0,
+        unpaidTaxAmount: 0,
+        year: 0,
+        total: 0
+      });
+
+      this.christmasTaxSummary.collectionRate = this.christmasTaxSummary.totalMembers > 0
+        ? Math.round((this.christmasTaxSummary.paidMembers / this.christmasTaxSummary.totalMembers) * 100)
+        : 0;
+    }
+
+    await this.loadAllYearsChristmasMemberDetails();
+  } catch (error) {
+    console.error('Error loading all years Christmas summary:', error);
+  }
+}
+
+async loadAllYearsChristmasMemberDetails(): Promise<void> {
+  try {
+    const familyFilter = this.selectedFamilyId === 'All Members' ? undefined : this.selectedFamilyId;
+    const allMembers = await this.christmasTaxService.getAllMembers(familyFilter).toPromise();
+
+    if (allMembers) {
+      const membersWithYearlyPayments: ExtendedTaxPayment[] = [];
+      const yearsToShow = this.getAvailableYearsForDisplay();
+
+      for (const member of allMembers) {
+        const memberPayments: ExtendedTaxPayment = {
+          ...member,
+          yearlyPayments: {}
+        };
+
+        for (const year of yearsToShow) {
+          try {
+            const yearlyPayments = await this.christmasTaxService.getMemberPaymentForYear(member._id, year).toPromise();
+            const yearlyPayment = yearlyPayments?.[0];
+
+            memberPayments.yearlyPayments![year] = yearlyPayment ? {
+              isPaid: yearlyPayment.isPaid,
+              status: yearlyPayment.isPaid ? 'Paid' : 'Unpaid',
+              paidAmount: yearlyPayment.paidAmount,
+              taxAmount: yearlyPayment.taxAmount
+            } : {
+              isPaid: false,
+              status: 'Not Generated',
+              paidAmount: 0,
+              taxAmount: 0
+            };
+          } catch (error) {
+            memberPayments.yearlyPayments![year] = {
+              isPaid: false,
+              status: 'Not Generated',
+              paidAmount: 0,
+              taxAmount: 0
+            };
+          }
+        }
+
+        membersWithYearlyPayments.push(memberPayments);
+      }
+
+      this.christmasMemberTaxDetails = membersWithYearlyPayments;
+      this.filteredChristmasMembers = [...membersWithYearlyPayments];
+    }
+  } catch (error) {
+    console.error('Error loading all years Christmas member details:', error);
+    this.showSnackBar('Error loading Christmas member details');
+  }
+}
+
+get totalChristmasTax(): number {
+  if (this.selectedYear === 'All Years' || this.selectedYear === 'All') {
+    return this.christmasTaxSummary?.paidTaxAmount || 0;
+  } else {
+    return this.christmasTaxSummary?.paidTaxAmount || this.christmasTaxForSelectedYear?.total || 0;
+  }
+}
 }

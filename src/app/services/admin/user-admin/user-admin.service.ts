@@ -13,6 +13,7 @@ export interface User {
     incomeExpense: boolean;
     members: boolean;
     user: boolean;
+    xmas:boolean;
   };
 }
 
@@ -20,7 +21,7 @@ export interface User {
   providedIn: 'root',
 })
 export class UserAdminService {
-  private apiUrl = 'https://church-backend-036s.onrender.com/api/admin/superadmin';
+  private apiUrl = 'api/admin/superadmin';
 
   constructor(private http: HttpClient) { }
 
