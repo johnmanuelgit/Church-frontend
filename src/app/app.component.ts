@@ -20,9 +20,11 @@ export class AppComponent {
 constructor(private loader:LoaderService,private router:Router)
 {
   this.isLoading$ = this.loader.isLoading;
-  this.router.events.subscribe(() => {
-      this.isAdminRoute = this.router.url.startsWith('/admindash');
-    });
+ this.router.events.subscribe(() => {
+  const url = this.router.url;
+  this.isAdminRoute = url.startsWith('/admindash') || url.startsWith('/members') || url.startsWith('/lcftax')|| url.startsWith('/income&expense')|| url.startsWith('/user')|| url.startsWith('/xmas-tax');
+});
+
 }
   
 
