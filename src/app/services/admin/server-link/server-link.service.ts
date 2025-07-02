@@ -7,5 +7,5 @@ export class ServerLinkService {
 
   constructor() { }
 
-  server='http://localhost:3000'
+  server='https://church-backend-036s.onrender.com'
 }
