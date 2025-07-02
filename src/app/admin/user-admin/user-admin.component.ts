@@ -15,7 +15,7 @@ interface FormErrors {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './user-admin.component.html',
-  styleUrls: ['./user-admin.component.css']
+  styleUrls: ['./user-admin.component.css'],
 })
 export class UserAdminComponent {
   email: string = '';
@@ -23,23 +23,15 @@ export class UserAdminComponent {
   errorMessage: string = '';
   isLoading: boolean = false;
   errors: FormErrors = {};
-  showPassword:boolean =false;
+  showPassword: boolean = false;
   rememberMe: boolean = false;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
-  /**
-   * Validates the form fields
-   * @returns boolean - true if form is valid, false otherwise
-   */
   validate(): boolean {
     this.errors = {};
     let isValid = true;
 
-    // Email validation
     if (!this.email.trim()) {
       this.errors['email'] = 'Email is required';
       isValid = false;
@@ -48,7 +40,6 @@ export class UserAdminComponent {
       isValid = false;
     }
 
-    // Password validation
     if (!this.password.trim()) {
       this.errors['password'] = 'Password is required';
       isValid = false;
@@ -60,9 +51,6 @@ export class UserAdminComponent {
     return isValid;
   }
 
-  /**
-   * Handles the login form submission
-   */
   login(): void {
     this.errorMessage = '';
 
@@ -79,19 +67,13 @@ export class UserAdminComponent {
       },
       error: (err) => {
         this.handleLoginError(err);
-      }
+      },
     });
   }
 
-  /**
-   * Handles successful login response
-   * @param res - API response
-   */
   private handleLoginResponse(res: any): void {
     if (res?.status === 'success') {
       if (this.rememberMe) {
-        // You might want to implement remember me functionality here
-        // For example, storing tokens in localStorage instead of sessionStorage
       }
       this.router.navigate(['/admindash']);
     } else {
@@ -100,18 +82,14 @@ export class UserAdminComponent {
     this.isLoading = false;
   }
 
-  /**
-   * Handles login error
-   * @param err - Error object
-   */
   private handleLoginError(err: any): void {
-    this.errorMessage = err?.error?.message ||
+    this.errorMessage =
+      err?.error?.message ||
       err?.message ||
       'Login failed. Please try again later.';
     this.isLoading = false;
     console.error('Login error:', err);
   }
-
 
   resetForm(): void {
     this.email = '';

@@ -3,7 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { MembersService } from '../../services/admin/members/members.service';
 import { CommonModule } from '@angular/common';
-import { AdminNavComponent } from "../admin-nav/admin-nav.component";
+import { AdminNavComponent } from '../admin-nav/admin-nav.component';
 
 interface Member {
   id: number | null;
@@ -25,7 +25,7 @@ interface Member {
   standalone: true,
   imports: [CommonModule, FormsModule, AdminNavComponent],
   templateUrl: './members.component.html',
-  styleUrls: ['./members.component.css']
+  styleUrls: ['./members.component.css'],
 })
 export class MembersComponent implements OnInit {
   @ViewChild('memberForm') memberForm!: NgForm;
@@ -43,7 +43,7 @@ export class MembersComponent implements OnInit {
   sortColumn = 'name';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private membersService: MembersService) { }
+  constructor(private membersService: MembersService) {}
 
   ngOnInit(): void {
     this.loadMembers();
@@ -59,7 +59,7 @@ export class MembersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching members', error);
-      }
+      },
     });
   }
 
@@ -70,7 +70,7 @@ export class MembersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching family heads', error);
-      }
+      },
     });
   }
 
@@ -87,7 +87,7 @@ export class MembersComponent implements OnInit {
       presentAddress: '',
       mobileNumber: '',
       familyId: null,
-      isHeadOfFamily: false
+      isHeadOfFamily: false,
     };
   }
 
@@ -101,14 +101,15 @@ export class MembersComponent implements OnInit {
     if (this.editMode) {
       this.membersService.updateMember(this.member).subscribe({
         next: (updatedMember) => {
-          const index = this.members.findIndex(m => m.id === updatedMember.id);
+          const index = this.members.findIndex(
+            (m) => m.id === updatedMember.id
+          );
           if (index !== -1) {
             this.members[index] = updatedMember;
             this.filteredMembers = [...this.members];
             this.sortMembers();
           }
 
-          // If this member is a family head, refresh the family heads list
           if (updatedMember.isHeadOfFamily) {
             this.loadFamilyHeads();
           }
@@ -117,7 +118,7 @@ export class MembersComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error updating member', error);
-        }
+        },
       });
     } else {
       this.membersService.createMember(this.member).subscribe({
@@ -125,7 +126,6 @@ export class MembersComponent implements OnInit {
           this.members.push(newMember);
           this.filteredMembers = [...this.members];
 
-          // If this member is a family head, refresh the family heads list
           if (newMember.isHeadOfFamily) {
             this.loadFamilyHeads();
           }
@@ -135,16 +135,18 @@ export class MembersComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error creating member', error);
-        }
+        },
       });
     }
   }
 
   generateFamilyId(): void {
     if (this.member.name && this.member.mobileNumber) {
-      // Get first 3 letters of name (uppercase)
-      const namePrefix = this.member.name.replace(/\s+/g, '').slice(0, 3).toUpperCase();
-      // Get last 3 digits of mobile number
+      const namePrefix = this.member.name
+        .replace(/\s+/g, '')
+        .slice(0, 3)
+        .toUpperCase();
+
       const mobilePostfix = this.member.mobileNumber.slice(-3);
       this.member.familyId = `${namePrefix}${mobilePostfix}`;
     } else {
@@ -153,8 +155,11 @@ export class MembersComponent implements OnInit {
   }
 
   updateFamilyId(): void {
-    // Auto-update family ID when name or mobile changes and member is family head
-    if (this.member.isHeadOfFamily && this.member.name && this.member.mobileNumber) {
+    if (
+      this.member.isHeadOfFamily &&
+      this.member.name &&
+      this.member.mobileNumber
+    ) {
       this.generateFamilyId();
     }
   }
@@ -172,7 +177,7 @@ export class MembersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error searching by family ID', error);
-      }
+      },
     });
   }
 
@@ -180,7 +185,6 @@ export class MembersComponent implements OnInit {
     this.editMode = true;
     this.member = { ...member };
 
-    // Convert string dates to Date objects for the form
     if (this.member.dateOfBirth) {
       this.member.dateOfBirth = new Date(this.member.dateOfBirth);
     }
@@ -194,7 +198,6 @@ export class MembersComponent implements OnInit {
       this.member.dateOfMarriage = new Date(this.member.dateOfMarriage);
     }
 
-    // Scroll to form
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -210,15 +213,16 @@ export class MembersComponent implements OnInit {
     if (confirm('Are you sure you want to delete this member?')) {
       this.membersService.deleteMember(id).subscribe({
         next: () => {
-          this.members = this.members.filter(m => m.id !== id);
-          this.filteredMembers = this.filteredMembers.filter(m => m.id !== id);
+          this.members = this.members.filter((m) => m.id !== id);
+          this.filteredMembers = this.filteredMembers.filter(
+            (m) => m.id !== id
+          );
 
-          // Refresh the family heads list in case a head was deleted
           this.loadFamilyHeads();
         },
         error: (error) => {
           console.error('Error deleting member', error);
-        }
+        },
       });
     }
   }
@@ -247,10 +251,11 @@ export class MembersComponent implements OnInit {
       this.filteredMembers = [...this.members];
     } else {
       const term = this.searchTerm.toLowerCase().trim();
-      this.filteredMembers = this.members.filter(member =>
-        member.name.toLowerCase().includes(term) ||
-        member.mobileNumber.includes(term) ||
-        (member.familyId && member.familyId.toLowerCase().includes(term))
+      this.filteredMembers = this.members.filter(
+        (member) =>
+          member.name.toLowerCase().includes(term) ||
+          member.mobileNumber.includes(term) ||
+          (member.familyId && member.familyId.toLowerCase().includes(term))
       );
     }
     this.sortMembers();
@@ -258,7 +263,6 @@ export class MembersComponent implements OnInit {
 
   sortBy(column: string): void {
     if (this.sortColumn === column) {
-      // Toggle sort direction
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
       this.sortColumn = column;
@@ -274,26 +278,35 @@ export class MembersComponent implements OnInit {
       if (this.sortColumn === 'name') {
         comparison = a.name.localeCompare(b.name);
       }
-      // Add more sort columns as needed
 
       return this.sortDirection === 'asc' ? comparison : -comparison;
     });
   }
 
   exportToExcel(): void {
-    const exportData = this.filteredMembers.map(member => {
+    const exportData = this.filteredMembers.map((member) => {
       return {
-        'ID': member.id,
+        ID: member.id,
         'Member Number': member.memberNumber,
-        'Name': member.name,
-        'Date of Birth': member.dateOfBirth ? new Date(member.dateOfBirth).toLocaleDateString() : '',
-        'Date of Baptism': member.dateOfBaptism ? new Date(member.dateOfBaptism).toLocaleDateString() : '',
-        'Date of Confirmation': member.dateOfConfirmation ? new Date(member.dateOfConfirmation).toLocaleDateString() : '',
-        'Date of Marriage': member.dateOfMarriage ? new Date(member.dateOfMarriage).toLocaleDateString() : '',
+        Name: member.name,
+        'Date of Birth': member.dateOfBirth
+          ? new Date(member.dateOfBirth).toLocaleDateString()
+          : '',
+        'Date of Baptism': member.dateOfBaptism
+          ? new Date(member.dateOfBaptism).toLocaleDateString()
+          : '',
+        'Date of Confirmation': member.dateOfConfirmation
+          ? new Date(member.dateOfConfirmation).toLocaleDateString()
+          : '',
+        'Date of Marriage': member.dateOfMarriage
+          ? new Date(member.dateOfMarriage).toLocaleDateString()
+          : '',
         'Permanent Address': member.permanentAddress,
         'Present Address': member.presentAddress,
         'Mobile Number': member.mobileNumber,
-        'Family Head': member.isHeadOfFamily ? 'Yes' : this.getFamilyHeadName(member.familyId)
+        'Family Head': member.isHeadOfFamily
+          ? 'Yes'
+          : this.getFamilyHeadName(member.familyId),
       };
     });
 
@@ -304,11 +317,12 @@ export class MembersComponent implements OnInit {
     XLSX.writeFile(workbook, `Members_${date}.xlsx`);
   }
 
-  // Add missing method - getFamilyHeadName
   getFamilyHeadName(familyId: string | null): string {
     if (!familyId) return 'N/A';
 
-    const familyHead = this.familyHeads.find(head => head.familyId === familyId);
+    const familyHead = this.familyHeads.find(
+      (head) => head.familyId === familyId
+    );
     return familyHead ? familyHead.name : 'Unknown';
   }
 }

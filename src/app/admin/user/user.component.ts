@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { User, UserAdminService } from '../../services/admin/user-admin/user-admin.service';
+import {
+  User,
+  UserAdminService,
+} from '../../services/admin/user-admin/user-admin.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminNavComponent } from "../admin-nav/admin-nav.component";
-
-
+import { AdminNavComponent } from '../admin-nav/admin-nav.component';
 
 @Component({
   selector: 'app-user',
   imports: [CommonModule, FormsModule, AdminNavComponent],
   templateUrl: './user.component.html',
-  styleUrl: './user.component.css'
+  styleUrl: './user.component.css',
 })
-
 export class UserComponent implements OnInit {
   admins: User[] = [];
   editMode: boolean = false;
   selectedAdmin: User | null = null;
-  // In user.component.ts
+
   admin: User = {
-    username: '',  // Changed from 'name' to 'username'
+    username: '',
     email: '',
     password: '',
     role: 'admin',
@@ -29,12 +29,11 @@ export class UserComponent implements OnInit {
       incomeExpense: false,
       members: false,
       user: false,
-      xmas:false
-    }
+      xmas: false,
+    },
   };
 
-
-  constructor(private useradminService: UserAdminService) { }
+  constructor(private useradminService: UserAdminService) {}
 
   ngOnInit() {
     this.loadAdmins();
@@ -46,10 +45,10 @@ export class UserComponent implements OnInit {
     this.useradminService.createAdminBySuperAdmin(this.admin).subscribe({
       next: () => {
         alert('Admin created successfully');
-        this.loadAdmins(); // <-- Refresh list
-        // In user.component.ts
+        this.loadAdmins();
+
         this.admin = {
-          username: '',  // Changed from 'name' to 'username'
+          username: '',
           email: '',
           password: '',
           role: 'admin',
@@ -59,16 +58,18 @@ export class UserComponent implements OnInit {
             incomeExpense: false,
             members: false,
             user: false,
-            xmas:false
-          }
+            xmas: false,
+          },
         };
       },
-      error: err => alert('Error: ' + err.message)
+      error: (err) => alert('Error: ' + err.message),
     });
   }
 
   loadAdmins() {
-    this.useradminService.getAllAdmins().subscribe(data => this.admins = data);
+    this.useradminService
+      .getAllAdmins()
+      .subscribe((data) => (this.admins = data));
   }
 
   edit(user: User) {
@@ -79,11 +80,13 @@ export class UserComponent implements OnInit {
   save() {
     if (!this.selectedAdmin?._id) return;
 
-    this.useradminService.editAdmin(this.selectedAdmin._id, this.selectedAdmin).subscribe(() => {
-      this.editMode = false;
-      this.selectedAdmin = null;
-      this.loadAdmins();
-    });
+    this.useradminService
+      .editAdmin(this.selectedAdmin._id, this.selectedAdmin)
+      .subscribe(() => {
+        this.editMode = false;
+        this.selectedAdmin = null;
+        this.loadAdmins();
+      });
   }
 
   cancel() {
@@ -99,4 +102,3 @@ export class UserComponent implements OnInit {
     }
   }
 }
-

@@ -20,12 +20,12 @@ interface Member {
 }
 @Component({
   selector: 'app-members-home',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './members-home.component.html',
-  styleUrl: './members-home.component.css'
+  styleUrl: './members-home.component.css',
 })
 export class MembersHomeComponent implements OnInit {
-currentDate: Date = new Date();
+  currentDate: Date = new Date();
   members: Member[] = [];
   filteredMembers: Member[] = [];
   familyHeads: Member[] = [];
@@ -34,7 +34,7 @@ currentDate: Date = new Date();
   searchFamilyId = '';
   selectedHeadId = '';
 
-  constructor(private membersService: MembersService) { }
+  constructor(private membersService: MembersService) {}
 
   ngOnInit(): void {
     this.loadMembers();
@@ -49,7 +49,7 @@ currentDate: Date = new Date();
       },
       error: (error) => {
         console.error('Error fetching members:', error);
-      }
+      },
     });
   }
 
@@ -60,7 +60,7 @@ currentDate: Date = new Date();
       },
       error: (error) => {
         console.error('Error fetching family heads:', error);
-      }
+      },
     });
   }
 
@@ -69,16 +69,17 @@ currentDate: Date = new Date();
     const familyIdFilter = this.searchFamilyId.toLowerCase().trim();
     const headIdFilter = this.selectedHeadId;
 
-    this.filteredMembers = this.members.filter(member => {
+    this.filteredMembers = this.members.filter((member) => {
       const matchesSearch =
         member.name.toLowerCase().includes(search) ||
         member.mobileNumber.includes(search);
 
       const matchesFamilyId =
-        !familyIdFilter || (member.familyId && member.familyId.toLowerCase().includes(familyIdFilter));
+        !familyIdFilter ||
+        (member.familyId &&
+          member.familyId.toLowerCase().includes(familyIdFilter));
 
-      const matchesHead =
-        !headIdFilter || (member.familyId === headIdFilter);
+      const matchesHead = !headIdFilter || member.familyId === headIdFilter;
 
       return matchesSearch && matchesFamilyId && matchesHead;
     });
@@ -86,24 +87,32 @@ currentDate: Date = new Date();
 
   getFamilyHeadName(familyId: string | null): string {
     if (!familyId) return 'N/A';
-    const head = this.familyHeads.find(h => h.familyId === familyId);
+    const head = this.familyHeads.find((h) => h.familyId === familyId);
     return head ? head.name : 'Unknown';
   }
 
   exportToExcel(): void {
-    const exportData = this.filteredMembers.map(member => ({
-      'ID': member.id,
+    const exportData = this.filteredMembers.map((member) => ({
+      ID: member.id,
       'Member Number': member.memberNumber,
-      'Name': member.name,
-      'Date of Birth': member.dateOfBirth ? new Date(member.dateOfBirth).toLocaleDateString() : '',
-      'Date of Baptism': member.dateOfBaptism ? new Date(member.dateOfBaptism).toLocaleDateString() : '',
-      'Date of Confirmation': member.dateOfConfirmation ? new Date(member.dateOfConfirmation).toLocaleDateString() : '',
-      'Date of Marriage': member.dateOfMarriage ? new Date(member.dateOfMarriage).toLocaleDateString() : '',
+      Name: member.name,
+      'Date of Birth': member.dateOfBirth
+        ? new Date(member.dateOfBirth).toLocaleDateString()
+        : '',
+      'Date of Baptism': member.dateOfBaptism
+        ? new Date(member.dateOfBaptism).toLocaleDateString()
+        : '',
+      'Date of Confirmation': member.dateOfConfirmation
+        ? new Date(member.dateOfConfirmation).toLocaleDateString()
+        : '',
+      'Date of Marriage': member.dateOfMarriage
+        ? new Date(member.dateOfMarriage).toLocaleDateString()
+        : '',
       'Permanent Address': member.permanentAddress,
       'Present Address': member.presentAddress,
       'Mobile Number': member.mobileNumber,
       'Family ID': member.familyId || '',
-      'Family Head': this.getFamilyHeadName(member.familyId)
+      'Family Head': this.getFamilyHeadName(member.familyId),
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
@@ -113,9 +122,9 @@ currentDate: Date = new Date();
     XLSX.writeFile(workbook, `Member_Details_${date}.xlsx`);
   }
   resetFilters() {
-  this.searchText = '';
-  this.searchFamilyId = '';
-  this.selectedHeadId = '';
-  this.applyFilters();
-}
+    this.searchText = '';
+    this.searchFamilyId = '';
+    this.selectedHeadId = '';
+    this.applyFilters();
+  }
 }

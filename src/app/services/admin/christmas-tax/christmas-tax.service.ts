@@ -24,7 +24,7 @@ export interface TaxPayment {
   familyId: string;
   isHeadOfFamily: boolean;
   status: string;
-  year?: number; // Added for all years view
+  year?: number;
 }
 
 export interface TaxSummary {
@@ -46,15 +46,14 @@ export interface FamilyHead {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChristmasTaxService {
   private apiUrl = 'api/xmas-tax';
   private taxData: TaxSummary[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  // Tax Rate Management
   getTaxRates(year: number): Observable<TaxRate> {
     return this.http.get<TaxRate>(`${this.apiUrl}/rates/${year}`);
   }
@@ -63,7 +62,6 @@ export class ChristmasTaxService {
     return this.http.put<TaxRate>(`${this.apiUrl}/rates/${year}`, rates);
   }
 
-  // Tax Payment Management
   generateTaxPayments(year: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/generate/${year}`, {});
   }
@@ -76,16 +74,20 @@ export class ChristmasTaxService {
     return this.http.get<TaxSummary>(`${this.apiUrl}/summary`, { params });
   }
 
-  // New method for all years summary
   getAllYearsSummary(familyId?: string): Observable<TaxSummary[]> {
     const params: any = {};
     if (familyId) {
       params.familyId = familyId;
     }
-    return this.http.get<TaxSummary[]>(`${this.apiUrl}/summary/all-years`, { params });
+    return this.http.get<TaxSummary[]>(`${this.apiUrl}/summary/all-years`, {
+      params,
+    });
   }
 
-  getMemberTaxDetails(year: number, familyId?: string): Observable<TaxPayment[]> {
+  getMemberTaxDetails(
+    year: number,
+    familyId?: string
+  ): Observable<TaxPayment[]> {
     const params: any = { year };
     if (familyId) {
       params.familyId = familyId;
@@ -93,20 +95,20 @@ export class ChristmasTaxService {
     return this.http.get<TaxPayment[]>(`${this.apiUrl}/details`, { params });
   }
 
-  // New method for all years member details
   getAllYearsMemberDetails(familyId?: string): Observable<TaxPayment[]> {
     const params: any = {};
     if (familyId) {
       params.familyId = familyId;
     }
-    return this.http.get<TaxPayment[]>(`${this.apiUrl}/details/all-years`, { params });
+    return this.http.get<TaxPayment[]>(`${this.apiUrl}/details/all-years`, {
+      params,
+    });
   }
 
   updatePaymentStatus(paymentId: string, paymentData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/payment/${paymentId}`, paymentData);
   }
 
-  // Utility Methods
   getFamilyHeads(): Observable<FamilyHead[]> {
     return this.http.get<FamilyHead[]>(`${this.apiUrl}/family-heads`);
   }
@@ -122,7 +124,6 @@ export class ChristmasTaxService {
     return this.http.get(`${this.apiUrl}/export`, { params });
   }
 
-  // New method for all years export
   exportAllYearsReport(familyId?: string): Observable<any> {
     const params: any = {};
     if (familyId) {
@@ -131,19 +132,15 @@ export class ChristmasTaxService {
     return this.http.get(`${this.apiUrl}/export/all-years`, { params });
   }
 
-
-  // Store the loaded tax data in memory
   setTaxData(data: TaxSummary[]): void {
     this.taxData = data;
   }
 
-  // Get tax data for a specific year
   getTaxDataForYear(year: string): TaxSummary | null {
     const yearNumber = parseInt(year, 10);
-    return this.taxData.find(t => t.year === yearNumber) || null;
+    return this.taxData.find((t) => t.year === yearNumber) || null;
   }
 
-  // Get all tax data
   getAllTaxData(): TaxSummary[] {
     return this.taxData;
   }
@@ -155,7 +152,12 @@ export class ChristmasTaxService {
     }
     return this.http.get<TaxPayment[]>(`${this.apiUrl}/members`, { params });
   }
-  getMemberPaymentForYear(memberId: string, year: number): Observable<TaxPayment[]> {
-    return this.http.get<TaxPayment[]>(`${this.apiUrl}/payment/${memberId}?year=${year}`);
+  getMemberPaymentForYear(
+    memberId: string,
+    year: number
+  ): Observable<TaxPayment[]> {
+    return this.http.get<TaxPayment[]>(
+      `${this.apiUrl}/payment/${memberId}?year=${year}`
+    );
   }
 }

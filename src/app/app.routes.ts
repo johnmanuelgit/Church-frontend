@@ -16,57 +16,55 @@ import { LcfTaxHomeComponent } from './lcf-tax-home/lcf-tax-home.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-{path:'lcf-home',component:LcfTaxHomeComponent},
-{path:'members-home',component:MembersHomeComponent},
-{path:'xmas-home',component:XmasTaxHomeComponent},
+  { path: 'lcf-home', component: LcfTaxHomeComponent },
+  { path: 'members-home', component: MembersHomeComponent },
+  { path: 'xmas-home', component: XmasTaxHomeComponent },
 
   //  admin
-  { 
-     path: 'adminlogin',
-     component: AdminLoginComponent 
-    },
   {
-    path:'user-admin-login',
-    component:UserAdminComponent
+    path: 'adminlogin',
+    component: AdminLoginComponent,
   },
-   {
-     path: 'reset-password',
-     component: ResetPasswordComponent
-   },
+  {
+    path: 'user-admin-login',
+    component: UserAdminComponent,
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+  },
   {
     path: 'admindash',
-    component: DashboardComponent
+    component: DashboardComponent,
   },
   {
     path: 'members',
     component: MembersComponent,
     canActivate: [ModuleAccessGuard],
-    data: { module: 'members' }
+    data: { module: 'members' },
   },
   {
     path: 'lcftax',
     component: LcfTaxComponent,
     canActivate: [ModuleAccessGuard],
-    data: { module: 'lcf' }
+    data: { module: 'lcf' },
   },
   {
     path: 'income&expense',
     component: IncomeExpenseComponent,
     canActivate: [ModuleAccessGuard],
-    data: { module: 'incomeExpense' }
+    data: { module: 'incomeExpense' },
   },
   {
     path: 'user',
     component: UserComponent,
     canActivate: [ModuleAccessGuard],
-    data: { module: 'user' }
+    data: { module: 'user' },
   },
   {
-    path:'xmas-tax',
-    component:ChristmasTaxComponent,
-    canActivate:[ModuleAccessGuard],
-    data:{module:'xmas'}
-  }
+    path: 'xmas-tax',
+    component: ChristmasTaxComponent,
+    canActivate: [ModuleAccessGuard],
+    data: { module: 'xmas' },
+  },
 ];
-
-

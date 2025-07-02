@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ServerLinkService {
+  constructor() {}
 
-  constructor() { }
-
-  server='https://church-backend-036s.onrender.com'
+  server = 'https://church-backend-036s.onrender.com';
 }

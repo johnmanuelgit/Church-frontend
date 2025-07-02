@@ -18,12 +18,12 @@ interface Member {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MembersService {
   private apiUrl = 'api/members';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getMembers(): Observable<Member[]> {
     return this.http.get<Member[]>(this.apiUrl);

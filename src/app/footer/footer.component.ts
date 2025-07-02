@@ -5,13 +5,11 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-footer',
   imports: [RouterModule],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrl: './footer.component.css',
 })
 export class FooterComponent {
-
-   constructor(private router: Router) {}
-   scrollToServices() {
-    // If we're not on the home page, navigate there first
+  constructor(private router: Router) {}
+  scrollToServices() {
     if (this.router.url !== '/') {
       this.router.navigate(['/']).then(() => {
         this.scrollToElement('services');
@@ -20,11 +18,10 @@ export class FooterComponent {
       this.scrollToElement('services');
     }
   }
-   private scrollToElement(elementId: string): void {
+  private scrollToElement(elementId: string): void {
     const element = document.getElementById(elementId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
-
 }

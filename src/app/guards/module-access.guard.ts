@@ -1,16 +1,17 @@
-// In module-access.guard.ts
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModuleAccessGuard implements CanActivate {
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const requiredModule = route.data['module'] as string;
-    const userJson = sessionStorage.getItem('admin_user') || localStorage.getItem('admin_user');
+    const userJson =
+      sessionStorage.getItem('admin_user') ||
+      localStorage.getItem('admin_user');
 
     if (!userJson) {
       this.router.navigate(['/adminlogin']);
@@ -19,12 +20,10 @@ export class ModuleAccessGuard implements CanActivate {
 
     const user = JSON.parse(userJson);
 
-    // ✅ Super Admin has access to everything
     if (user.role === 'superadmin') {
       return true;
     }
 
-    // ✅ Regular admins need specific module access
     const hasAccess = user.moduleAccess?.[requiredModule];
     if (!hasAccess) {
       this.router.navigate(['']);

@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/admin/auth/auth.service';
@@ -8,10 +14,10 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-reset-password',
-  standalone:true,
-  imports:[CommonModule,FormsModule,ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './reset-password.component.html',
-   styleUrl: './reset-password.component.css'
+  styleUrl: './reset-password.component.css',
 })
 export class ResetPasswordComponent implements OnInit {
   token: string = '';
@@ -47,21 +53,20 @@ export class ResetPasswordComponent implements OnInit {
     this.authService.resetPassword(this.token, newPassword).subscribe({
       next: (res) => {
         this.successMessage = 'Password reset successfully!';
-        this.router.navigate(['/login']); // redirect to login after success
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         this.errorMessage = err.message || 'Failed to reset password';
-      }
+      },
     });
   }
 
-  // Add to your component
-isSubmitting: boolean = false;
-showPassword: boolean = false;
+  isSubmitting: boolean = false;
+  showPassword: boolean = false;
 
-togglePasswordVisibility(): void {
-  this.showPassword = !this.showPassword;
-  const input = document.getElementById('newPassword') as HTMLInputElement;
-  input.type = this.showPassword ? 'text' : 'password';
-}
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+    const input = document.getElementById('newPassword') as HTMLInputElement;
+    input.type = this.showPassword ? 'text' : 'password';
+  }
 }

@@ -1,104 +1,198 @@
 <div class="container mx-auto p-5 max-w-7xl">
-  <!-- Festive Header -->
   <div class="text-center mb-8 relative">
     <h2 class="text-3xl font-bold text-gray-800 mb-2 relative">
-      <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-600">
+      <span
+        class="bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-600"
+      >
         Christmas Tax Status
       </span>
     </h2>
 
-    <div class="w-24 h-1 bg-gradient-to-r from-red-500 to-green-500 mx-auto mt-3 rounded-full"></div>
+    <div
+      class="w-24 h-1 bg-gradient-to-r from-red-500 to-green-500 mx-auto mt-3 rounded-full"
+    ></div>
   </div>
 
-  <!-- Filters Card with Festive Border -->
-  <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 mb-6 relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-16 h-16 bg-red-500 transform rotate-45 translate-x-8 -translate-y-8 opacity-20"></div>
+  <div
+    class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 mb-6 relative overflow-hidden"
+  >
+    <div
+      class="absolute top-0 right-0 w-16 h-16 bg-red-500 transform rotate-45 translate-x-8 -translate-y-8 opacity-20"
+    ></div>
     <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 mr-2 text-red-500"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+          clip-rule="evenodd"
+        />
       </svg>
       Filter Options
     </h3>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <!-- Year Filter -->
       <div>
-        <label class="block text-sm font-medium mb-1 text-gray-700">Select Year</label>
+        <label class="block text-sm font-medium mb-1 text-gray-700"
+          >Select Year</label
+        >
         <div class="relative">
-          <select [(ngModel)]="selectedYear" (change)="onYearChange()" 
-                  class="w-full border border-gray-300 rounded-lg p-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition appearance-none bg-white">
-            <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+          <select
+            [(ngModel)]="selectedYear"
+            (change)="onYearChange()"
+            class="w-full border border-gray-300 rounded-lg p-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition appearance-none bg-white"
+          >
+            <option *ngFor="let year of availableYears" [value]="year">
+              {{ year }}
+            </option>
           </select>
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
           </div>
         </div>
       </div>
 
-      <!-- Family Filter -->
       <div>
-        <label class="block text-sm font-medium mb-1 text-gray-700">Select Family</label>
+        <label class="block text-sm font-medium mb-1 text-gray-700"
+          >Select Family</label
+        >
         <div class="relative">
-          <select [(ngModel)]="selectedFamilyId" (change)="onFamilyChange()" 
-                  class="w-full border border-gray-300 rounded-lg p-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition appearance-none bg-white">
+          <select
+            [(ngModel)]="selectedFamilyId"
+            (change)="onFamilyChange()"
+            class="w-full border border-gray-300 rounded-lg p-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition appearance-none bg-white"
+          >
             <option value="All Members">All Members</option>
-            <option *ngFor="let family of familyHeads" [value]="family.familyId">
+            <option
+              *ngFor="let family of familyHeads"
+              [value]="family.familyId"
+            >
               {{ family.name }} Family
             </option>
           </select>
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
           </div>
         </div>
       </div>
 
-      <!-- Payment Status Filter -->
       <div>
-        <label class="block text-sm font-medium mb-1 text-gray-700">Payment Status</label>
+        <label class="block text-sm font-medium mb-1 text-gray-700"
+          >Payment Status</label
+        >
         <div class="relative">
-          <select [(ngModel)]="selectedStatus" (change)="applyFilters()" 
-                  class="w-full border border-gray-300 rounded-lg p-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition appearance-none bg-white">
+          <select
+            [(ngModel)]="selectedStatus"
+            (change)="applyFilters()"
+            class="w-full border border-gray-300 rounded-lg p-2 pl-10 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition appearance-none bg-white"
+          >
             <option value="All">All Statuses</option>
             <option value="Paid">Paid Only</option>
             <option value="Unpaid">Unpaid Only</option>
           </select>
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </div>
         </div>
       </div>
 
-      <!-- Search Box -->
       <div>
-        <label class="block text-sm font-medium mb-1 text-gray-700">Search Members</label>
+        <label class="block text-sm font-medium mb-1 text-gray-700"
+          >Search Members</label
+        >
         <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              class="h-5 w-5 text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
           </div>
-          <input type="text" [(ngModel)]="searchText" (input)="applyFilters()" 
-                 placeholder="Name or ID..." 
-                 class="pl-10 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition">
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (input)="applyFilters()"
+            placeholder="Name or ID..."
+            class="pl-10 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+          />
         </div>
       </div>
     </div>
   </div>
 
-
-
-  <!-- Members Table with Festive Accents -->
-  <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
-    <div class="px-5 py-3 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-red-50 to-green-50">
+  <div
+    class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100"
+  >
+    <div
+      class="px-5 py-3 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-red-50 to-green-50"
+    >
       <h3 class="text-lg font-semibold text-gray-700 flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2 text-red-500"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+          />
         </svg>
         Member Contributions
       </h3>
@@ -106,29 +200,71 @@
         Showing {{ filteredMembers.length }} records
       </div>
     </div>
-    
+
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Family</th>
-            <th *ngIf="selectedYear === 'All Years'" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Member
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Age
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Family
+            </th>
+            <th
+              *ngIf="selectedYear === 'All Years'"
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Year
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Amount
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Status
+            </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let member of filteredMembers" class="hover:bg-gray-50 transition">
+          <tr
+            *ngFor="let member of filteredMembers"
+            class="hover:bg-gray-50 transition"
+          >
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
-                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
-                  <span class="text-red-600 font-medium">{{ member.name.charAt(0) }}</span>
+                <div
+                  class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center"
+                >
+                  <span class="text-red-600 font-medium">{{
+                    member.name.charAt(0)
+                  }}</span>
                 </div>
                 <div class="ml-4">
-                  <div class="text-sm font-medium text-gray-900">{{ member.name }}</div>
-                  <div class="text-sm text-gray-500">ID: {{ member._id || 'N/A' }}</div>
+                  <div class="text-sm font-medium text-gray-900">
+                    {{ member.name }}
+                  </div>
+                  <div class="text-sm text-gray-500">
+                    ID: {{ member._id || "N/A" }}
+                  </div>
                 </div>
               </div>
             </td>
@@ -136,26 +272,49 @@
               <div class="text-sm text-gray-900">{{ member.age }}</div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-red-100 to-green-100 text-green-800">
+              <span
+                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-red-100 to-green-100 text-green-800"
+              >
                 {{ member.familyId }}
               </span>
             </td>
-            <td *ngIf="selectedYear === 'All Years'" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td
+              *ngIf="selectedYear === 'All Years'"
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+            >
               {{ member.year }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+            >
               {{ formatCurrency(member.taxAmount) }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <span [ngClass]="{
-                'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800': member.isPaid,
-                'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800': !member.isPaid
-              }">
-                {{ member.isPaid ? 'Paid' : 'Unpaid' }}
+              <span
+                [ngClass]="{
+                  'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800':
+                    member.isPaid,
+                  'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800':
+                    !member.isPaid
+                }"
+              >
+                {{ member.isPaid ? "Paid" : "Unpaid" }}
               </span>
-              <div *ngIf="selectedYear === 'All Years' && !member.isPaid" class="text-xs text-red-500 mt-1 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              <div
+                *ngIf="selectedYear === 'All Years' && !member.isPaid"
+                class="text-xs text-red-500 mt-1 flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 inline mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                  />
                 </svg>
                 Pending for {{ member.year }}
               </div>
@@ -165,71 +324,145 @@
       </table>
     </div>
 
-    <div *ngIf="filteredMembers.length === 0" class="text-center py-10 bg-gradient-to-r from-red-50 to-green-50">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <div
+      *ngIf="filteredMembers.length === 0"
+      class="text-center py-10 bg-gradient-to-r from-red-50 to-green-50"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-16 w-16 mx-auto text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
       </svg>
       <h3 class="mt-4 text-lg font-medium text-gray-700">No members found</h3>
-      <p class="mt-1 text-sm text-gray-500">Try adjusting your filters or search term</p>
-      <button (click)="resetFilters()" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-red-600 to-green-600 hover:from-red-700 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+      <p class="mt-1 text-sm text-gray-500">
+        Try adjusting your filters or search term
+      </p>
+      <button
+        (click)="resetFilters()"
+        class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-red-600 to-green-600 hover:from-red-700 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+      >
         Reset filters
       </button>
     </div>
   </div>
 </div>
-  <!-- Festive Summary Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 p-5 mb-6">
-    <div class="bg-white p-5 rounded-lg shadow-md border-l-4 border-green-600 hover:shadow-lg transition relative overflow-hidden">
-      <div class="absolute -right-4 -top-4 text-green-100 text-6xl z-0">🎄</div>
-      <div class="relative z-10">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-gray-500">Total Members</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ taxSummary.totalMembers }}</h3>
-          </div>
-          <div class="bg-green-100 p-3 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-        </div>
-        <p class="text-xs text-gray-500 mt-2">All community members</p>
-      </div>
-    </div>
 
-    <div class="bg-white p-5 rounded-lg shadow-md border-l-4 border-blue-600 hover:shadow-lg transition relative overflow-hidden">
-      <div class="absolute -right-4 -top-4 text-blue-100 text-6xl z-0">🎁</div>
-      <div class="relative z-10">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-gray-500">Paid Members</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ taxSummary.paidMembers }}</h3>
-          </div>
-          <div class="bg-blue-100 p-3 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5 p-5 mb-6">
+  <div
+    class="bg-white p-5 rounded-lg shadow-md border-l-4 border-green-600 hover:shadow-lg transition relative overflow-hidden"
+  >
+    <div class="absolute -right-4 -top-4 text-green-100 text-6xl z-0">🎄</div>
+    <div class="relative z-10">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-gray-500">Total Members</p>
+          <h3 class="text-2xl font-bold text-gray-800 mt-1">
+            {{ taxSummary.totalMembers }}
+          </h3>
         </div>
-        <p class="text-xs text-gray-500 mt-2">{{ (taxSummary.paidMembers / taxSummary.totalMembers * 100).toFixed(1) }}% completed</p>
-      </div>
-    </div>
-
-    <div class="bg-white p-5 rounded-lg shadow-md border-l-4 border-red-600 hover:shadow-lg transition relative overflow-hidden">
-      <div class="absolute -right-4 -top-4 text-red-100 text-6xl z-0">🔔</div>
-      <div class="relative z-10">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-gray-500">Unpaid Members</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ taxSummary.unpaidMembers }}</h3>
-          </div>
-          <div class="bg-red-100 p-3 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
+        <div class="bg-green-100 p-3 rounded-full">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-green-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
         </div>
-        <p class="text-xs text-gray-500 mt-2">{{ (taxSummary.unpaidMembers / taxSummary.totalMembers * 100).toFixed(1) }}% remaining</p>
       </div>
+      <p class="text-xs text-gray-500 mt-2">All community members</p>
     </div>
   </div>
+
+  <div
+    class="bg-white p-5 rounded-lg shadow-md border-l-4 border-blue-600 hover:shadow-lg transition relative overflow-hidden"
+  >
+    <div class="absolute -right-4 -top-4 text-blue-100 text-6xl z-0">🎁</div>
+    <div class="relative z-10">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-gray-500">Paid Members</p>
+          <h3 class="text-2xl font-bold text-gray-800 mt-1">
+            {{ taxSummary.paidMembers }}
+          </h3>
+        </div>
+        <div class="bg-blue-100 p-3 rounded-full">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-blue-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">
+        {{
+          ((taxSummary.paidMembers / taxSummary.totalMembers) * 100).toFixed(1)
+        }}% completed
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="bg-white p-5 rounded-lg shadow-md border-l-4 border-red-600 hover:shadow-lg transition relative overflow-hidden"
+  >
+    <div class="absolute -right-4 -top-4 text-red-100 text-6xl z-0">🔔</div>
+    <div class="relative z-10">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-gray-500">Unpaid Members</p>
+          <h3 class="text-2xl font-bold text-gray-800 mt-1">
+            {{ taxSummary.unpaidMembers }}
+          </h3>
+        </div>
+        <div class="bg-red-100 p-3 rounded-full">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-red-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">
+        {{
+          ((taxSummary.unpaidMembers / taxSummary.totalMembers) * 100).toFixed(
+            1
+          )
+        }}% remaining
+      </p>
+    </div>
+  </div>
+</div>
