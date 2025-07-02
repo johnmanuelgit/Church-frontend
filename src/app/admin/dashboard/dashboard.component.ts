@@ -36,8 +36,4 @@ export class DashboardComponent implements OnInit {
     return this.user?.moduleAccess?.[moduleName] === true;
   }
 
-  logout(): void {
-    this.authService.logout()
-  }
-
 }
