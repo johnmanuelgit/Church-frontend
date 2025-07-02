@@ -6,6 +6,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 import { FamilyHead, TaxPayment, TaxRate, TaxService, TaxSummary } from '../../services/admin/tax/tax.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChristmasTaxService } from '../../services/admin/christmas-tax/christmas-tax.service';
+import { ServerLinkService } from '../../services/admin/server-link/server-link.service';
 
 interface ExtendedTaxPayment extends TaxPayment {
   yearlyPayments?: { [year: number]: { isPaid: boolean; status: string; paidAmount: number; taxAmount: number } };
@@ -119,11 +120,13 @@ currentFile: File | null = null;
   displayedColumns: string[] = ['name', 'age', 'taxAmount', 'status', 'actions'];
   filteredMembers: ExtendedTaxPayment[] = [];
   originalTaxRates: TaxRate = { ...this.taxRates };
-
+server='';
   isLoading = false;
   private apiBaseUrl = 'api';
 
-  constructor(private http: HttpClient, private taxService: TaxService, private snackBar: MatSnackBar,private christmasTaxService:ChristmasTaxService ) { }
+  constructor(private http: HttpClient, private taxService: TaxService, private snackBar: MatSnackBar,private christmasTaxService:ChristmasTaxService ,private serverlinkservice:ServerLinkService) { 
+    this.server=this.serverlinkservice.server
+  }
 
   ngOnInit(): void {
     this.generateYears();
@@ -387,7 +390,7 @@ currentFile: File | null = null;
     this.getTax();
     this.loadIncomes();
     this.loadExpenses();
-    // Reload tax data when year changes
+this.loadChristmasTaxData();
     this.loadTaxData();
   }
 
@@ -548,108 +551,115 @@ currentFile: File | null = null;
   }
 
   // EXPENSE FUNCTIONS
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.formData.set('billImage', file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewUrl = reader.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
+onFileSelected(event: any): void {
+  const file = event.target.files[0];
+  if (file) {
+    this.currentFile = file;
+    this.formData.set('billImage', file);
 
-  addExpense(): void {
-    // Create a new FormData object to avoid appending to previous data
-    this.formData = new FormData();
-
-    // Add year to the expense
-    const expenseWithYear = {
-      ...this.newExpense,
-      year: Number(this.selectedYear)
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result;
     };
+    reader.readAsDataURL(file);
+  }
+}
 
-    // Append all expense data to form data
-    for (const key in expenseWithYear) {
-      this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
-    }
+addExpense(): void {
+  this.formData = new FormData();
 
-    this.http.post(`${this.apiBaseUrl}/out/expenses`, this.formData)
-      .subscribe({
-        next: () => {
-          this.loadExpenses();
-          this.resetExpenseForm();
+  const expenseWithYear = {
+    ...this.newExpense,
+    year: Number(this.selectedYear)
+  };
 
-        },
-        error: (err) => {
-          console.error('Error adding expense:', err);
-          alert('Failed to add expense. Please try again.');
-        }
-      });
+  for (const key in expenseWithYear) {
+    this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
   }
 
-  editExpense(expense: Expense): void {
-    this.isEditingExpense = true;
-    this.editingExpenseId = expense.id || expense._id;
-
-    // Clone the expense object
-    this.newExpense = {
-      reason: expense.reason,
-      amount: expense.amount,
-      responsiblePerson: expense.responsiblePerson,
-      billBy: expense.billBy,
-      date: new Date(expense.date).toISOString().split('T')[0],
-      year: expense.year,
-      billImage: expense.billImage
-    };
-
-    this.formData = new FormData();
-    this.previewUrl = expense.billImage ?? null;
-
-    // 🔽 Scroll to the form
-    setTimeout(() => {
-      this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-    }, 100); // Wait for DOM to render
+  if (this.currentFile) {
+    this.formData.set('billImage', this.currentFile);
   }
 
-  updateExpense(): void {
-    if (!this.editingExpenseId) {
-      console.error('No expense ID to update');
-      return;
-    }
+  this.http.post(`${this.apiBaseUrl}/out/expenses`, this.formData)
+    .subscribe({
+      next: () => {
+        this.loadExpenses();
+        this.resetExpenseForm();
+      },
+      error: (err) => {
+        console.error('Error adding expense:', err);
+        alert('Failed to add expense. Please try again.');
+      }
+    });
+}
 
-    this.formData = new FormData();
-    const expenseWithYear = {
-      ...this.newExpense,
-      year: Number(this.selectedYear)
-    };
+editExpense(expense: Expense): void {
+  this.isEditingExpense = true;
+  this.editingExpenseId = expense.id || expense._id;
 
-    for (const key in expenseWithYear) {
-      this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
-    }
+  this.newExpense = {
+    reason: expense.reason,
+    amount: expense.amount,
+    responsiblePerson: expense.responsiblePerson,
+    billBy: expense.billBy,
+    date: new Date(expense.date).toISOString().split('T')[0],
+    year: expense.year,
+    billImage: expense.billImage
+  };
 
-    this.http.put(`${this.apiBaseUrl}/out/expenses/${this.editingExpenseId}`, this.formData)
-      .subscribe({
-        next: () => {
-          const updatedId = this.editingExpenseId;
-          this.loadExpenses();
-          this.cancelExpenseEdit();
+  this.formData = new FormData();
+this.previewUrl = expense.billImage ? this.server + expense.billImage : null;
+  this.currentFile = null;  // Reset file so user can select a new one if needed
 
-          // 🔽 After a short delay, scroll to updated row
-          setTimeout(() => {
-            const el = document.getElementById(`expense-${updatedId}`);
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-          }, 500); // Adjust timing if needed
-        },
-        error: (err) => {
-          console.error('Error updating expense:', err);
-          alert('Failed to update expense. Please try again.');
-        }
-      });
+  setTimeout(() => {
+    this.editExpenseFormRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
+
+
+updateExpense(): void {
+  if (!this.editingExpenseId) {
+    console.error('No expense ID to update');
+    return;
   }
+
+  this.formData = new FormData();
+  const expenseWithYear = {
+    ...this.newExpense,
+    year: Number(this.selectedYear)
+  };
+
+  for (const key in expenseWithYear) {
+    this.formData.set(key, String(expenseWithYear[key as keyof typeof expenseWithYear]));
+  }
+
+  // If user selected a new file, append it
+  if (this.currentFile) {
+    this.formData.set('billImage', this.currentFile);
+  }
+
+  this.http.put(`${this.apiBaseUrl}/out/expenses/${this.editingExpenseId}`, this.formData)
+    .subscribe({
+      next: () => {
+        const updatedId = this.editingExpenseId;
+        this.loadExpenses();
+        this.cancelExpenseEdit();
+
+        setTimeout(() => {
+          const el = document.getElementById(`expense-${updatedId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 500);
+      },
+      error: (err) => {
+        console.error('Error updating expense:', err);
+        alert('Failed to update expense. Please try again.');
+      }
+    });
+}
+
 
 
   deleteExpense(id: string): void {
@@ -673,18 +683,20 @@ currentFile: File | null = null;
     this.resetExpenseForm();
   }
 
-  resetExpenseForm(): void {
-    this.newExpense = {
-      reason: '',
-      amount: 0,
-      responsiblePerson: '',
-      billBy: '',
-      date: new Date().toISOString().split('T')[0],
-      year: Number(this.selectedYear)
-    };
-    this.formData = new FormData();
-    this.previewUrl = null;
-  }
+resetExpenseForm(): void {
+  this.newExpense = {
+    reason: '',
+    amount: 0,
+    responsiblePerson: '',
+    billBy: '',
+    date: new Date().toISOString().split('T')[0],
+    year: Number(this.selectedYear)
+  };
+  this.formData = new FormData();
+  this.previewUrl = null;
+  this.currentFile = null;
+}
+
 
   // DATA LOADING FUNCTIONS
   loadIncomes(): void {
