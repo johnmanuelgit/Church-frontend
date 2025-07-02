@@ -9,6 +9,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChristmasTaxService, FamilyHead, TaxPayment, TaxRate, TaxSummary  } from '../../services/admin/christmas-tax/christmas-tax.service';
+import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 
 interface ExtendedTaxPayment extends TaxPayment {
   yearlyPayments?: { [year: number]: { isPaid: boolean; status: string; paidAmount: number; taxAmount: number } };
@@ -25,8 +26,9 @@ interface ExtendedTaxPayment extends TaxPayment {
     MatIconModule,
     MatTableModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
-  ],
+    MatTooltipModule,
+    AdminNavComponent
+],
   templateUrl: './christmas-tax.component.html',
   styleUrl: './christmas-tax.component.css'
 })

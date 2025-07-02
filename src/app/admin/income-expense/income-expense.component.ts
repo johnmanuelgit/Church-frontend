@@ -7,6 +7,7 @@ import { FamilyHead, TaxPayment, TaxRate, TaxService, TaxSummary } from '../../s
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChristmasTaxService } from '../../services/admin/christmas-tax/christmas-tax.service';
 import { ServerLinkService } from '../../services/admin/server-link/server-link.service';
+import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 
 interface ExtendedTaxPayment extends TaxPayment {
   yearlyPayments?: { [year: number]: { isPaid: boolean; status: string; paidAmount: number; taxAmount: number } };
@@ -38,7 +39,7 @@ interface Expense {
 @Component({
   selector: 'app-income-expense',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule, AdminNavComponent],
   templateUrl: './income-expense.component.html',
   styleUrl: './income-expense.component.css'
 })

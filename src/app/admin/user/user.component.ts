@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { User, UserAdminService } from '../../services/admin/user-admin/user-admin.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 
 
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AdminNavComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

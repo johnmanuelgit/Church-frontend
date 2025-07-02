@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 
 // Extended interface for member details with year-wise payments
 interface ExtendedTaxPayment extends TaxPayment {
@@ -28,8 +29,9 @@ interface ExtendedTaxPayment extends TaxPayment {
     MatIconModule,
     MatTableModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
-  ],
+    MatTooltipModule,
+    AdminNavComponent
+],
   templateUrl: './lcf-tax.component.html',
   styleUrls: ['./lcf-tax.component.css']
 })

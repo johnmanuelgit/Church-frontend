@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { MembersService } from '../../services/admin/members/members.service';
 import { CommonModule } from '@angular/common';
+import { AdminNavComponent } from "../admin-nav/admin-nav.component";
 
 interface Member {
   id: number | null;
@@ -22,7 +23,7 @@ interface Member {
 @Component({
   selector: 'app-members',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AdminNavComponent],
   templateUrl: './members.component.html',
   styleUrls: ['./members.component.css']
 })

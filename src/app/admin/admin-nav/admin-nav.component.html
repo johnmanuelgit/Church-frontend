@@ -1,0 +1,21 @@
+<nav class="bg-indigo-600 text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+    
+    <!-- Left side with Logo and Links -->
+    <div class="flex space-x-6 items-center">
+      <span class="text-lg font-semibold">Admin Panel</span>
+
+      <a routerLink="/admindash" routerLinkActive="font-bold underline" class="hover:underline">Dashboard</a>
+      <a routerLink="/members" routerLinkActive="font-bold underline" class="hover:underline">Members</a>
+      <a routerLink="/lcftax" routerLinkActive="font-bold underline" class="hover:underline">LCF Tax</a>
+      <a routerLink="/income&expense" routerLinkActive="font-bold underline" class="hover:underline">Income & Expense</a>
+      <a routerLink="/user" routerLinkActive="font-bold underline" class="hover:underline">Users</a>
+      <a routerLink="/xmas-tax" routerLinkActive="font-bold underline" class="hover:underline">Christmas Tax</a>
+    </div>
+
+    <!-- Right side with Logout -->
+    <button (click)="logout()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+      Logout
+    </button>
+  </div>
+</nav>
