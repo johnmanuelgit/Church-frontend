@@ -8,7 +8,7 @@ export class ModuleAccessGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const requiredModule = route.data['module'] as string;
+    const requiredModule = (route.data['module'] as string)?.trim();
     const userJson =
       sessionStorage.getItem('admin_user') ||
       localStorage.getItem('admin_user');
@@ -18,18 +18,26 @@ export class ModuleAccessGuard implements CanActivate {
       return false;
     }
 
-    const user = JSON.parse(userJson);
+    try {
+      const user = JSON.parse(userJson);
 
-    if (user.role === 'superadmin') {
-      return true;
-    }
+      if (user.role === 'superadmin') {
+        return true;
+      }
 
-    const hasAccess = user.moduleAccess?.[requiredModule];
-    if (!hasAccess) {
-      this.router.navigate(['']);
+      if (user.moduleAccess && typeof user.moduleAccess === 'object') {
+        const hasAccess = !!user.moduleAccess[requiredModule];
+        if (hasAccess) {
+          return true;
+        }
+      }
+
+      this.router.navigate(['/access-denied']);
+      return false;
+    } catch (e) {
+      console.error('Error parsing user data:', e);
+      this.router.navigate(['/adminlogin']);
       return false;
     }
-
-    return true;
   }
 }

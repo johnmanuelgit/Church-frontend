@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/admin/auth/auth.service';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-login',
@@ -47,12 +47,23 @@ export class AdminLoginComponent implements OnInit {
 
   private loadRememberMeData(): void {
     const rememberMe = localStorage.getItem('admin_remember') === 'true';
-    if (rememberMe) {
-      const user = this.authService.getCurrentUser();
-      if (user) {
-        this.username = user.username || '';
-        this.rememberMe = true;
+    const token = localStorage.getItem('admin_token');
+
+    if (rememberMe && token) {
+      const userData = localStorage.getItem('admin_user');
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          this.username = user.username || '';
+          this.rememberMe = true;
+        } catch (e) {
+          console.error('Error parsing stored user data:', e);
+        }
       }
+    } else {
+      localStorage.removeItem('admin_remember');
+      localStorage.removeItem('admin_user');
+      localStorage.removeItem('admin_token');
     }
   }
 
@@ -119,7 +130,7 @@ export class AdminLoginComponent implements OnInit {
 
   toggleForgotPassword(): void {
     this.showForgotPassword = !this.showForgotPassword;
-    this.showForgotUsername = false; // Hide username recovery when showing password reset
+    this.showForgotUsername = false;
     this.resetEmail = '';
     this.resetEmailSent = false;
     this.clearMessages();
@@ -200,7 +211,6 @@ export class AdminLoginComponent implements OnInit {
     this.clearErrors();
   }
 
-  
   validateUsernameRecoveryEmail(): boolean {
     this.usernameRecoveryEmailError = '';
 
@@ -217,7 +227,6 @@ export class AdminLoginComponent implements OnInit {
 
     return true;
   }
-
 
   requestUsername(): void {
     if (!this.validateUsernameRecoveryEmail()) return;
@@ -256,13 +265,13 @@ export class AdminLoginComponent implements OnInit {
       'Failed to send username recovery email. Please try again.';
   }
 
-
   resetUsernameRecoveryForm(): void {
     this.usernameRecoveryEmail = '';
     this.usernameRecoveryEmailSent = false;
     this.clearMessages();
     this.clearErrors();
   }
+
   tryAgainUsername(): void {
     this.usernameRecoveryEmailSent = false;
     this.usernameRecoveryEmail = '';

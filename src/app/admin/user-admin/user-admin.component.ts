@@ -63,7 +63,6 @@ export class UserAdminComponent {
     this.authService.userLogin(this.email, this.password).subscribe({
       next: (res) => {
         this.handleLoginResponse(res);
-        this.isLoading = true;
       },
       error: (err) => {
         this.handleLoginError(err);
@@ -72,22 +71,32 @@ export class UserAdminComponent {
   }
 
   private handleLoginResponse(res: any): void {
-    if (res?.status === 'success') {
+    this.isLoading = false;
+
+    if (res?.status === 'success' && res?.token && res?.user) {
+      const token = res.token;
+      const userData = JSON.stringify(res.user);
+
       if (this.rememberMe) {
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('admin_user', userData);
+      } else {
+        sessionStorage.setItem('adminToken', token);
+        sessionStorage.setItem('admin_user', userData);
       }
+
       this.router.navigate(['/admindash']);
     } else {
       this.errorMessage = res?.message || 'Invalid credentials';
     }
-    this.isLoading = false;
   }
 
   private handleLoginError(err: any): void {
+    this.isLoading = false;
     this.errorMessage =
       err?.error?.message ||
       err?.message ||
       'Login failed. Please try again later.';
-    this.isLoading = false;
     console.error('Login error:', err);
   }
 

@@ -307,160 +307,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div
-        class="bg-white rounded-xl shadow-sm overflow-hidden border border-blue-100 hover:shadow-md transition-shadow duration-200"
-      >
-        <div class="p-5 flex justify-between items-center">
-          <div>
-            <p
-              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Total Members
-            </p>
-            <p class="text-3xl font-bold text-gray-900 mt-1">
-              {{ taxSummary.totalMembers }}
-            </p>
-            <p class="text-xs text-blue-600 mt-1">Across all families</p>
-          </div>
-          <div class="bg-blue-50 p-4 rounded-lg text-blue-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="bg-white rounded-xl shadow-sm overflow-hidden border border-green-100 hover:shadow-md transition-shadow duration-200"
-      >
-        <div class="p-5 flex justify-between items-center">
-          <div>
-            <p
-              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Paid Members
-            </p>
-            <p class="text-3xl font-bold text-gray-900 mt-1">
-              {{ taxSummary.paidMembers }}
-            </p>
-            <p class="text-xs text-green-600 mt-1">
-              {{
-                (
-                  (taxSummary.paidMembers / taxSummary.totalMembers) *
-                  100
-                ).toFixed(1)
-              }}% of total
-            </p>
-          </div>
-          <div class="bg-green-50 p-4 rounded-lg text-green-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="bg-white rounded-xl shadow-sm overflow-hidden border border-red-100 hover:shadow-md transition-shadow duration-200"
-      >
-        <div class="p-5 flex justify-between items-center">
-          <div>
-            <p
-              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Unpaid Members
-            </p>
-            <p class="text-3xl font-bold text-gray-900 mt-1">
-              {{ taxSummary.unpaidMembers }}
-            </p>
-            <p class="text-xs text-red-600 mt-1">
-              {{
-                (
-                  (taxSummary.unpaidMembers / taxSummary.totalMembers) *
-                  100
-                ).toFixed(1)
-              }}% of total
-            </p>
-          </div>
-          <div class="bg-red-50 p-4 rounded-lg text-red-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="bg-white rounded-xl shadow-sm overflow-hidden border border-purple-100 hover:shadow-md transition-shadow duration-200"
-      >
-        <div class="p-5 flex justify-between items-center">
-          <div>
-            <p
-              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Collection Rate
-            </p>
-            <p class="text-3xl font-bold text-gray-900 mt-1">
-              {{ taxSummary.collectionRate }}%
-            </p>
-            <p class="text-xs text-purple-600 mt-1">
-              {{ formatCurrency(taxSummary.paidTaxAmount) }} collected
-            </p>
-          </div>
-          <div class="bg-purple-50 p-4 rounded-lg text-purple-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
-
+   
     <div
       class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200"
     >
@@ -767,5 +614,159 @@
         </div>
       </div>
     </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        class="bg-white rounded-xl shadow-sm overflow-hidden border border-blue-100 hover:shadow-md transition-shadow duration-200"
+      >
+        <div class="p-5 flex justify-between items-center">
+          <div>
+            <p
+              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Total Members
+            </p>
+            <p class="text-3xl font-bold text-gray-900 mt-1">
+              {{ taxSummary.totalMembers }}
+            </p>
+            <p class="text-xs text-blue-600 mt-1">Across all families</p>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-lg text-blue-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm overflow-hidden border border-green-100 hover:shadow-md transition-shadow duration-200"
+      >
+        <div class="p-5 flex justify-between items-center">
+          <div>
+            <p
+              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Paid Members
+            </p>
+            <p class="text-3xl font-bold text-gray-900 mt-1">
+              {{ taxSummary.paidMembers }}
+            </p>
+            <p class="text-xs text-green-600 mt-1">
+              {{
+                (
+                  (taxSummary.paidMembers / taxSummary.totalMembers) *
+                  100
+                ).toFixed(1)
+              }}% of total
+            </p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg text-green-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm overflow-hidden border border-red-100 hover:shadow-md transition-shadow duration-200"
+      >
+        <div class="p-5 flex justify-between items-center">
+          <div>
+            <p
+              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Unpaid Members
+            </p>
+            <p class="text-3xl font-bold text-gray-900 mt-1">
+              {{ taxSummary.unpaidMembers }}
+            </p>
+            <p class="text-xs text-red-600 mt-1">
+              {{
+                (
+                  (taxSummary.unpaidMembers / taxSummary.totalMembers) *
+                  100
+                ).toFixed(1)
+              }}% of total
+            </p>
+          </div>
+          <div class="bg-red-50 p-4 rounded-lg text-red-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow-sm overflow-hidden border border-purple-100 hover:shadow-md transition-shadow duration-200"
+      >
+        <div class="p-5 flex justify-between items-center">
+          <div>
+            <p
+              class="text-sm font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Collection Rate
+            </p>
+            <p class="text-3xl font-bold text-gray-900 mt-1">
+              {{ taxSummary.collectionRate }}%
+            </p>
+            <p class="text-xs text-purple-600 mt-1">
+              {{ formatCurrency(taxSummary.paidTaxAmount) }} collected
+            </p>
+          </div>
+          <div class="bg-purple-50 p-4 rounded-lg text-purple-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

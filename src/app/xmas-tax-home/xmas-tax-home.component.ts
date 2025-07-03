@@ -7,6 +7,24 @@ import {
 } from '../services/admin/christmas-tax/christmas-tax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MembersService } from '../services/admin/members/members.service';
+interface Member {
+  id: number | null;
+  memberNumber: number | null;
+  name: string;
+  dateOfBirth: Date | null;
+  dateOfBaptism: Date | null;
+  dateOfConfirmation: Date | null;
+  dateOfMarriage: Date | null;
+  permanentAddress: string;
+  presentAddress: string;
+  mobileNumber: string;
+  familyId: string | null;
+  isHeadOfFamily: boolean;
+}
+interface TaxPaymentWithId extends TaxPayment {
+  id?: number | null;
+}
 
 @Component({
   selector: 'app-xmas-tax-home',
@@ -35,16 +53,29 @@ export class XmasTaxHomeComponent implements OnInit {
   };
 
   memberTaxDetails: TaxPayment[] = [];
-  filteredMembers: TaxPayment[] = [];
-
+filteredMembers: TaxPaymentWithId[] = [];
+  memberss: Member[] = [];
   isLoading = false;
 
-  constructor(private taxService: ChristmasTaxService) {}
+  constructor(private taxService: ChristmasTaxService,
+      private membersService: MembersService
+  ) {}
 
   ngOnInit(): void {
     this.generateAvailableYears();
     this.loadFamilyHeads();
     this.loadTaxData();
+     this.loadMembers();
+  }
+ loadMembers(): void {
+    this.membersService.getMembers().subscribe({
+      next: (data) => {
+        this.memberss = data;
+      },
+      error: (error) => {
+        console.error('Error fetching members:', error);
+      },
+    });
   }
 
   generateAvailableYears(): void {
@@ -141,9 +172,11 @@ export class XmasTaxHomeComponent implements OnInit {
     this.loadTaxData();
   }
 
-  applyFilters(): void {
-    const search = this.searchText.toLowerCase();
-    this.filteredMembers = this.memberTaxDetails.filter((member) => {
+applyFilters(): void {
+  const search = this.searchText.toLowerCase();
+
+  this.filteredMembers = this.memberTaxDetails
+    .filter((member) => {
       const matchesSearch =
         member.name.toLowerCase().includes(search) ||
         member.familyId.toLowerCase().includes(search);
@@ -154,8 +187,16 @@ export class XmasTaxHomeComponent implements OnInit {
         (this.selectedStatus === 'Unpaid' && !member.isPaid);
 
       return matchesSearch && matchesStatus;
+    })
+    .map((member) => {
+      const matchedMember = this.memberss.find((m) => m.name === member.name);
+      return {
+        ...member,
+        id: matchedMember ? matchedMember.id : null,
+      };
     });
-  }
+}
+
 
   formatCurrency(amount: number): string {
     return `₹${amount.toLocaleString()}`;

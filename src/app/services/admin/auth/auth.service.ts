@@ -202,14 +202,12 @@ export class AuthService {
     return this.isAuthenticatedSubject.asObservable();
   }
 
-  private hasValidToken(): boolean {
-    const rememberMe = localStorage.getItem(this.rememberMeKey) === 'true';
-    const token = rememberMe
-      ? localStorage.getItem('admin_token')
-      : sessionStorage.getItem('admin_token');
+private hasValidToken(): boolean {
+  const token =
+    localStorage.getItem('admin_token') || sessionStorage.getItem('admin_token');
+  return !!token;
+}
 
-    return token !== null;
-  }
 
   getCurrentUser(): any {
     const rememberMe = localStorage.getItem(this.rememberMeKey) === 'true';
