@@ -5,11 +5,11 @@
 >
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
-<app-header *ngIf="!isAdminRoute"></app-header>
+<app-header></app-header>
 
-<main [class.mt-20]="!isAdminRoute">
+<main class="mt-20">
   <router-outlet></router-outlet>
 </main>
 
-<app-footer *ngIf="!isAdminRoute"></app-footer>
+<app-footer ></app-footer>
 
