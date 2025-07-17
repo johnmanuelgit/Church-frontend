@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
-import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { MembersComponent } from './admin/members/members.component';
 import { LcfTaxComponent } from './admin/lcf-tax/lcf-tax.component';
@@ -12,58 +10,78 @@ import { ResetPasswordComponent } from './admin/reset-password/reset-password.co
 import { ChristmasTaxComponent } from './admin/christmas-tax/christmas-tax.component';
 import { MembersHomeComponent } from './members-home/members-home.component';
 import { XmasTaxHomeComponent } from './xmas-tax-home/xmas-tax-home.component';
-import { LcfTaxHomeComponent } from './lcf-tax-home/lcf-tax-home.component';
+
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'lcf-home', component: LcfTaxHomeComponent },
-  { path: 'members-home', component: MembersHomeComponent },
-  { path: 'xmas-home', component: XmasTaxHomeComponent },
+  { path: '', 
+    loadComponent:()=>
+      import('./home/home.component').then(m=>m.HomeComponent)
+   },
+  { path: 'lcf-home',
+    loadComponent:()=>
+      import('./lcf-tax-home/lcf-tax-home.component').then(m=>m.LcfTaxHomeComponent)
+  },
+  { path: 'members-home',
+     loadComponent:()=>
+    import('./members-home/members-home.component').then(m=>m.MembersHomeComponent)
+     },
+  { path: 'xmas-home',
+    loadComponent:()=>
+      import('./xmas-tax-home/xmas-tax-home.component').then(m=>m.XmasTaxHomeComponent)
+   },
 
-  //  admin
   {
     path: 'adminlogin',
-    component: AdminLoginComponent,
+    loadComponent:() =>
+      import('./admin/admin-login/admin-login.component').then(m=>m.AdminLoginComponent)
   },
   {
     path: 'user-admin-login',
-    component: UserAdminComponent,
+  loadComponent:()=>
+    import('./admin/user-admin/user-admin.component').then(m=>m.UserAdminComponent)
   },
   {
     path: 'reset-password',
-    component: ResetPasswordComponent,
+    loadComponent:()=>
+      import('./admin/reset-password/reset-password.component').then(m=>m.ResetPasswordComponent)
   },
   {
     path: 'admindash',
-    component: DashboardComponent,
+    loadComponent:()=>
+      import('./admin/dashboard/dashboard.component').then(m=>m.DashboardComponent)
   },
   {
     path: 'members',
-    component: MembersComponent,
+    loadComponent:()=>
+      import('./admin/members/members.component').then(m=>m.MembersComponent),
     canActivate: [ModuleAccessGuard],
     data: { module: 'members' },
   },
   {
     path: 'lcftax',
-    component: LcfTaxComponent,
+    loadComponent:()=>
+      import('./admin/lcf-tax/lcf-tax.component').then(m=>m.LcfTaxComponent),
     canActivate: [ModuleAccessGuard],
     data: { module: 'lcf' },
   },
   {
     path: 'income&expense',
-    component: IncomeExpenseComponent,
+    loadComponent:()=>
+      import('./admin/income-expense/income-expense.component').then(m=>m.IncomeExpenseComponent),
     canActivate: [ModuleAccessGuard],
     data: { module: 'incomeExpense' },
   },
   {
     path: 'user',
-    component: UserComponent,
+    loadComponent:()=>
+      import('./admin/user/user.component').then(m=>m.UserComponent),
     canActivate: [ModuleAccessGuard],
     data: { module: 'user' },
   },
   {
     path: 'xmas-tax',
-    component: ChristmasTaxComponent,
+    loadComponent:()=>
+      import('./admin/christmas-tax/christmas-tax.component').then(m=>m.ChristmasTaxComponent),
     canActivate: [ModuleAccessGuard],
     data: { module: 'xmas' },
   },
