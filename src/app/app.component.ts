@@ -33,7 +33,7 @@ export class AppComponent {
         url.startsWith('/lcftax') ||
         url.startsWith('/income&expense') ||
         url.startsWith('/user') ||
-        url.startsWith('/xmas-tax');
+        url.startsWith('/xmas-tax')
     });
   }
 }

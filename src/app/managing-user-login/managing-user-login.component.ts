@@ -2,23 +2,21 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/admin/auth/auth.service';
-
+import { AuthService } from '../services/admin/auth/auth.service';
 interface FormErrors {
   email?: string;
   password?: string;
   [key: string]: string | undefined;
 }
-
 @Component({
-  selector: 'app-user-admin',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './user-admin.component.html',
-  styleUrls: ['./user-admin.component.css'],
+  selector: 'app-managing-user-login',
+  standalone:true,
+  imports: [CommonModule,FormsModule,RouterModule],
+  templateUrl: './managing-user-login.component.html',
+  styleUrl: './managing-user-login.component.css'
 })
-export class UserAdminComponent {
-  email: string = '';
+export class ManagingUserLoginComponent {
+ email: string = '';
   password: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
@@ -106,4 +104,5 @@ export class UserAdminComponent {
     this.errorMessage = '';
     this.errors = {};
   }
+
 }

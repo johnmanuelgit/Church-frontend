@@ -1,15 +1,5 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './admin/dashboard/dashboard.component';
-import { MembersComponent } from './admin/members/members.component';
-import { LcfTaxComponent } from './admin/lcf-tax/lcf-tax.component';
-import { IncomeExpenseComponent } from './admin/income-expense/income-expense.component';
-import { UserComponent } from './admin/user/user.component';
 import { ModuleAccessGuard } from './guards/module-access.guard';
-import { UserAdminComponent } from './admin/user-admin/user-admin.component';
-import { ResetPasswordComponent } from './admin/reset-password/reset-password.component';
-import { ChristmasTaxComponent } from './admin/christmas-tax/christmas-tax.component';
-import { MembersHomeComponent } from './members-home/members-home.component';
-import { XmasTaxHomeComponent } from './xmas-tax-home/xmas-tax-home.component';
 
 
 export const routes: Routes = [
@@ -38,7 +28,7 @@ export const routes: Routes = [
   {
     path: 'user-admin-login',
   loadComponent:()=>
-    import('./admin/user-admin/user-admin.component').then(m=>m.UserAdminComponent)
+    import('./managing-user-login/managing-user-login.component').then(m=>m.ManagingUserLoginComponent)
   },
   {
     path: 'reset-password',
