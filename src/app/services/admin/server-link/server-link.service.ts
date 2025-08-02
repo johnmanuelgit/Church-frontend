@@ -6,5 +6,5 @@ import { Injectable } from '@angular/core';
 export class ServerLinkService {
   constructor() {}
 
-  server = 'https://church-backend-036s.onrender.com';
+  server = 'https://church-backend-production.up.railway.app';
 }
